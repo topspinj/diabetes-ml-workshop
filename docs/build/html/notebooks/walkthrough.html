@@ -1,0 +1,2092 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Building a Binary Classification Machine Learning Model To Predict Hospital Readmission in Patients with Diabetes &mdash; Intro to Data Science 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Welcome to Intro to Data Science’s documentation!" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Intro to Data Science
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Building a Binary Classification Machine Learning Model To Predict Hospital Readmission in Patients with Diabetes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Step-1:-Importing-Depedencies">Step 1: Importing Depedencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-2:-Load-the-Data">Step 2: Load the Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#How-many-rows-and-columns-are-in-our-dataset?">How many rows and columns are in our dataset?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#How-many-hospital-admissions-and-unique-patients-are-in-the-dataset?">How many hospital admissions and unique patients are in the dataset?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#How-many-patients-have-had-more-than-one-hospital-admission?">How many patients have had more than one hospital admission?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-3:-Data-Cleaning">Step 3: Data Cleaning</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Decoding-admission_type_id">Decoding <code class="docutils literal notranslate"><span class="pre">admission_type_id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Decoding-admission_source_id">Decoding <code class="docutils literal notranslate"><span class="pre">admission_source_id</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ii)-Converting-Medication-Features-From-Categorical-to-Boolean">ii) Converting Medication Features From Categorical to Boolean</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#iii)-Creating-a-Boolean-Target-Variable">iii) Creating a Boolean Target Variable</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-4:-Data-Exploration-and-Visualization">Step 4: Data Exploration and Visualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-5:-Feature-Selection">Step 5: Feature Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-6:-Building-the-Binary-Classification-ML-Model">Step 6: Building the Binary Classification ML Model</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Intro to Data Science</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Building a Binary Classification Machine Learning Model To Predict Hospital Readmission in Patients with Diabetes</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/notebooks/walkthrough.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 5ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="Building-a-Binary-Classification-Machine-Learning-Model-To-Predict-Hospital-Readmission-in-Patients-with-Diabetes">
+<h1>Building a Binary Classification Machine Learning Model To Predict Hospital Readmission in Patients with Diabetes<a class="headerlink" href="#Building-a-Binary-Classification-Machine-Learning-Model-To-Predict-Hospital-Readmission-in-Patients-with-Diabetes" title="Permalink to this headline">¶</a></h1>
+<p>In this tutorial, we’ll be looking at hospital admission data in patients with diabetes. This dataset was collected from 130 hospitals in the United States from 1999 to 2008. More details can be found on the UCI Machine Learning Repository <a class="reference external" href="https://archive.ics.uci.edu/ml/datasets/diabetes+130-us+hospitals+for+years+1999-2008">website</a>.</p>
+<div class="section" id="Step-1:-Importing-Depedencies">
+<h2>Step 1: Importing Depedencies<a class="headerlink" href="#Step-1:-Importing-Depedencies" title="Permalink to this headline">¶</a></h2>
+<p>Before getting started, we’ll need to import several packages. These include:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/">pandas</a> - a package for performing data analysis and manipulation</p></li>
+<li><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/">numpy</a> - a package for scientific computing</p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/">matplotlib</a> - the standard Python plotting package</p></li>
+<li><p><a class="reference external" href="https://seaborn.pydata.org/">seaborn</a> - a dataframe-centric visualization package that is built off of <strong>matplotlib</strong></p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>import os
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/usr/local/lib/python3.7/site-packages/matplotlib/__init__.py:886: MatplotlibDeprecationWarning:
+examples.directory is deprecated; in the future, examples will be found relative to the &#39;datapath&#39; directory.
+  &#34;found relative to the &#39;datapath&#39; directory.&#34;.format(key))
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Step-2:-Load-the-Data">
+<h2>Step 2: Load the Data<a class="headerlink" href="#Step-2:-Load-the-Data" title="Permalink to this headline">¶</a></h2>
+<p>We will be loading in the data as a pandas DataFrame.</p>
+<p>The data is stored in a csv file. We’ll import this data using a pandas method called <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>data = pd.read_csv(&quot;patient_data.csv&quot;)
+</pre></div>
+</div>
+</div>
+<p>To get a glimpse of our data, we can use either the <code class="docutils literal notranslate"><span class="pre">head()</span></code>, which shows the first 5 rows of the dataframe.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>data.head()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>encounter_id</th>
+      <th>patient_nbr</th>
+      <th>race</th>
+      <th>gender</th>
+      <th>age</th>
+      <th>weight</th>
+      <th>admission_type_id</th>
+      <th>admission_source_id</th>
+      <th>time_in_hospital</th>
+      <th>medical_specialty</th>
+      <th>...</th>
+      <th>examide</th>
+      <th>citoglipton</th>
+      <th>insulin</th>
+      <th>glyburide-metformin</th>
+      <th>glipizide-metformin</th>
+      <th>glimepiride-pioglitazone</th>
+      <th>metformin-rosiglitazone</th>
+      <th>metformin-pioglitazone</th>
+      <th>diabetesMed</th>
+      <th>readmitted</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2278392</td>
+      <td>8222157</td>
+      <td>Caucasian</td>
+      <td>Female</td>
+      <td>[0-10)</td>
+      <td>NaN</td>
+      <td>6</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Pediatrics-Endocrinology</td>
+      <td>...</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>NO</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>149190</td>
+      <td>55629189</td>
+      <td>Caucasian</td>
+      <td>Female</td>
+      <td>[10-20)</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>7</td>
+      <td>3</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Up</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>&gt;30</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>64410</td>
+      <td>86047875</td>
+      <td>AfricanAmerican</td>
+      <td>Female</td>
+      <td>[20-30)</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>7</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>NO</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>500364</td>
+      <td>82442376</td>
+      <td>Caucasian</td>
+      <td>Male</td>
+      <td>[30-40)</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>7</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Up</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>NO</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>16680</td>
+      <td>42519267</td>
+      <td>Caucasian</td>
+      <td>Male</td>
+      <td>[40-50)</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>7</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Steady</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>NO</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 44 columns</p>
+</div></div>
+</div>
+<div class="section" id="How-many-rows-and-columns-are-in-our-dataset?">
+<h3>How many rows and columns are in our dataset?<a class="headerlink" href="#How-many-rows-and-columns-are-in-our-dataset?" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>data.shape
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>(101766, 44)
+</pre></div>
+</div>
+</div>
+<p>Our dataset has 101,766 rows and 45 columns. Each row represents a unique hospital admission. Columns represent patient demographics, medical details, and admission-specific information such as length of stay (<code class="docutils literal notranslate"><span class="pre">time_in_hospital</span></code>). We can see a list of all columns by applying <code class="docutils literal notranslate"><span class="pre">.columns</span></code> to our dataframe.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>print(f&quot;Columns: {data.columns.tolist()}&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Columns: [&#39;encounter_id&#39;, &#39;patient_nbr&#39;, &#39;race&#39;, &#39;gender&#39;, &#39;age&#39;, &#39;weight&#39;, &#39;admission_type_id&#39;, &#39;admission_source_id&#39;, &#39;time_in_hospital&#39;, &#39;medical_specialty&#39;, &#39;num_lab_procedures&#39;, &#39;num_procedures&#39;, &#39;num_medications&#39;, &#39;number_outpatient&#39;, &#39;number_emergency&#39;, &#39;number_inpatient&#39;, &#39;number_diagnoses&#39;, &#39;max_glu_serum&#39;, &#39;A1Cresult&#39;, &#39;metformin&#39;, &#39;repaglinide&#39;, &#39;nateglinide&#39;, &#39;chlorpropamide&#39;, &#39;glimepiride&#39;, &#39;acetohexamide&#39;, &#39;glipizide&#39;, &#39;glyburide&#39;, &#39;tolbutamide&#39;, &#39;pioglitazone&#39;, &#39;rosiglitazone&#39;, &#39;acarbose&#39;, &#39;miglitol&#39;, &#39;troglitazone&#39;, &#39;tolazamide&#39;, &#39;examide&#39;, &#39;citoglipton&#39;, &#39;insulin&#39;, &#39;glyburide-metformin&#39;, &#39;glipizide-metformin&#39;, &#39;glimepiride-pioglitazone&#39;, &#39;metformin-rosiglitazone&#39;, &#39;metformin-pioglitazone&#39;, &#39;diabetesMed&#39;, &#39;readmitted&#39;]
+</pre></div></div>
+</div>
+<p>Looking at the columns, we can see that a large proportion are medication names. Let’s store these column names as a separate list, which we’ll get back to in a bit.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>medications = [&#39;metformin&#39;, &#39;repaglinide&#39;, &#39;nateglinide&#39;, &#39;chlorpropamide&#39;, &#39;glimepiride&#39;,
+    &#39;acetohexamide&#39;, &#39;glipizide&#39;, &#39;glyburide&#39;, &#39;tolbutamide&#39;, &#39;pioglitazone&#39;,
+    &#39;rosiglitazone&#39;, &#39;acarbose&#39;, &#39;miglitol&#39;, &#39;troglitazone&#39;, &#39;tolazamide&#39;,
+    &#39;examide&#39;, &#39;citoglipton&#39;, &#39;insulin&#39;, &#39;glyburide-metformin&#39;, &#39;glipizide-metformin&#39;,
+    &#39;glimepiride-pioglitazone&#39;, &#39;metformin-rosiglitazone&#39;, &#39;metformin-pioglitazone&#39;]
+
+print(f&quot;There are {len(medications)} medications represented as columns in the dataset.&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+There are 23 medications represented as columns in the dataset.
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="How-many-hospital-admissions-and-unique-patients-are-in-the-dataset?">
+<h3>How many hospital admissions and unique patients are in the dataset?<a class="headerlink" href="#How-many-hospital-admissions-and-unique-patients-are-in-the-dataset?" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>n_admissions = data[&#39;encounter_id&#39;].nunique()
+n_patients = data[&#39;patient_nbr&#39;].nunique()
+
+print(f&quot;Number of hospital admissions: {n_admissions:,}&quot;)
+print(f&quot;Number of unique patients: {n_patients:,}&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Number of hospital admissions: 101,766
+Number of unique patients: 71,518
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="How-many-patients-have-had-more-than-one-hospital-admission?">
+<h3>How many patients have had more than one hospital admission?<a class="headerlink" href="#How-many-patients-have-had-more-than-one-hospital-admission?" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>admissions_per_patient = data[&#39;patient_nbr&#39;].value_counts().reset_index()
+admissions_per_patient.columns = [&#39;patient_nbr&#39;, &#39;count&#39;]
+multiple_admissions = admissions_per_patient[admissions_per_patient[&#39;count&#39;] &gt; 1]
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>print(f&quot;Proportion of patients that have multiple admissions: {multiple_admissions[&#39;patient_nbr&#39;].nunique()/n_patients:.2%}&quot;)
+print(f&quot;Maximum number of admissions for a given patient: {multiple_admissions[&#39;count&#39;].max()}&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Proportion of patients that have multiple admissions: 23.45%
+Maximum number of admissions for a given patient: 40
+</pre></div></div>
+</div>
+<p>Almost one-quarter of the patients have had more than 1 hosptial admission. The maximum number of hospital admissions for a given patient is 40.</p>
+</div>
+</div>
+<div class="section" id="Step-3:-Data-Cleaning">
+<h2>Step 3: Data Cleaning<a class="headerlink" href="#Step-3:-Data-Cleaning" title="Permalink to this headline">¶</a></h2>
+<p>Data cleaning is a crucial step in the machine learning pipeline, and typically requires the most time and effort.</p>
+<p>There are 2 columns in our dataset which represent ID’s that link to descriptors in separate files:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">admission_type_id</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">admission_source_id</span></code></p></li>
+</ol>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>data[[&#39;admission_type_id&#39;, &#39;admission_source_id&#39;]].head()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>admission_type_id</th>
+      <th>admission_source_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>6</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>7</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>We’ll update these 2 columns so that they represent the descriptor name instead of simply the id number.</p>
+<p>Our mapper files are located in <code class="docutils literal notranslate"><span class="pre">data/id_mappers/</span></code> as shown below.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>import glob
+
+glob.glob(&#39;data/id_mappers/*.csv&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>[&#39;data/id_mappers/admission_source_id.csv&#39;,
+ &#39;data/id_mappers/admission_type_id.csv&#39;]
+</pre></div>
+</div>
+</div>
+<div class="section" id="Decoding-admission_type_id">
+<h3>Decoding <code class="docutils literal notranslate"><span class="pre">admission_type_id</span></code><a class="headerlink" href="#Decoding-admission_type_id" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>admission_type = pd.read_csv(&quot;data/id_mappers/admission_type_id.csv&quot;)
+admission_type
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>admission_type_id</th>
+      <th>description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Emergency</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Urgent</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Elective</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Newborn</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Not Available</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>6</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>7</td>
+      <td>Trauma Center</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>8</td>
+      <td>Not Mapped</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>We can see that the admission type mapper file has 3 values which represent missing data:</p>
+<ol class="arabic simple">
+<li><p>NaN</p></li>
+<li><p>‘Not Mapped’</p></li>
+<li><p>‘Not Available’</p></li>
+</ol>
+<p>Let’s collapse these into one category that represents a missing value.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>missing_values = [&#39;nan&#39;, &#39;Not Available&#39;, &#39;Not Mapped&#39;]
+admission_type[&#39;description&#39;] = admission_type[&#39;description&#39;].replace(missing_values, np.nan)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>admission_type_mapper = admission_type.to_dict()[&#39;description&#39;]
+admission_type_mapper
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>{0: &#39;Emergency&#39;,
+ 1: &#39;Urgent&#39;,
+ 2: &#39;Elective&#39;,
+ 3: &#39;Newborn&#39;,
+ 4: nan,
+ 5: nan,
+ 6: &#39;Trauma Center&#39;,
+ 7: nan}
+</pre></div>
+</div>
+</div>
+<p>Now that we have a “clean” mapper, we can apply it to our dataset. We can use <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.map.html">pandas.Series.map</a> to map <code class="docutils literal notranslate"><span class="pre">admission_type_id</span></code> values in our original dataframe to the descriptors in our <code class="docutils literal notranslate"><span class="pre">admission_type_mapper</span></code> dictionary.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>data[&#39;admission_type&#39;] = data[&#39;admission_type_id&#39;].map(admission_type_mapper)
+data[[&#39;admission_type&#39;]].head()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>admission_type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Trauma Center</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Urgent</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Urgent</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Urgent</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Urgent</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</div>
+<div class="section" id="Decoding-admission_source_id">
+<h3>Decoding <code class="docutils literal notranslate"><span class="pre">admission_source_id</span></code><a class="headerlink" href="#Decoding-admission_source_id" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>admission_source = pd.read_csv(&quot;data/id_mappers/admission_source_id.csv&quot;)
+admission_source.shape
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>(25, 2)
+</pre></div>
+</div>
+</div>
+<p>There are significantly more ID’s represented in the <code class="docutils literal notranslate"><span class="pre">admission_source_id.csv</span></code> file as compared to <code class="docutils literal notranslate"><span class="pre">admission_type_id.csv</span></code>. Let’s take a look at the list of all descriptions.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>admission_source[&#39;description&#39;].tolist()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>[&#39;Physician Referral&#39;,
+ &#39;Clinic Referral&#39;,
+ &#39;HMO Referral&#39;,
+ &#39;Transfer from a hospital&#39;,
+ &#39;Transfer from a Skilled Nursing Facility (SNF)&#39;,
+ &#39;Transfer from another health care facility&#39;,
+ &#39;Emergency Room&#39;,
+ &#39;Court/Law Enforcement&#39;,
+ &#39;Not Available&#39;,
+ &#39;Transfer from critial access hospital&#39;,
+ &#39;Normal Delivery&#39;,
+ &#39;Premature Delivery&#39;,
+ &#39;Sick Baby&#39;,
+ &#39;Extramural Birth&#39;,
+ &#39;Not Available&#39;,
+ nan,
+ &#39;Transfer From Another Home Health Agency&#39;,
+ &#39;Readmission to Same Home Health Agency&#39;,
+ &#39;Not Mapped&#39;,
+ &#39;Unknown/Invalid&#39;,
+ &#39;Transfer from hospital inpt/same fac reslt in a sep claim&#39;,
+ &#39;Born inside this hospital&#39;,
+ &#39;Born outside this hospital&#39;,
+ &#39;Transfer from Ambulatory Surgery Center&#39;,
+ &#39;Transfer from Hospice&#39;]
+</pre></div>
+</div>
+</div>
+<p>Here, we can see that there are 4 missing values:</p>
+<ul class="simple">
+<li><p>‘Not Available’</p></li>
+<li><p>‘Unknown/Invalid’</p></li>
+<li><p>‘Not Mapped’</p></li>
+<li><p>‘nan’</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>missing_values = [&#39;nan&#39;, &#39;Not Available&#39;, &#39;Not Mapped&#39;, &#39;Unknown/Invalid&#39;]
+admission_source[&#39;description&#39;] = admission_source[&#39;description&#39;].replace(missing_values, np.nan)
+</pre></div>
+</div>
+</div>
+<p>There are also a couple of overlapping themes in admission source descriptions. For example, <code class="docutils literal notranslate"><span class="pre">'Physician</span> <span class="pre">Referral'</span></code>, <code class="docutils literal notranslate"><span class="pre">'Clinic</span> <span class="pre">Referral'</span></code>, and <code class="docutils literal notranslate"><span class="pre">'HMO</span> <span class="pre">Referral'</span></code> can be grouped as <code class="docutils literal notranslate"><span class="pre">Referral</span></code>. Let’s do this now using pandas’ replace() method.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>referrals = [&#39;Physician Referral&#39;, &#39;Clinic Referral&#39;, &#39;HMO Referral&#39;]
+admission_source[&#39;description&#39;] = admission_source[&#39;description&#39;].replace(referrals, &#39;Referral&#39;)
+</pre></div>
+</div>
+</div>
+<p>We can also group transfer-related admission sources into a single description called <code class="docutils literal notranslate"><span class="pre">Transfer</span></code>. There are 8 admission sources that include <code class="docutils literal notranslate"><span class="pre">'Transfer'</span></code>. Instead of going through the list and selecting these manually, we’re going to use pandas.Series’s <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.str.contains.html">contains()</a> method to filter out admission source descriptions that contain the string <code class="docutils literal notranslate"><span class="pre">'Transfer'</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>transfers = admission_source[admission_source[&#39;description&#39;].str.contains(&#39;Transfer&#39;).fillna(False)]
+transfers
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>admission_source_id</th>
+      <th>description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Transfer from a hospital</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Transfer from a Skilled Nursing Facility (SNF)</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>6</td>
+      <td>Transfer from another health care facility</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>10</td>
+      <td>Transfer from critial access hospital</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>18</td>
+      <td>Transfer From Another Home Health Agency</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>22</td>
+      <td>Transfer from hospital inpt/same fac reslt in ...</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>25</td>
+      <td>Transfer from Ambulatory Surgery Center</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>26</td>
+      <td>Transfer from Hospice</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>Let’s generate a list of all transfer-related admission source descriptions.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>transfers = transfers[&#39;description&#39;].tolist()
+transfers
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>[&#39;Transfer from a hospital&#39;,
+ &#39;Transfer from a Skilled Nursing Facility (SNF)&#39;,
+ &#39;Transfer from another health care facility&#39;,
+ &#39;Transfer from critial access hospital&#39;,
+ &#39;Transfer From Another Home Health Agency&#39;,
+ &#39;Transfer from hospital inpt/same fac reslt in a sep claim&#39;,
+ &#39;Transfer from Ambulatory Surgery Center&#39;,
+ &#39;Transfer from Hospice&#39;]
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>admission_source[&#39;description&#39;] = admission_source[&#39;description&#39;].replace(transfers, &#39;Transfer&#39;)
+</pre></div>
+</div>
+</div>
+<p>Let’s now convert this into a dictionary.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>admission_source_mapper = admission_source.to_dict()[&#39;description&#39;]
+admission_source_mapper
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>{0: &#39;Referral&#39;,
+ 1: &#39;Referral&#39;,
+ 2: &#39;Referral&#39;,
+ 3: &#39;Transfer&#39;,
+ 4: &#39;Transfer&#39;,
+ 5: &#39;Transfer&#39;,
+ 6: &#39;Emergency Room&#39;,
+ 7: &#39;Court/Law Enforcement&#39;,
+ 8: nan,
+ 9: &#39;Transfer&#39;,
+ 10: &#39;Normal Delivery&#39;,
+ 11: &#39;Premature Delivery&#39;,
+ 12: &#39;Sick Baby&#39;,
+ 13: &#39;Extramural Birth&#39;,
+ 14: nan,
+ 15: nan,
+ 16: &#39;Transfer&#39;,
+ 17: &#39;Readmission to Same Home Health Agency&#39;,
+ 18: nan,
+ 19: nan,
+ 20: &#39;Transfer&#39;,
+ 21: &#39;Born inside this hospital&#39;,
+ 22: &#39;Born outside this hospital&#39;,
+ 23: &#39;Transfer&#39;,
+ 24: &#39;Transfer&#39;}
+</pre></div>
+</div>
+</div>
+<p>Now we can apply this mapper to the admission_source_id column in our original dataset.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>data[&#39;admission_source&#39;] = data[&#39;admission_source_id&#39;].map(admission_source_mapper)
+data[[&#39;admission_source&#39;]].head()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>admission_source</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Referral</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Court/Law Enforcement</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Court/Law Enforcement</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Court/Law Enforcement</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Court/Law Enforcement</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="section" id="ii)-Converting-Medication-Features-From-Categorical-to-Boolean">
+<h4>ii) Converting Medication Features From Categorical to Boolean<a class="headerlink" href="#ii)-Converting-Medication-Features-From-Categorical-to-Boolean" title="Permalink to this headline">¶</a></h4>
+<p>Remember that list of medications we created when we loaded in the data in Step 1?</p>
+<p>Remember that list of medications we created when we loaded in the data in Step 1? We’re going revisit this and convert these features to boolean variables.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>data[medications[0]].value_counts()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>No        81778
+Steady    18346
+Up         1067
+Down        575
+Name: metformin, dtype: int64
+</pre></div>
+</div>
+</div>
+<p>Medication columns are currently categorical datatypes that have several possible categories including:</p>
+<ul class="simple">
+<li><p>“No” (not taking the medication)</p></li>
+<li><p>“Up” (increased medication dose)</p></li>
+<li><p>“Down” (decrease medication dose)</p></li>
+<li><p>“Steady” (no changes in dose)</p></li>
+</ul>
+<p>To keep things simple, we’ll update the column to “0” (not taking the medication) to “1” (taking the medication). We’re losing out on information regarding their dose change, but it’s a compromise we’re willing to make to simplify our dataset.</p>
+<p>We can use <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.where.html">numpy.where</a> to</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>for m in medications:
+    data[f&#39;{m}_bool&#39;] = np.where(data[m]==&#39;No&#39;, 0, 1)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>counts = []
+
+for m in medications:
+    counts.append(data[f&#39;{m}_bool&#39;].sum()/len(data))
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>medication_counts = pd.DataFrame({&#39;meds&#39;: medications, &#39;counts&#39;:counts})
+
+medication_counts
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>meds</th>
+      <th>counts</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>metformin</td>
+      <td>0.196411</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>repaglinide</td>
+      <td>0.015123</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>nateglinide</td>
+      <td>0.006908</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>chlorpropamide</td>
+      <td>0.000845</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>glimepiride</td>
+      <td>0.051009</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>acetohexamide</td>
+      <td>0.000010</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>glipizide</td>
+      <td>0.124659</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>glyburide</td>
+      <td>0.104652</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>tolbutamide</td>
+      <td>0.000226</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>pioglitazone</td>
+      <td>0.072008</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>rosiglitazone</td>
+      <td>0.062545</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>acarbose</td>
+      <td>0.003027</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>miglitol</td>
+      <td>0.000373</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>troglitazone</td>
+      <td>0.000029</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>tolazamide</td>
+      <td>0.000383</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>examide</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>citoglipton</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>insulin</td>
+      <td>0.534393</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>glyburide-metformin</td>
+      <td>0.006937</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>glipizide-metformin</td>
+      <td>0.000128</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>glimepiride-pioglitazone</td>
+      <td>0.000010</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>metformin-rosiglitazone</td>
+      <td>0.000020</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>metformin-pioglitazone</td>
+      <td>0.000010</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from utils import get_mesh_from_drug_name
+
+from tqdm import tqdm
+
+med_mesh = dict()
+for m in medications:
+    med_mesh[m] = get_mesh_from_drug_name(m)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>med_mesh
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>{&#39;metformin&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;repaglinide&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;nateglinide&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;chlorpropamide&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;glimepiride&#39;: [&#39;Anti-Arrhythmia Agents&#39;,
+  &#39;Immunosuppressive Agents&#39;,
+  &#39;Hypoglycemic Agents&#39;],
+ &#39;acetohexamide&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;glipizide&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;glyburide&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;tolbutamide&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;pioglitazone&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;rosiglitazone&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;acarbose&#39;: [&#39;Glycoside Hydrolase Inhibitors&#39;],
+ &#39;miglitol&#39;: [&#39;Enzyme Inhibitors&#39;,
+  &#39;Hypoglycemic Agents&#39;,
+  &#39;Glycoside Hydrolase Inhibitors&#39;],
+ &#39;troglitazone&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;tolazamide&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;examide&#39;: [],
+ &#39;citoglipton&#39;: [],
+ &#39;insulin&#39;: [],
+ &#39;glyburide-metformin&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;glipizide-metformin&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;glimepiride-pioglitazone&#39;: [&#39;Anti-Arrhythmia Agents&#39;,
+  &#39;Immunosuppressive Agents&#39;,
+  &#39;Hypoglycemic Agents&#39;],
+ &#39;metformin-rosiglitazone&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;metformin-pioglitazone&#39;: [&#39;Hypoglycemic Agents&#39;]}
+</pre></div>
+</div>
+</div>
+<p>MeSH terms are a type of “tag” that describes a medical term. We used RxNav’s API to further investigate which MeSH terms are assocaited with our list of medications. The results show that all medications have a single MeSH term, <a class="reference external" href="https://en.wikipedia.org/wiki/Anti-diabetic_medication">hypoglycemic agent</a>, which means it’s an anti-diabetic medication.</p>
+</div>
+<div class="section" id="iii)-Creating-a-Boolean-Target-Variable">
+<h4>iii) Creating a Boolean Target Variable<a class="headerlink" href="#iii)-Creating-a-Boolean-Target-Variable" title="Permalink to this headline">¶</a></h4>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>data[&#39;readmitted&#39;].value_counts()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>NO     54864
+&gt;30    35545
+&lt;30    11357
+Name: readmitted, dtype: int64
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>data[&#39;readmitted_bool&#39;] = np.where(data[&#39;readmitted&#39;]==&#39;NO&#39;, 0, 1)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>data[&#39;readmitted_bool&#39;].value_counts()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>0    54864
+1    46902
+Name: readmitted_bool, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="Step-4:-Data-Exploration-and-Visualization">
+<h2>Step 4: Data Exploration and Visualization<a class="headerlink" href="#Step-4:-Data-Exploration-and-Visualization" title="Permalink to this headline">¶</a></h2>
+<p>To get a better sense of the missing values in our data, let’s visualize it using <a class="reference external" href="https://github.com/ResidentMario/missingno">missingno</a>’s “nullity” matrix.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>import missingno as msno
+
+msno.matrix(data)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x102ff1b70&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_walkthrough_65_1.png" src="../_images/notebooks_walkthrough_65_1.png" />
+</div>
+</div>
+<p>The data-dense columns are fully black, while the sparse columns (with missing values) have a mixture of white and black.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>plt.figure(figsize=(14,4))
+plt.subplot(1,2,1)
+sns.countplot(x=&#39;age&#39;, data=data, palette=&#39;viridis&#39;)
+plt.title(&quot;Distribution of Age&quot;)
+
+plt.subplot(1,2,2)
+sns.countplot(data[&#39;gender&#39;], palette=&#39;viridis&#39;)
+plt.title(&quot;Distribution of Gender&quot;)
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_walkthrough_68_0.png" src="../_images/notebooks_walkthrough_68_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>data[&#39;gender&#39;].value_counts(normalize=True)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Female    0.537602
+Male      0.462398
+Name: gender, dtype: float64
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>plt.figure(figsize=(8,6))
+sns.countplot(data[&#39;time_in_hospital&#39;], palette=&#39;viridis&#39;)
+plt.xlabel(&quot;time in hospital (days)&quot;)
+plt.title(&quot;Length of Hospital Stay&quot;)
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_walkthrough_72_0.png" src="../_images/notebooks_walkthrough_72_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>print(f&quot;Mean time in hospital: {data[&#39;time_in_hospital&#39;].mean():.2f}&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Mean time in hospital: 4.40
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>plt.figure(figsize=(14,5))
+
+plt.subplot(1,2,1)
+sns.kdeplot(data[&#39;num_medications&#39;], shade=True)
+plt.title(f&quot;Number of Medications, mean: {data[&#39;num_medications&#39;].mean():.2f}&quot;)
+
+plt.subplot(1,2,2)
+sns.kdeplot(data[&#39;num_lab_procedures&#39;], shade=True)
+plt.title(f&quot;Number of Lab Procedures, mean: {data[&#39;num_lab_procedures&#39;].mean():.2f}&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/usr/local/lib/python3.7/site-packages/scipy/stats/stats.py:1713: FutureWarning: Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of `arr[seq]`. In the future this will be interpreted as an array index, `arr[np.array(seq)]`, which will result either in an error or a different result.
+  return np.add.reduce(sorted[indexer] * weights, axis=axis) / sumval
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Text(0.5, 1.0, &#39;Number of Lab Procedures, mean: 43.10&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_walkthrough_75_2.png" src="../_images/notebooks_walkthrough_75_2.png" />
+</div>
+</div>
+<p>Medical specialty of attending physician.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>medical_specialties = data[&#39;medical_specialty&#39;].value_counts().reset_index()
+medical_specialties.columns = [&#39;specialty&#39;, &#39;count&#39;]
+medical_specialties[&#39;prevalence&#39;] = medical_specialties[&#39;count&#39;]/len(data)
+
+medical_specialties.head(10)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>specialty</th>
+      <th>count</th>
+      <th>prevalence</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>InternalMedicine</td>
+      <td>14635</td>
+      <td>0.143810</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Emergency/Trauma</td>
+      <td>7565</td>
+      <td>0.074337</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Family/GeneralPractice</td>
+      <td>7440</td>
+      <td>0.073109</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Cardiology</td>
+      <td>5352</td>
+      <td>0.052591</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Surgery-General</td>
+      <td>3099</td>
+      <td>0.030452</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Nephrology</td>
+      <td>1613</td>
+      <td>0.015850</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Orthopedics</td>
+      <td>1400</td>
+      <td>0.013757</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Orthopedics-Reconstructive</td>
+      <td>1233</td>
+      <td>0.012116</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Radiologist</td>
+      <td>1140</td>
+      <td>0.011202</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Pulmonology</td>
+      <td>871</td>
+      <td>0.008559</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>data[medications[3]].value_counts()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>No        101680
+Steady        79
+Up             6
+Down           1
+Name: chlorpropamide, dtype: int64
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>data[&#39;diabetesMed&#39;] = data[&#39;diabetesMed&#39;].map({&#39;Yes&#39;: 1, &#39;No&#39;:0})
+data[&#39;diabetesMed&#39;].value_counts()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>1    78363
+0    23403
+Name: diabetesMed, dtype: int64
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>data[&#39;A1Cresult&#39;].value_counts()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&gt;8      8216
+Norm    4990
+&gt;7      3812
+Name: A1Cresult, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Step-5:-Feature-Selection">
+<h2>Step 5: Feature Selection<a class="headerlink" href="#Step-5:-Feature-Selection" title="Permalink to this headline">¶</a></h2>
+<p>Talk about the importance of feature selection / feature engineering.</p>
+</div>
+<div class="section" id="Step-6:-Building-the-Binary-Classification-ML-Model">
+<h2>Step 6: Building the Binary Classification ML Model<a class="headerlink" href="#Step-6:-Building-the-Binary-Classification-ML-Model" title="Permalink to this headline">¶</a></h2>
+<p>No Free Lunch Theorem!!!</p>
+<ul class="simple">
+<li><p>Support Vector Machine</p></li>
+<li><p>Random Forest Classifier</p></li>
+<li><p>K-Neighbours</p></li>
+<li><p>Logistic Regression</p></li>
+<li><p>AdaBoost Classifier</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to Intro to Data Science’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Jill Cates
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
