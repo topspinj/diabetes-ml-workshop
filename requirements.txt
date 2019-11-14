@@ -3,3 +3,5 @@ numpy
 matplotlib
 seaborn
 tqdm
+sphinx
+nbsphinx
