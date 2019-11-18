@@ -1,7 +1,25 @@
-# Column Descriptions
+# Getting Started
+
+This is an introductory workshop that focuses on data pre-processing and machine learning basics. Participants should know how to use Python and have some familiarity with pandas, numpy, and scikit-learn. 
+
+### Environment Setup
+
+There are two options for setting up your environment:
+
+1. On your local machine 
+2. On the cloud using [Google Colab]()
+
+If you're relatively new to Python and programming, we highly recommend starting with the cloud option which doesn't require any setup. The only requirement is a Gmail account. 
+
+If you decide to run the tutorial on your local machine, make sure that your environment is running on Python 3.6+ and has Jupyter notebook installed. You will need to install several pacakges which can be found in [requirements.txt](https://github.com/topspinj/diabetes-ml-workshop/blob/master/requirements.txt).
+
+```
+pip install -r requirements.txt
+```
+
+### Dataset
 
 A list of features in the dataset and a description from each one. Adapted from the [original data source](https://www.hindawi.com/journals/bmri/2014/781670/tab1/). 
-
 
 |column|description|
 |------|-----------|
