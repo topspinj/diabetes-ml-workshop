@@ -39,6 +39,8 @@ Environment Setup
 - Option 1: Running Jupyter notebook locally
 - Option 2: Running Jupyter notebook via `Google Colab <https://colab.research.google.com/>`_ (recommended)
 
+For more details on how to get started, check out the 'Getting Started' section. All code is stored
+on Github (see repo `healthcare-ml-workshop <https://github.com/topspinj/healthcare-ml-workshop>`_).  
 
 .. toctree::
    :maxdepth: 1
