@@ -7,7 +7,7 @@ This is an introductory workshop that focuses on data pre-processing and machine
 There are two options for setting up your environment:
 
 1. On your local machine 
-2. On the cloud using [Google Colab]()
+2. On the cloud using [Google Colab](https://colab.research.google.com/drive/1LBth_Yk2jAyegg-elx9P7ljrYhojhe0z#scrollTo=VY2r-0i3DtbR)
 
 If you're relatively new to Python and programming, we highly recommend starting with the cloud option which doesn't require any setup. The only requirement is a Gmail account. 
 
@@ -19,7 +19,7 @@ pip install -r requirements.txt
 
 ### Dataset
 
-A list of features in the dataset and a description from each one. Adapted from the [original data source](https://www.hindawi.com/journals/bmri/2014/781670/tab1/). 
+We'll be working with a dataset that consists of 130 hospitals in the United States from 1999 to 2008. It represents 101,766 hospital admissions for 71,518 patients. The table below lists the features in our dataset and a description for each one. It's adapted from the [original data source](https://www.hindawi.com/journals/bmri/2014/781670/tab1/) which was published in 2014. 
 
 |column|description|
 |------|-----------|

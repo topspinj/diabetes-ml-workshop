@@ -19,6 +19,7 @@ sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath('../../'))
 
 import nbsphinx
+import sphinx_markdown_tables
 import sphinx_rtd_theme
 # -- Project information -----------------------------------------------------
 
@@ -43,7 +44,8 @@ release = u'1.0'
 # ones.
 extensions = [
     'sphinx.ext.githubpages',
-    'nbsphinx'
+    'nbsphinx',
+    'sphinx_markdown_tables'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
