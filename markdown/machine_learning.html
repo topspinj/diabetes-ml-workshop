@@ -1,0 +1,281 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Machine Learning Basics &mdash; TMLS Workshop 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Getting Started" href="getting_started.html" />
+    <link rel="prev" title="TMLS Data Science Workshop" href="../index.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> TMLS Workshop
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Glossary of Terms:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Machine Learning Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#supervised-learning">Supervised Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#binary-classification">Binary Classification</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Workshop Walkthrough:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/walkthrough.html">Predicting Hospital Readmission with a Binary Classification Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/walkthrough.html#Data-Preprocessing">Data Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/walkthrough.html#Data-Modelling">Data Modelling</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TMLS Workshop</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Machine Learning Basics</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/markdown/machine_learning.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="machine-learning-basics">
+<span id="machine-learning-basics"></span><h1>Machine Learning Basics<a class="headerlink" href="#machine-learning-basics" title="Permalink to this headline">¶</a></h1>
+<p>Machine learning is the process of “building a mathematical model based on sample data, known as <em>training data</em>, in order to make predictions or decisions without being explicitly programmed to perform the task” (<a class="reference external" href="https://www.springer.com/gp/book/9780387310732">Bishop 2006</a>).</p>
+<p>Machine learning models use statistics to find patterns in data which can consist of tabular information, text, images, etc.</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/HcqpanDadyQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><p>Machine learning can be broken down into three paradigms:</p>
+<ol class="simple">
+<li><strong>Supervised learning:</strong> Model has a label which is to be predicted from a set of predictors. For example, predicting whether a person will get sepsis based on their vital signs.</li>
+<li><strong>Unsupervised learning:</strong> Model looks for any patterns it can find and clusters data points into different groups. There is no label to predict. For example, group patients in the intensive care unit based on similar traits and past medical history.</li>
+<li><strong>Reinforcement learning:</strong> Model learns by trial and error in order to achieve a certain objective. For example, finding the optimal treatment regime for a cancer treatment.</li>
+</ol>
+<p>In this workshop, we will be focusing on <em>supervised learning</em>.</p>
+</div>
+<div class="section" id="supervised-learning">
+<span id="supervised-learning"></span><h1>Supervised Learning<a class="headerlink" href="#supervised-learning" title="Permalink to this headline">¶</a></h1>
+<p>In supervised learning, there are two components:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">X</span></code>: a set of predictors or “features”</li>
+<li><code class="docutils literal notranslate"><span class="pre">y</span></code>: a target variable or label</li>
+</ul>
+<p>The goal of supervised learning is to learn how to predict a label (<code class="docutils literal notranslate"><span class="pre">y</span></code>) based on a set of predictors (<code class="docutils literal notranslate"><span class="pre">X</span></code>). The training data needs to be labelled so that your model can look for patterns in <code class="docutils literal notranslate"><span class="pre">X</span></code> that correspond to <code class="docutils literal notranslate"><span class="pre">y</span></code>. When you pass in unlabelled data, the trained model will make a prediction of each data point’s label by applying the patterns it learned from the training data.</p>
+<p><img src="https://s3.us-east-2.amazonaws.com/hidden.layers.assets/supervised_learning.png"></p>
+<p>The two main types of supervised learning are:</p>
+<ol class="simple">
+<li><strong>Classification:</strong> Label is categorical. For example, predicting what type of surgery a patient will need based on their presenting illness.</li>
+<li><strong>Regression:</strong> Label is numerical. For example, predicting the cost of a hospital stay.</li>
+</ol>
+</div>
+<div class="section" id="binary-classification">
+<span id="binary-classification"></span><h1>Binary Classification<a class="headerlink" href="#binary-classification" title="Permalink to this headline">¶</a></h1>
+<p>Classification is a type of supervised learning. The goal is to predict categorical class labels (i.e., target variable) of new samples based on past observations. When our label is binary (0 or 1), we call it a binary classification problem. A classic example of binary classification is e-mail spam detection where our model is trained to determine whether an email is spam (1) or not spam (0). In our case study example, we’ll be building a model that predicts whether a patient will be readmitted to the hospital (1) or not readmitted (0) based on medical record data.</p>
+<p>When building a binary classification model, there are a wide selection of machine learning models to choose from:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">Random Forest Classification</a></li>
+<li><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html">Logistic Regression</a></li>
+<li><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.discriminant_analysis.LinearDiscriminantAnalysis.html#sklearn.discriminant_analysis.LinearDiscriminantAnalysis">Linear Discriminant Analysis</a></li>
+<li><a class="reference external" href="https://scikit-learn.org/stable/modules/svm.html">Support Vector Machines (SVM)</a></li>
+<li><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html">Gaussian Naive Bayes</a></li>
+<li><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html#sklearn.neighbors.KNeighborsClassifier">k-Nearest Neighbours</a></li>
+</ul>
+<p>Which model works best? This depends entirely on your data. The <a class="reference external" href="https://en.wikipedia.org/wiki/No_free_lunch_in_search_and_optimization">No Free Lunch Theorem</a> states:</p>
+<blockquote>
+<div><em>…all algorithms that search for an extremum of a cost function perform exactly the same, when averaged over all possible cost functions.</em></div></blockquote>
+<p>In other words, <code class="docutils literal notranslate"><span class="pre">model</span> <span class="pre">A</span></code> might outperform <code class="docutils literal notranslate"><span class="pre">model</span> <span class="pre">B</span></code> on some datasets, but model B might be better for other sets of data.</p>
+<p><img src="https://s3.us-east-2.amazonaws.com/hidden.layers.assets/no_free_lunch.png" width='50%'></p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="getting_started.html" class="btn btn-neutral float-right" title="Getting Started" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../index.html" class="btn btn-neutral" title="TMLS Data Science Workshop" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Jill Cates
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,285 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Getting Started &mdash; TMLS Workshop 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Predicting Hospital Readmission with a Binary Classification Model" href="../notebooks/walkthrough.html" />
+    <link rel="prev" title="Machine Learning Basics" href="machine_learning.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> TMLS Workshop
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Glossary of Terms:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="machine_learning.html">Machine Learning Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="machine_learning.html#supervised-learning">Supervised Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="machine_learning.html#binary-classification">Binary Classification</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Workshop Walkthrough:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#environment-setup">Environment Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dataset">Dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/walkthrough.html">Predicting Hospital Readmission with a Binary Classification Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/walkthrough.html#Data-Preprocessing">Data Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/walkthrough.html#Data-Modelling">Data Modelling</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TMLS Workshop</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Getting Started</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/markdown/getting_started.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="getting-started">
+<span id="getting-started"></span><h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p>This is an introductory workshop that focuses on data pre-processing and machine learning basics. Participants should know how to use Python and have some familiarity with pandas, numpy, and scikit-learn.</p>
+<div class="section" id="environment-setup">
+<span id="environment-setup"></span><h2>Environment Setup<a class="headerlink" href="#environment-setup" title="Permalink to this headline">¶</a></h2>
+<p>There are two options for setting up your environment:</p>
+<ol class="simple">
+<li>On your local machine</li>
+<li>On the cloud using <a class="reference external" href="#">Google Colab</a></li>
+</ol>
+<p>If you’re relatively new to Python and programming, we highly recommend starting with the cloud option which doesn’t require any setup. The only requirement is a Gmail account.</p>
+<p>If you decide to run the tutorial on your local machine, make sure that your environment is running on Python 3.6+ and has Jupyter notebook installed. You will need to install several pacakges which can be found in <a class="reference external" href="https://github.com/topspinj/diabetes-ml-workshop/blob/master/requirements.txt">requirements.txt</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dataset">
+<span id="dataset"></span><h2>Dataset<a class="headerlink" href="#dataset" title="Permalink to this headline">¶</a></h2>
+<p>A list of features in the dataset and a description from each one. Adapted from the <a class="reference external" href="https://www.hindawi.com/journals/bmri/2014/781670/tab1/">original data source</a>.</p>
+<p>|column|description|
+|——|———–|
+|encounter_id|Unique identifier of an encounter|
+|patient_nbr|Unique identifier of a patient|
+|race|Race of patient|
+|gender|Gender of patient|
+|age|Age of patient, grouped in 10-year intervals|
+|weight|Weight of patient in pounds|
+|admission_type_id|Identifier corresponding to 9 distinct values, for example, emergency, urgent, elective, newborn, and not available|
+|admission_source_id|Identifier corresponding to 21 distinct values, for example, physician referral, emergency room, and transfer from a hospital|
+|time_in_hospital|Length of hospital stay (number of days between admission and discharge)|
+|medical_specialty|Specialty of the attending physician|
+|num_lab_procedures|Number of lab tests performed during the encounter|
+|num_procedures|Number of procedures (other than lab tests) performed during the encounter|
+|num_medications|Number of distinct generic medication names administered during the encounter|
+|number_outpatient|Number of outpatient visits of the patient in the year preceding the encounter|
+|number_emergency|Number of emergency visits of the patient in the year preceding the encounter|
+|number_inpatient|Number of inpatient visits of the patient in the year preceding the encounter|
+|number_diagnoses|Number of diagnoses entered to the system (most likely in the form of ICD codes|
+|max_glu_serum|Result from glucose serum test. “None” if test was not taken.|
+|A1Cresult|Results from A1C test which reflects a patient’s average blood glucose levels over the past 3 months.|
+|*medications|24 columns for medications. Describes whether the drug was prescribed or if there was a change in dosage.|
+|diabetesMed|Indicates whether the patient was prescribed any diabetic medication.|
+|readmitted|Indicates whether the patient was readmitted to the hospital.|</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../notebooks/walkthrough.html" class="btn btn-neutral float-right" title="Predicting Hospital Readmission with a Binary Classification Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="machine_learning.html" class="btn btn-neutral" title="Machine Learning Basics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Jill Cates
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

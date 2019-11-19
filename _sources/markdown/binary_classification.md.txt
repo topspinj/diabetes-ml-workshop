@@ -1,0 +1,22 @@
+# Binary Classification
+
+Classification is a type of supervised learning. The goal is to predict categorical class labels (i.e., target variable) of new samples based on past observations. When our label is binary (0 or 1), we call it a binary classification problem. A classic example of binary classification is e-mail spam detection where our model is trained to determine whether an email is spam (1) or not spam (0). In our case study example, we'll be building a model that predicts whether a patient will be readmitted to the hospital (1) or not readmitted (0) based on medical record data. 
+
+When building a binary classification model, there are a wide selection of machine learning models to choose from:
+
+- [Random Forest Classification](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html)
+- [Logistic Regression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html)
+- [Linear Discriminant Analysis](https://scikit-learn.org/stable/modules/generated/sklearn.discriminant_analysis.LinearDiscriminantAnalysis.html#sklearn.discriminant_analysis.LinearDiscriminantAnalysis)
+- [Support Vector Machines (SVM)](https://scikit-learn.org/stable/modules/svm.html)
+- [Gaussian Naive Bayes](https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html)
+- [k-Nearest Neighbours](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html#sklearn.neighbors.KNeighborsClassifier)
+
+Which model works best? This depends entirely on your data. The [No Free Lunch Theorem](https://en.wikipedia.org/wiki/No_free_lunch_in_search_and_optimization) states: 
+
+
+> *...all algorithms that search for an extremum of a cost function perform exactly the same, when averaged over all possible cost functions.*
+
+
+In other words, `model A` might outperform `model B` on some datasets, but model B might be better for other sets of data.
+
+<img src="https://s3.us-east-2.amazonaws.com/hidden.layers.assets/no_free_lunch.png" width='50%'>

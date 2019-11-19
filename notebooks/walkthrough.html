@@ -1,0 +1,2840 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Predicting Hospital Readmission with a Binary Classification Model &mdash; TMLS Workshop 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Getting Started" href="../markdown/getting_started.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> TMLS Workshop
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Glossary of Terms:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../markdown/machine_learning.html">Machine Learning Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../markdown/machine_learning.html#supervised-learning">Supervised Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../markdown/machine_learning.html#binary-classification">Binary Classification</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Workshop Walkthrough:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../markdown/getting_started.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Predicting Hospital Readmission with a Binary Classification Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#Data-Preprocessing">Data Preprocessing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Step-1:-Importing-Depedencies">Step 1: Importing Depedencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-2:-Load-the-Data">Step 2: Load the Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#How-many-rows-and-columns-are-in-our-dataset?">How many rows and columns are in our dataset?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#How-many-hospital-admissions-and-unique-patients-are-in-the-dataset?">How many hospital admissions and unique patients are in the dataset?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#How-many-patients-have-had-more-than-one-hospital-admission?">How many patients have had more than one hospital admission?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-3:-Data-Cleaning">Step 3: Data Cleaning</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Decoding-Admission-Type">Decoding Admission Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Decoding-Discharge-Location">Decoding Discharge Location</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Converting-Medication-Features-From-Categorical-to-Boolean">Converting Medication Features From Categorical to Boolean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Creating-a-Target-Variable">Creating a Target Variable</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-4:-Data-Exploration-and-Visualization">Step 4: Data Exploration and Visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Assessing-Missing-Values">Assessing Missing Values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Patient-Demographics:-Age-and-Gender">Patient Demographics: Age and Gender</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#How-long-were-hospital-stays-for-a-given-admission?">How long were hospital stays for a given admission?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Number-of-Diagnoses,-Procedures,-Medications">Number of Diagnoses, Procedures, Medications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#What-was-the-most-common-medical-specialty?">What was the most common medical specialty?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#What-proportion-of-patients-were-on-diabetes-medication-during-their-hospital-stay?">What proportion of patients were on diabetes medication during their hospital stay?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Do-patients-have-normal-A1C-levels?">Do patients have normal A1C levels?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-5:-Feature-Selection-and-Engineering">Step 5: Feature Selection and Engineering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#One-hot-Encoding">One-hot Encoding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Encode-Binary-Categorical-Features">Encode Binary Categorical Features</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#Data-Modelling">Data Modelling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Step-6:-Defining-the-X-and-y-Variables">Step 6: Defining the X and y Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-7:-Choosing-our-Model">Step 7: Choosing our Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-8:-Hyperparameter-Tuning">Step 8: Hyperparameter Tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-9:-Evaluating-Model-Performance">Step 9: Evaluating Model Performance</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TMLS Workshop</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Predicting Hospital Readmission with a Binary Classification Model</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/notebooks/walkthrough.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 8ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="Predicting-Hospital-Readmission-with-a-Binary-Classification-Model">
+<h1>Predicting Hospital Readmission with a Binary Classification Model<a class="headerlink" href="#Predicting-Hospital-Readmission-with-a-Binary-Classification-Model" title="Permalink to this headline">¶</a></h1>
+<p>In this tutorial, we’ll be looking at hospital admission data in
+patients with diabetes. This dataset was collected from 130 hospitals in
+the United States from 1999 to 2008. More details can be found on the
+UCI Machine Learning Repository
+<a class="reference external" href="https://archive.ics.uci.edu/ml/datasets/diabetes+130-us+hospitals+for+years+1999-2008">website</a>.</p>
+<p>This walkthrough is divided into two parts:</p>
+<ul class="simple">
+<li><strong>Data preprocessing (Steps 1-5)</strong>, which involves data cleaning,
+exploration, and feature engineering</li>
+<li><strong>Data modelling (Steps 6-10)</strong>, where we will train a machine
+learning model to predict whether a patient will be readmitted to the
+hospital</li>
+</ul>
+</div>
+<div class="section" id="Data-Preprocessing">
+<h1>Data Preprocessing<a class="headerlink" href="#Data-Preprocessing" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="Step-1:-Importing-Depedencies">
+<h2>Step 1: Importing Depedencies<a class="headerlink" href="#Step-1:-Importing-Depedencies" title="Permalink to this headline">¶</a></h2>
+<p>Before getting started, we’ll need to import several packages. These
+include:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/">pandas</a> - a
+package for performing data analysis and manipulation</li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/">numpy</a> - a package for
+scientific computing</li>
+<li><a class="reference external" href="https://matplotlib.org/">matplotlib</a> - the standard Python
+plotting package</li>
+<li><a class="reference external" href="https://seaborn.pydata.org/">seaborn</a> - a dataframe-centric
+visualization package that is built off of <strong>matplotlib</strong></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Step-2:-Load-the-Data">
+<h2>Step 2: Load the Data<a class="headerlink" href="#Step-2:-Load-the-Data" title="Permalink to this headline">¶</a></h2>
+<p>We will be loading in the data as a
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html">pandas.DataFrame</a>.</p>
+<p>The data is stored in a csv file, which we can access locally (see
+data/patient_data.csv) or in the cloud (stored in a AWS S3 bucket).
+We’ll import the S3 version of this data using a pandas method called
+<code class="docutils literal notranslate"><span class="pre">read_csv</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://s3.us-east-2.amazonaws.com/explore.datasets/diabetes/patient_data.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>To get a glimpse of our data, we can use either the <code class="docutils literal notranslate"><span class="pre">head()</span></code>, which
+shows the first 5 rows of the dataframe.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[4]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>encounter_id</th>
+      <th>patient_nbr</th>
+      <th>race</th>
+      <th>gender</th>
+      <th>age</th>
+      <th>weight</th>
+      <th>admission_type_id</th>
+      <th>discharge_disposition_id</th>
+      <th>time_in_hospital</th>
+      <th>medical_specialty</th>
+      <th>...</th>
+      <th>examide</th>
+      <th>citoglipton</th>
+      <th>insulin</th>
+      <th>glyburide-metformin</th>
+      <th>glipizide-metformin</th>
+      <th>glimepiride-pioglitazone</th>
+      <th>metformin-rosiglitazone</th>
+      <th>metformin-pioglitazone</th>
+      <th>diabetesMed</th>
+      <th>readmitted</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2278392</td>
+      <td>8222157</td>
+      <td>Caucasian</td>
+      <td>Female</td>
+      <td>[0-10)</td>
+      <td>NaN</td>
+      <td>6</td>
+      <td>25</td>
+      <td>1</td>
+      <td>Pediatrics-Endocrinology</td>
+      <td>...</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>NO</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>149190</td>
+      <td>55629189</td>
+      <td>Caucasian</td>
+      <td>Female</td>
+      <td>[10-20)</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Up</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>&gt;30</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>64410</td>
+      <td>86047875</td>
+      <td>AfricanAmerican</td>
+      <td>Female</td>
+      <td>[20-30)</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>NO</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>500364</td>
+      <td>82442376</td>
+      <td>Caucasian</td>
+      <td>Male</td>
+      <td>[30-40)</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Up</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>NO</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>16680</td>
+      <td>42519267</td>
+      <td>Caucasian</td>
+      <td>Male</td>
+      <td>[40-50)</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Steady</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>NO</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 44 columns</p>
+</div></div>
+</div>
+<div class="section" id="How-many-rows-and-columns-are-in-our-dataset?">
+<h3>How many rows and columns are in our dataset?<a class="headerlink" href="#How-many-rows-and-columns-are-in-our-dataset?" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[5]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>(101766, 44)
+</pre></div>
+</div>
+</div>
+<p>Our dataset has 101,766 rows and 45 columns. Each row represents a
+unique hospital admission. Columns represent patient demographics,
+medical details, and admission-specific information such as length of
+stay (<code class="docutils literal notranslate"><span class="pre">time_in_hospital</span></code>). We can see a list of all columns by
+applying <code class="docutils literal notranslate"><span class="pre">.columns</span></code> to our dataframe.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Columns: {data.columns.tolist()}&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Columns: [&#39;encounter_id&#39;, &#39;patient_nbr&#39;, &#39;race&#39;, &#39;gender&#39;, &#39;age&#39;, &#39;weight&#39;, &#39;admission_type_id&#39;, &#39;discharge_disposition_id&#39;, &#39;time_in_hospital&#39;, &#39;medical_specialty&#39;, &#39;num_lab_procedures&#39;, &#39;num_procedures&#39;, &#39;num_medications&#39;, &#39;number_outpatient&#39;, &#39;number_emergency&#39;, &#39;number_inpatient&#39;, &#39;number_diagnoses&#39;, &#39;max_glu_serum&#39;, &#39;A1Cresult&#39;, &#39;metformin&#39;, &#39;repaglinide&#39;, &#39;nateglinide&#39;, &#39;chlorpropamide&#39;, &#39;glimepiride&#39;, &#39;acetohexamide&#39;, &#39;glipizide&#39;, &#39;glyburide&#39;, &#39;tolbutamide&#39;, &#39;pioglitazone&#39;, &#39;rosiglitazone&#39;, &#39;acarbose&#39;, &#39;miglitol&#39;, &#39;troglitazone&#39;, &#39;tolazamide&#39;, &#39;examide&#39;, &#39;citoglipton&#39;, &#39;insulin&#39;, &#39;glyburide-metformin&#39;, &#39;glipizide-metformin&#39;, &#39;glimepiride-pioglitazone&#39;, &#39;metformin-rosiglitazone&#39;, &#39;metformin-pioglitazone&#39;, &#39;diabetesMed&#39;, &#39;readmitted&#39;]
+</pre></div></div>
+</div>
+<p>Looking at the columns, we can see that a large proportion are
+medication names. Let’s store these column names as a separate list,
+which we’ll get back to in a bit.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">medications</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;metformin&#39;</span><span class="p">,</span> <span class="s1">&#39;repaglinide&#39;</span><span class="p">,</span> <span class="s1">&#39;nateglinide&#39;</span><span class="p">,</span> <span class="s1">&#39;chlorpropamide&#39;</span><span class="p">,</span> <span class="s1">&#39;glimepiride&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;acetohexamide&#39;</span><span class="p">,</span> <span class="s1">&#39;glipizide&#39;</span><span class="p">,</span> <span class="s1">&#39;glyburide&#39;</span><span class="p">,</span> <span class="s1">&#39;tolbutamide&#39;</span><span class="p">,</span> <span class="s1">&#39;pioglitazone&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;rosiglitazone&#39;</span><span class="p">,</span> <span class="s1">&#39;acarbose&#39;</span><span class="p">,</span> <span class="s1">&#39;miglitol&#39;</span><span class="p">,</span> <span class="s1">&#39;troglitazone&#39;</span><span class="p">,</span> <span class="s1">&#39;tolazamide&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;examide&#39;</span><span class="p">,</span> <span class="s1">&#39;citoglipton&#39;</span><span class="p">,</span> <span class="s1">&#39;insulin&#39;</span><span class="p">,</span> <span class="s1">&#39;glyburide-metformin&#39;</span><span class="p">,</span> <span class="s1">&#39;glipizide-metformin&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;glimepiride-pioglitazone&#39;</span><span class="p">,</span> <span class="s1">&#39;metformin-rosiglitazone&#39;</span><span class="p">,</span> <span class="s1">&#39;metformin-pioglitazone&#39;</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;There are {len(medications)} medications represented as columns in the dataset.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+There are 23 medications represented as columns in the dataset.
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="How-many-hospital-admissions-and-unique-patients-are-in-the-dataset?">
+<h3>How many hospital admissions and unique patients are in the dataset?<a class="headerlink" href="#How-many-hospital-admissions-and-unique-patients-are-in-the-dataset?" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">n_admissions</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;encounter_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+<span class="n">n_patients</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;patient_nbr&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Number of hospital admissions: </span><span class="si">{n_admissions:,}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Number of unique patients: </span><span class="si">{n_patients:,}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Number of hospital admissions: 101,766
+Number of unique patients: 71,518
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="How-many-patients-have-had-more-than-one-hospital-admission?">
+<h3>How many patients have had more than one hospital admission?<a class="headerlink" href="#How-many-patients-have-had-more-than-one-hospital-admission?" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">admissions_per_patient</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;patient_nbr&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">admissions_per_patient</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;patient_nbr&#39;</span><span class="p">,</span> <span class="s1">&#39;count&#39;</span><span class="p">]</span>
+<span class="n">multiple_admissions</span> <span class="o">=</span> <span class="n">admissions_per_patient</span><span class="p">[</span><span class="n">admissions_per_patient</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Proportion of patients that have multiple admissions: {multiple_admissions[&#39;patient_nbr&#39;].nunique()/n_patients:.2%}&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Maximum number of admissions for a given patient: {multiple_admissions[&#39;count&#39;].max()}&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Proportion of patients that have multiple admissions: 23.45%
+Maximum number of admissions for a given patient: 40
+</pre></div></div>
+</div>
+<p>Almost one-quarter of the patients (23.45%) have had more than 1
+hosptial admission. The maximum number of hospital admissions for a
+given patient is 40.</p>
+</div>
+</div>
+<div class="section" id="Step-3:-Data-Cleaning">
+<h2>Step 3: Data Cleaning<a class="headerlink" href="#Step-3:-Data-Cleaning" title="Permalink to this headline">¶</a></h2>
+<p>Data cleaning is a crucial step in the machine learning pipeline, and
+typically requires the most time and effort in any data science project.</p>
+<div class="section" id="Decoding-Admission-Type">
+<h3>Decoding Admission Type<a class="headerlink" href="#Decoding-Admission-Type" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">admission_type_id</span></code> column describes the type of admission and is
+represented by integers. The <code class="docutils literal notranslate"><span class="pre">id</span></code> column links to descriptors found in
+a separate file. We’ll update this column so that it represents the
+descriptor name instead of simply the id number.</p>
+<p>Our mapper files are located in <code class="docutils literal notranslate"><span class="pre">data/id_mappers/</span></code>. They are also
+stored on the cloud in a AWS S3 bucket.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">admission_type</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://s3.us-east-2.amazonaws.com/explore.datasets/diabetes/id_mappers/admission_type_id.csv&quot;</span><span class="p">)</span>
+<span class="n">admission_type</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[11]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>admission_type_id</th>
+      <th>description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Emergency</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Urgent</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Elective</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Newborn</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Not Available</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>6</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>7</td>
+      <td>Trauma Center</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>8</td>
+      <td>Not Mapped</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>We can see that the admission type mapper file has 3 values which
+represent missing data:</p>
+<ol class="arabic simple">
+<li>NaN</li>
+<li>‘Not Mapped’</li>
+<li>‘Not Available’</li>
+</ol>
+<p>Let’s collapse these into one category that represents a missing value.
+We can use <code class="docutils literal notranslate"><span class="pre">pandas</span></code>
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.replace.html">replace</a>
+method to do this.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">missing_values</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;nan&#39;</span><span class="p">,</span> <span class="s1">&#39;Not Available&#39;</span><span class="p">,</span> <span class="s1">&#39;Not Mapped&#39;</span><span class="p">]</span>
+<span class="n">admission_type</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">admission_type</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">missing_values</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">admission_type</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;admission_type_id&#39;</span><span class="p">,</span> <span class="s1">&#39;admission_type&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">admission_type</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;admission_type_id&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Now that we have a “clean” mapper, we can apply it to our dataset. We
+can
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.map.html">map</a>
+<code class="docutils literal notranslate"><span class="pre">admission_type_id</span></code> values in our original dataframe to the
+descriptors in our <code class="docutils literal notranslate"><span class="pre">admission_type_mapper</span></code> dictionary.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;admission_type&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[15]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Emergency        53990
+Elective         18869
+Urgent           18480
+Trauma Center       21
+Newborn             10
+Name: admission_type, dtype: int64
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;admission_type&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s1">&#39;magma&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;type of hospital admission&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_walkthrough_29_0.png" src="../_images/notebooks_walkthrough_29_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="Decoding-Discharge-Location">
+<h3>Decoding Discharge Location<a class="headerlink" href="#Decoding-Discharge-Location" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">discharge_disposition</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://s3.us-east-2.amazonaws.com/explore.datasets/diabetes/id_mappers/discharge_disposition_id.csv&quot;</span><span class="p">)</span>
+<span class="n">discharge_disposition</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">416</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[17]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>discharge_disposition_id</th>
+      <th>description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>13</th>
+      <td>14</td>
+      <td>Hospice / medical facility</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>9</td>
+      <td>Admitted as an inpatient to this hospital</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>15</td>
+      <td>Discharged/transferred within this institution...</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>21</td>
+      <td>Expired, place unknown. Medicaid only, hospice.</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>29</td>
+      <td>Discharged/transferred to a Critical Access Ho...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>In medicine, “expired” is a term that describes a patient who has died.
+We only want to predict hospital readmission for living patients so
+we’re going to remove hospital admissions in which the patient was
+recorded as “expired” upon being discharged in our dataset.</p>
+<p>We’ll first convert our <code class="docutils literal notranslate"><span class="pre">description</span></code> column to lowercase
+(<code class="docutils literal notranslate"><span class="pre">str.lower()</span></code>), then we’ll search for rows that contain “expired”
+(<code class="docutils literal notranslate"><span class="pre">str.contains(&quot;expired&quot;)</span></code>).</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">discharge_disposition</span><span class="p">[</span><span class="s1">&#39;expired&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">discharge_disposition</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;expired&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Now let’s take a look at all discharge dispositions that indicate an
+expired patient. We’ll create a new dataframe that filters for rows in
+which the expired column is True.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">discharge_expired</span> <span class="o">=</span> <span class="n">discharge_disposition</span><span class="p">[</span><span class="n">discharge_disposition</span><span class="p">[</span><span class="s1">&#39;expired&#39;</span><span class="p">]</span><span class="o">==</span><span class="kc">True</span><span class="p">]</span>
+<span class="n">discharge_expired</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[19]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>discharge_disposition_id</th>
+      <th>description</th>
+      <th>expired</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>10</th>
+      <td>11</td>
+      <td>Expired</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>19</td>
+      <td>Expired at home. Medicaid only, hospice.</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>20</td>
+      <td>Expired in a medical facility. Medicaid only, ...</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>21</td>
+      <td>Expired, place unknown. Medicaid only, hospice.</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">expired_ids</span> <span class="o">=</span> <span class="n">discharge_expired</span><span class="p">[</span><span class="s1">&#39;discharge_disposition_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;discharge_disposition_id&#39;s that indicate an expired patient: </span><span class="si">{expired_ids}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+discharge_disposition_id&#39;s that indicate an expired patient: [11, 19, 20, 21]
+</pre></div></div>
+</div>
+<p>The next step is to remove all rows in our original dataset that has
+<code class="docutils literal notranslate"><span class="pre">discharge_disposition_id</span></code> equal to one of the values in our
+<code class="docutils literal notranslate"><span class="pre">expired_ids</span></code> list.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="o">~</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;discharge_disposition_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">expired_ids</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<p>After removing expired patients, how many patients do we have in our
+dataset?</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">n_patients_nonexpired</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;patient_nbr&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Original number of patients: </span><span class="si">{n_patients:,}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Number of expired patients: {n_patients-n_patients_nonexpired:,}&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;After filtering out expired patients: </span><span class="si">{n_patients_nonexpired:,}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Original number of patients: 71,518
+Number of expired patients: 1,079
+After filtering out expired patients: 70,439
+</pre></div></div>
+</div>
+<p>We had 1079 expired patients in our dataset. After removing them, our
+dataset has 70439 patients.</p>
+</div>
+<div class="section" id="Converting-Medication-Features-From-Categorical-to-Boolean">
+<h3>Converting Medication Features From Categorical to Boolean<a class="headerlink" href="#Converting-Medication-Features-From-Categorical-to-Boolean" title="Permalink to this headline">¶</a></h3>
+<p>Remember that list of medications we created when we loaded our data in
+Step 1? We’re going to convert these medication columns into boolean
+variables.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">data</span><span class="p">[</span><span class="n">medications</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[23]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>No        80216
+Steady    18256
+Up         1067
+Down        575
+Name: metformin, dtype: int64
+</pre></div>
+</div>
+</div>
+<p>Medication columns are currently categorical datatypes that have several
+possible categories including:</p>
+<ul class="simple">
+<li>“No” (not taking the medication)</li>
+<li>“Up” (increased medication dose)</li>
+<li>“Down” (decrease medication dose)</li>
+<li>“Steady” (no changes in dose)</li>
+</ul>
+<p>To keep things simple, we’ll update the column to “0” (not taking the
+medication) to “1” (taking the medication). We’re losing out on
+information regarding their dose change, but it’s a compromise we’re
+willing to make in order to simplify our dataset.</p>
+<p>We can use
+<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.where.html">numpy.where</a>
+to convert all instances of “No” to <code class="docutils literal notranslate"><span class="pre">0</span></code> and everything else (i.e.,
+“Up”, “Down”, “Steady”) to <code class="docutils literal notranslate"><span class="pre">1</span></code>. Let’s loop through all medications and
+convert each column to boolean.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">medications</span><span class="p">:</span>
+    <span class="n">data</span><span class="p">[</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{m}</span><span class="s1">_bool&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">m</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;No&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">m</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Our medication data are now represented as boolean features. Let’s take
+a look at the prevelance of these medications. We’ll calcualte the
+proportion of patients taking each type of medication. Because some
+patients have had multiple hospital admissions in this dataset, we’ll
+need to do some wrangling to determine whether a patient was on a given
+medication during any of their admissions. The wrangling process
+consists of the following steps:</p>
+<ul class="simple">
+<li>applying <code class="docutils literal notranslate"><span class="pre">groupby</span></code> to <code class="docutils literal notranslate"><span class="pre">patient_nbr</span></code> and calculate the sum of
+admissions in which the patient was administered a medication</li>
+<li>convert the column to boolean such that patients that have “0” are
+False and “1” is True</li>
+<li>calculate the sum of patients on that specific medication</li>
+<li>calculate the proportion of patients who were administered that
+medication</li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">prevelance</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">medications</span><span class="p">:</span>
+    <span class="n">patient_meds</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;patient_nbr&#39;</span><span class="p">)[</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{m}</span><span class="s1">_bool&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="n">patient_meds</span><span class="p">[</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{m}</span><span class="s1">_bool&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">patient_meds</span><span class="p">[</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{m}</span><span class="s1">_bool&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="n">n_patients_on_med</span> <span class="o">=</span> <span class="n">patient_meds</span><span class="p">[</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{m}</span><span class="s1">_bool&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">proportion</span> <span class="o">=</span> <span class="n">n_patients_on_med</span><span class="o">/</span><span class="n">n_patients</span>
+    <span class="n">prevelance</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proportion</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Now that we have a list of medication prevelance, we can create a
+dataframe and sort by prevelance to determine which medications are most
+prevelant in our dataset.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">medication_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;medication&#39;</span><span class="p">:</span> <span class="n">medications</span><span class="p">,</span> <span class="s1">&#39;prevelance&#39;</span><span class="p">:</span><span class="n">prevelance</span><span class="p">})</span>
+<span class="n">medication_counts</span> <span class="o">=</span> <span class="n">medication_counts</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;prevelance&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">medication_counts</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[26]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>medication</th>
+      <th>prevelance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>17</th>
+      <td>insulin</td>
+      <td>0.543779</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>metformin</td>
+      <td>0.229523</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>glipizide</td>
+      <td>0.138916</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>glyburide</td>
+      <td>0.118851</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>pioglitazone</td>
+      <td>0.082525</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>Let’s also visualize the top 10 most prevelance medications. We’ll use
+seaborn’s
+<a class="reference external" href="https://seaborn.pydata.org/generated/seaborn.barplot.html">barplot</a>
+method.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;medication&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;prevelance&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">medication_counts</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">palette</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_walkthrough_52_0.png" src="../_images/notebooks_walkthrough_52_0.png" />
+</div>
+</div>
+<p>We can see that <code class="docutils literal notranslate"><span class="pre">insulin</span></code> is by far the most prevelance medication
+followed by <code class="docutils literal notranslate"><span class="pre">metformin</span></code>. More than half of the patients in our dataset
+were prescribed insulin whie 22% were prescribed metformin.</p>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Medical_Subject_Headings">MeSH</a> (or
+Medical Subject Headings) are a type of “tag” that describes a medical
+term. We’ll use RxNav’s API to further investigate which MeSH terms are
+assocaited with our list of medications. We’ll cretea a function called
+<code class="docutils literal notranslate"><span class="pre">get_mesh_from_drug_name</span></code> which returns relevant MeSH terms for a
+given drug name.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="k">def</span> <span class="nf">get_mesh_from_drug_name</span><span class="p">(</span><span class="n">drug_name</span><span class="p">):</span>
+    <span class="n">drug_name</span> <span class="o">=</span> <span class="n">drug_name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">rxclass_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;https://rxnav.nlm.nih.gov/REST/rxclass/class/byDrugName.json?drugName=</span><span class="si">{drug_name}</span><span class="s2">&amp;relaSource=MESH&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="n">all_concepts</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;rxclassDrugInfoList&#39;</span><span class="p">][</span><span class="s1">&#39;rxclassDrugInfo&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">all_concepts</span><span class="p">:</span>
+            <span class="n">rxclass_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;rxclassMinConceptItem&#39;</span><span class="p">][</span><span class="s1">&#39;className&#39;</span><span class="p">])</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">rxclass_list</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<p>We’ll pass the top 10 medications into <code class="docutils literal notranslate"><span class="pre">get_mesh_from_drug_name</span></code> and
+get their relevant MeSH terms. The results will be stored in a
+dictionary that we’ll call <code class="docutils literal notranslate"><span class="pre">med_mesh_descriptors</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">top_ten_meds</span> <span class="o">=</span> <span class="n">medication_counts</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)[</span><span class="s1">&#39;medication&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="n">med_mesh_descriptors</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">top_ten_meds</span><span class="p">:</span>
+    <span class="n">med_mesh_descriptors</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_mesh_from_drug_name</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">med_mesh_descriptors</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[30]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>{&#39;insulin&#39;: [],
+ &#39;metformin&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;glipizide&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;glyburide&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;pioglitazone&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;rosiglitazone&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;glimepiride&#39;: [&#39;Anti-Arrhythmia Agents&#39;,
+  &#39;Hypoglycemic Agents&#39;,
+  &#39;Immunosuppressive Agents&#39;],
+ &#39;repaglinide&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;nateglinide&#39;: [&#39;Hypoglycemic Agents&#39;],
+ &#39;glyburide-metformin&#39;: [&#39;Hypoglycemic Agents&#39;]}
+</pre></div>
+</div>
+</div>
+<p>The results above show that all medications have the MeSH term
+<a class="reference external" href="https://en.wikipedia.org/wiki/Anti-diabetic_medication">hypoglycemic
+agent</a>, which
+means it’s an anti-diabetic medication. Interestingly, the medication
+<code class="docutils literal notranslate"><span class="pre">glimepiride</span></code> also has two other associated MeSH terms
+‘Anti-Arrhythmia Agents’ and ‘Immunosuppressive Agents’ in addition to
+it being a hypoglycemic agent.</p>
+<p>If you want to learn more about each medication in our dataset, check
+out the <a class="reference external" href="https://mor.nlm.nih.gov/RxNav/">RxNav dashboard</a> which gives
+an overview of medication properties and interactions.</p>
+</div>
+<div class="section" id="Creating-a-Target-Variable">
+<h3>Creating a Target Variable<a class="headerlink" href="#Creating-a-Target-Variable" title="Permalink to this headline">¶</a></h3>
+<p>The goal of our model will be to predict whether a patient will get
+readmitted to the hospital. Looking at the <code class="docutils literal notranslate"><span class="pre">readmitted</span></code> column, we see
+that there are 3 possible values:</p>
+<ol class="arabic simple">
+<li><code class="docutils literal notranslate"><span class="pre">NO</span></code> (not readmitted)</li>
+<li><code class="docutils literal notranslate"><span class="pre">&gt;30</span></code> (readmitted more than 30 days after being discharged)</li>
+<li><code class="docutils literal notranslate"><span class="pre">&lt;30</span></code> (readmitted within 30 days of being discharged)</li>
+</ol>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;readmitted&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[31]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>NO     53212
+&gt;30    35545
+&lt;30    11357
+Name: readmitted, dtype: int64
+</pre></div>
+</div>
+</div>
+<p>To keep things simple, we’ll view this as a binary classification
+problem: did the patient get readmitted? We’re going to use
+<code class="docutils literal notranslate"><span class="pre">numpy.where</span></code> to convert all instances of “NO” to 0 (means patient did
+not get readmitted) and everyhting else to 1 (patient did get
+readmitted).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;readmitted_bool&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;readmitted&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;NO&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;readmitted_bool&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[32]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>0    53212
+1    46902
+Name: readmitted_bool, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="Step-4:-Data-Exploration-and-Visualization">
+<h2>Step 4: Data Exploration and Visualization<a class="headerlink" href="#Step-4:-Data-Exploration-and-Visualization" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Assessing-Missing-Values">
+<h3>Assessing Missing Values<a class="headerlink" href="#Assessing-Missing-Values" title="Permalink to this headline">¶</a></h3>
+<p>To get a better sense of the missing values in our data, let’s visualize
+it using <a class="reference external" href="https://github.com/ResidentMario/missingno">missingno</a>’s
+“nullity” matrix.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">missingno</span> <span class="k">as</span> <span class="nn">msno</span>
+
+<span class="n">msno</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[33]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x1188bf950&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_walkthrough_67_1.png" src="../_images/notebooks_walkthrough_67_1.png" />
+</div>
+</div>
+<p>The data-dense columns are fully black, while the sparse columns (with
+missing values) have a mixture of white and black.</p>
+</div>
+<div class="section" id="Patient-Demographics:-Age-and-Gender">
+<h3>Patient Demographics: Age and Gender<a class="headerlink" href="#Patient-Demographics:-Age-and-Gender" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of Age&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">],</span> <span class="n">palette</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of Gender&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_walkthrough_70_0.png" src="../_images/notebooks_walkthrough_70_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[35]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Female    0.538013
+Male      0.461987
+Name: gender, dtype: float64
+</pre></div>
+</div>
+</div>
+<p>The age distribution plot shows that our dataset represents an aging
+population. The most common age range is 70-80 years old. Our population
+also has a higher proportion of females than males.</p>
+</div>
+<div class="section" id="How-long-were-hospital-stays-for-a-given-admission?">
+<h3>How long were hospital stays for a given admission?<a class="headerlink" href="#How-long-were-hospital-stays-for-a-given-admission?" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;time_in_hospital&#39;</span><span class="p">],</span> <span class="n">palette</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;time in hospital (days)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Length of Hospital Stay&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_walkthrough_74_0.png" src="../_images/notebooks_walkthrough_74_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [37]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Mean time in hospital: {data[&#39;time_in_hospital&#39;].mean():.2f}&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Mean time in hospital: 4.39
+</pre></div></div>
+</div>
+<p>Patients stayed on average 4.4 days in hospital. The longest stay was 14
+days.</p>
+</div>
+<div class="section" id="Number-of-Diagnoses,-Procedures,-Medications">
+<h3>Number of Diagnoses, Procedures, Medications<a class="headerlink" href="#Number-of-Diagnoses,-Procedures,-Medications" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [38]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;num_medications&#39;</span><span class="p">],</span> <span class="n">shade</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Number of Medications, mean: {data[&#39;num_medications&#39;].mean():.2f}&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;num_lab_procedures&#39;</span><span class="p">],</span> <span class="n">shade</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Number of Lab Procedures, mean: {data[&#39;num_lab_procedures&#39;].mean():.2f}&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_walkthrough_78_0.png" src="../_images/notebooks_walkthrough_78_0.png" />
+</div>
+</div>
+<p>Patients on average were administered 16 medications during their
+hospital stay. The average number of lab procedures was 43.</p>
+</div>
+<div class="section" id="What-was-the-most-common-medical-specialty?">
+<h3>What was the most common medical specialty?<a class="headerlink" href="#What-was-the-most-common-medical-specialty?" title="Permalink to this headline">¶</a></h3>
+<p>We also have information on the medical specialty of a patient’s
+attending physician. This can give us a sense of the nature of a
+patient’s illness during their hospital stay. For example, “orthopedics”
+would suggest that the patient’s presenting issue was bone-related,
+while “nephrology” suggests a kidney problem.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [39]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">medical_specialties</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;medical_specialty&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">medical_specialties</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;specialty&#39;</span><span class="p">,</span> <span class="s1">&#39;count&#39;</span><span class="p">]</span>
+<span class="n">medical_specialties</span><span class="p">[</span><span class="s1">&#39;prevalence&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">medical_specialties</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;There are {data[&#39;medical_specialty&#39;].nunique()} medical specialties.&quot;</span><span class="p">)</span>
+<span class="n">medical_specialties</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+There are 72 medical specialties.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[39]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>specialty</th>
+      <th>count</th>
+      <th>prevalence</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>InternalMedicine</td>
+      <td>14328</td>
+      <td>0.143117</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Emergency/Trauma</td>
+      <td>7449</td>
+      <td>0.074405</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Family/GeneralPractice</td>
+      <td>7302</td>
+      <td>0.072937</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Cardiology</td>
+      <td>5296</td>
+      <td>0.052900</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Surgery-General</td>
+      <td>3068</td>
+      <td>0.030645</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Nephrology</td>
+      <td>1544</td>
+      <td>0.015422</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Orthopedics</td>
+      <td>1394</td>
+      <td>0.013924</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Orthopedics-Reconstructive</td>
+      <td>1231</td>
+      <td>0.012296</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Radiologist</td>
+      <td>1129</td>
+      <td>0.011277</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Pulmonology</td>
+      <td>856</td>
+      <td>0.008550</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</div>
+<div class="section" id="What-proportion-of-patients-were-on-diabetes-medication-during-their-hospital-stay?">
+<h3>What proportion of patients were on diabetes medication during their hospital stay?<a class="headerlink" href="#What-proportion-of-patients-were-on-diabetes-medication-during-their-hospital-stay?" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [40]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;diabetesMed&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[40]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Yes    0.77184
+No     0.22816
+Name: diabetesMed, dtype: float64
+</pre></div>
+</div>
+</div>
+<p>77% of patients were on diabetes medication during their stay.</p>
+</div>
+<div class="section" id="Do-patients-have-normal-A1C-levels?">
+<h3>Do patients have normal A1C levels?<a class="headerlink" href="#Do-patients-have-normal-A1C-levels?" title="Permalink to this headline">¶</a></h3>
+<p>The A1C blood test is used to diagnose whether a patient has type I or
+II diabetes, and represents the average levels of blood sugar over the
+past 3 months. The higher the A1C level, the poorer a patient’s blood
+sugar control which indicates a higher risk of diabetes complications.
+The table below represents Mayo Clinic’s
+<a class="reference external" href="https://www.mayoclinic.org/tests-procedures/a1c-test/about/pac-20384643">guideline</a>
+of how to interpret A1C levels:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="69%" />
+<col width="31%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">interpretation</th>
+<th class="head">A1C level</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>no diabetes</td>
+<td>&lt;5.7</td>
+</tr>
+<tr class="row-odd"><td>pre-diabetes</td>
+<td>5.7-6.4</td>
+</tr>
+<tr class="row-even"><td>diabetes</td>
+<td>&gt;6.5</td>
+</tr>
+<tr class="row-odd"><td>well-managed diabetes</td>
+<td>&lt;7</td>
+</tr>
+<tr class="row-even"><td>poorly managed diabetes</td>
+<td>&gt;8</td>
+</tr>
+</tbody>
+</table>
+<p>Our dataset has a <code class="docutils literal notranslate"><span class="pre">A1Cresult</span></code> which reflects a patient’s A1C level
+during their hospital stay.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [41]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;A1Cresult&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[41]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&gt;8      0.482994
+Norm    0.292783
+&gt;7      0.224224
+Name: A1Cresult, dtype: float64
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [42]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Proportion of hospital admissions with missing A1C result: {data[&#39;A1Cresult&#39;].isna().sum()/len(data):.2%}&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Proportion of hospital admissions with missing A1C result: 83.14%
+</pre></div></div>
+</div>
+<p>Of the hospital admissions where A1C was measured, almost half had a A1C
+level of greater than 8, which suggests that the patient’s diabetes was
+poorly managed. However, the availability of A1C data is sparse in our
+dataset, so we may want to consider not including it in the first
+iteration of our model.</p>
+</div>
+</div>
+<div class="section" id="Step-5:-Feature-Selection-and-Engineering">
+<h2>Step 5: Feature Selection and Engineering<a class="headerlink" href="#Step-5:-Feature-Selection-and-Engineering" title="Permalink to this headline">¶</a></h2>
+<p>Our dataset contains quite a few categorical variables. In general,
+machine learning models can’t handle categorical variables so we will
+need to apply one-hot encoding.</p>
+<p>By the end of this step, we’ll have a training dataset (<code class="docutils literal notranslate"><span class="pre">X</span></code>) with
+corresponding targets (<code class="docutils literal notranslate"><span class="pre">y</span></code>).</p>
+<div class="section" id="One-hot-Encoding">
+<h3>One-hot Encoding<a class="headerlink" href="#One-hot-Encoding" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [43]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">categorical</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;race&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;admission_type&#39;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">categorical</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="n">prefix</span><span class="o">=</span><span class="n">c</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Encode-Binary-Categorical-Features">
+<h3>Encode Binary Categorical Features<a class="headerlink" href="#Encode-Binary-Categorical-Features" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [44]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;gender_bool&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s1">&#39;Female&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Male&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gender_bool&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="Data-Modelling">
+<h1>Data Modelling<a class="headerlink" href="#Data-Modelling" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="Step-6:-Defining-the-X-and-y-Variables">
+<h2>Step 6: Defining the X and y Variables<a class="headerlink" href="#Step-6:-Defining-the-X-and-y-Variables" title="Permalink to this headline">¶</a></h2>
+<p>Given that we now have a good understanding of our dataset, we can now
+aim to build predictive models. The first step is to separate our
+features and target into variables <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> respectively.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [45]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s1">&#39;metformin_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;repaglinide_bool&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;nateglinide_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;chlorpropamide_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;glimepiride_bool&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;acetohexamide_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;glipizide_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;glyburide_bool&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;tolbutamide_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;pioglitazone_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;rosiglitazone_bool&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;acarbose_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;miglitol_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;troglitazone_bool&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;tolazamide_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;examide_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;citoglipton_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;insulin_bool&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;glyburide-metformin_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;glipizide-metformin_bool&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;glimepiride-pioglitazone_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;metformin-rosiglitazone_bool&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;metformin-pioglitazone_bool&#39;</span><span class="p">,</span><span class="s1">&#39;num_lab_procedures&#39;</span><span class="p">,</span> <span class="s1">&#39;num_procedures&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;num_medications&#39;</span><span class="p">,</span> <span class="s1">&#39;number_outpatient&#39;</span><span class="p">,</span> <span class="s1">&#39;number_emergency&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;number_inpatient&#39;</span><span class="p">,</span> <span class="s1">&#39;number_diagnoses&#39;</span><span class="p">,</span> <span class="s1">&#39;race_AfricanAmerican&#39;</span><span class="p">,</span> <span class="s1">&#39;race_Asian&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;race_Caucasian&#39;</span><span class="p">,</span> <span class="s1">&#39;race_Hispanic&#39;</span><span class="p">,</span> <span class="s1">&#39;race_Other&#39;</span><span class="p">,</span> <span class="s1">&#39;age_[20-30)&#39;</span><span class="p">,</span> <span class="s1">&#39;age_[30-40)&#39;</span><span class="p">,</span> <span class="s1">&#39;age_[40-50)&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;age_[50-60)&#39;</span><span class="p">,</span> <span class="s1">&#39;age_[60-70)&#39;</span><span class="p">,</span> <span class="s1">&#39;age_[70-80)&#39;</span><span class="p">,</span> <span class="s1">&#39;age_[80-90)&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;age_[90-100)&#39;</span><span class="p">,</span> <span class="s1">&#39;admission_type_Elective&#39;</span><span class="p">,</span> <span class="s1">&#39;admission_type_Newborn&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;admission_type_Trauma Center&#39;</span><span class="p">,</span> <span class="s1">&#39;admission_type_Urgent&#39;</span><span class="p">,</span> <span class="s1">&#39;gender_bool&#39;</span><span class="p">]]</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;readmitted_bool&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Step-7:-Choosing-our-Model">
+<h2>Step 7: Choosing our Model<a class="headerlink" href="#Step-7:-Choosing-our-Model" title="Permalink to this headline">¶</a></h2>
+<p>We’ll test out the <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">Random Forest Classifier
+(RFC)</a>
+for this dataset. We’re choosing this model because it uses ensemble
+learning and has interpretable results in which feature importance can
+be extracted. We’ll import it from
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">scikit-learn</a>
+which is a very comprehensive Python library for data mining and data
+analysis.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [46]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">RandomForestClassifier</span>
+</pre></div>
+</div>
+</div>
+<p>We can inspect the default parameters for RandomForestClassifier by
+creating an instance of the class and applying <code class="docutils literal notranslate"><span class="pre">get_params()</span></code>:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [47]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">RandomForestClassifier</span><span class="p">()</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[47]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>{&#39;bootstrap&#39;: True,
+ &#39;class_weight&#39;: None,
+ &#39;criterion&#39;: &#39;gini&#39;,
+ &#39;max_depth&#39;: None,
+ &#39;max_features&#39;: &#39;auto&#39;,
+ &#39;max_leaf_nodes&#39;: None,
+ &#39;min_impurity_decrease&#39;: 0.0,
+ &#39;min_impurity_split&#39;: None,
+ &#39;min_samples_leaf&#39;: 1,
+ &#39;min_samples_split&#39;: 2,
+ &#39;min_weight_fraction_leaf&#39;: 0.0,
+ &#39;n_estimators&#39;: &#39;warn&#39;,
+ &#39;n_jobs&#39;: None,
+ &#39;oob_score&#39;: False,
+ &#39;random_state&#39;: None,
+ &#39;verbose&#39;: 0,
+ &#39;warm_start&#39;: False}
+</pre></div>
+</div>
+</div>
+<p>You can keep the default values for most of these parameters. But there
+are a few that can be modified prior to training the model that can
+impact model performance. These are called
+<a class="reference external" href="https://en.wikipedia.org/wiki/Hyperparameter_(machine_learning)">hyperparameters</a>.
+Some RFC hyperparameters include:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">n_estimators</span></code>: number of trees in the forest</li>
+<li><code class="docutils literal notranslate"><span class="pre">max_depth</span></code>: maximum number of levels in each decision tree</li>
+<li><code class="docutils literal notranslate"><span class="pre">max_features</span></code>: maximum number of features considered for splitting
+a node</li>
+<li><code class="docutils literal notranslate"><span class="pre">min_samples_split</span></code>: number of data points placed in a node before
+the node is split</li>
+</ul>
+<p>These are external configurations that can’t be learned from training
+the model. To select the optimal values of a hyperparameter, we’ll need
+to use a technique called hyperparameter tuning.</p>
+</div>
+<div class="section" id="Step-8:-Hyperparameter-Tuning">
+<h2>Step 8: Hyperparameter Tuning<a class="headerlink" href="#Step-8:-Hyperparameter-Tuning" title="Permalink to this headline">¶</a></h2>
+<p>Hyperparemter tuning is a critical step in the machine learning
+pipeline. It describes the process of choosing a set of optimal
+hyperparameters for a model. The hyperparameters that you select can
+have a significant impact on your model’s performance.</p>
+<p>We’re going to be testing out two hyperparameter tuning techniques
+offered by scikit-learn:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html">GridSearchCV</a></li>
+<li><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html">RandomizedSearchCV</a></li>
+</ul>
+<p>With grid search, you define your search space as a grid of values and
+iterate over each grid point until you find the optimal combination of
+values. Let’s say we want to tune <code class="docutils literal notranslate"><span class="pre">max_depth</span></code> and <code class="docutils literal notranslate"><span class="pre">n_estimators</span></code> in
+our RandomForestClassifer. We’ll set our search space as follows:</p>
+<ul class="simple">
+<li>n_estimators = [5,10,50]</li>
+<li>max_depth = [3,5,10]</li>
+</ul>
+<p>This means that we’ll have to train our model 9 times to test for every
+configuration of values. We’ll choose the combination of n_estimators
+and max_depth that give us the best model performance.</p>
+<p>Let’s implement this with scikit-learn’s GridSearchCV. We first need to
+define our search space as a dictionary. We also need to initialize our
+model.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [48]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">GridSearchCV</span>
+
+<span class="n">search_space</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">50</span><span class="p">],</span>
+    <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">rfc</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Now, we set up grid search. GridSearchCV also performs
+<a class="reference external" href="https://machinelearningmastery.com/k-fold-cross-validation/">cross-validation</a>
+(hence the <code class="docutils literal notranslate"><span class="pre">'CV'</span></code>) so we can specify how many folds we want in our
+analysis. We’ll set our number of folds to 3. The more folds you use,
+the longer it will take to compute results.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [49]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">grid_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">rfc</span><span class="p">,</span> <span class="n">search_space</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The last step is to run fit. We’ll pass in X and y which we created in
+<em>Step 6</em>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [50]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">grid_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[50]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>GridSearchCV(cv=3, error_score=&#39;raise-deprecating&#39;,
+       estimator=RandomForestClassifier(bootstrap=True, class_weight=None, criterion=&#39;gini&#39;,
+            max_depth=None, max_features=&#39;auto&#39;, max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=&#39;warn&#39;, n_jobs=None,
+            oob_score=False, random_state=42, verbose=0, warm_start=False),
+       fit_params=None, iid=&#39;warn&#39;, n_jobs=None,
+       param_grid={&#39;n_estimators&#39;: [5, 10, 50], &#39;max_depth&#39;: [3, 5, 10]},
+       pre_dispatch=&#39;2*n_jobs&#39;, refit=True, return_train_score=&#39;warn&#39;,
+       scoring=None, verbose=0)
+</pre></div>
+</div>
+</div>
+<p>Let’s see what our optimal hyperparameters are:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [51]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Optimal hyperparameters: </span><span class="si">{grid_search.best_params_}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Best score: </span><span class="si">{grid_search.best_score_:.3f}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Optimal hyperparameters: {&#39;max_depth&#39;: 3, &#39;n_estimators&#39;: 50}
+Best score: 0.616
+</pre></div></div>
+</div>
+<p>Based on the search space we defined for GridSearchCv, it looks like
+max_depth of 5 and n_estimators of 10 are our optimal hyperparmeters
+which gave us an accuracy of 0.616.</p>
+<p>We can also see a thorough report of our results with <code class="docutils literal notranslate"><span class="pre">cv_results_</span></code>.
+It shows fit time, score time, and mean train/test score (averaged over
+all folds). We’ll sort by <code class="docutils literal notranslate"><span class="pre">mean_test_score</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [52]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;mean_test_score&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">results</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[52]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean_fit_time</th>
+      <th>std_fit_time</th>
+      <th>mean_score_time</th>
+      <th>std_score_time</th>
+      <th>param_max_depth</th>
+      <th>param_n_estimators</th>
+      <th>params</th>
+      <th>split0_test_score</th>
+      <th>split1_test_score</th>
+      <th>split2_test_score</th>
+      <th>mean_test_score</th>
+      <th>std_test_score</th>
+      <th>rank_test_score</th>
+      <th>split0_train_score</th>
+      <th>split1_train_score</th>
+      <th>split2_train_score</th>
+      <th>mean_train_score</th>
+      <th>std_train_score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>0.898266</td>
+      <td>0.022974</td>
+      <td>0.109786</td>
+      <td>0.010580</td>
+      <td>3</td>
+      <td>50</td>
+      <td>{'max_depth': 3, 'n_estimators': 50}</td>
+      <td>0.607803</td>
+      <td>0.629937</td>
+      <td>0.611208</td>
+      <td>0.616316</td>
+      <td>0.009731</td>
+      <td>1</td>
+      <td>0.626146</td>
+      <td>0.614405</td>
+      <td>0.621028</td>
+      <td>0.620526</td>
+      <td>0.004806</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.211936</td>
+      <td>0.002936</td>
+      <td>0.031435</td>
+      <td>0.000512</td>
+      <td>3</td>
+      <td>10</td>
+      <td>{'max_depth': 3, 'n_estimators': 10}</td>
+      <td>0.607084</td>
+      <td>0.627600</td>
+      <td>0.612586</td>
+      <td>0.615757</td>
+      <td>0.008670</td>
+      <td>2</td>
+      <td>0.622325</td>
+      <td>0.613431</td>
+      <td>0.619469</td>
+      <td>0.618409</td>
+      <td>0.003708</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2.002041</td>
+      <td>0.079391</td>
+      <td>0.195860</td>
+      <td>0.007887</td>
+      <td>10</td>
+      <td>50</td>
+      <td>{'max_depth': 10, 'n_estimators': 50}</td>
+      <td>0.612028</td>
+      <td>0.622355</td>
+      <td>0.607612</td>
+      <td>0.613998</td>
+      <td>0.006178</td>
+      <td>3</td>
+      <td>0.654435</td>
+      <td>0.646904</td>
+      <td>0.646754</td>
+      <td>0.649364</td>
+      <td>0.003586</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>1.344713</td>
+      <td>0.114324</td>
+      <td>0.142994</td>
+      <td>0.017598</td>
+      <td>5</td>
+      <td>50</td>
+      <td>{'max_depth': 5, 'n_estimators': 50}</td>
+      <td>0.607983</td>
+      <td>0.630057</td>
+      <td>0.602248</td>
+      <td>0.613429</td>
+      <td>0.011988</td>
+      <td>4</td>
+      <td>0.631930</td>
+      <td>0.620144</td>
+      <td>0.626631</td>
+      <td>0.626235</td>
+      <td>0.004820</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>0.136248</td>
+      <td>0.007508</td>
+      <td>0.024020</td>
+      <td>0.001144</td>
+      <td>3</td>
+      <td>5</td>
+      <td>{'max_depth': 3, 'n_estimators': 5}</td>
+      <td>0.609751</td>
+      <td>0.624753</td>
+      <td>0.601828</td>
+      <td>0.612111</td>
+      <td>0.009507</td>
+      <td>5</td>
+      <td>0.623704</td>
+      <td>0.611318</td>
+      <td>0.619529</td>
+      <td>0.618184</td>
+      <td>0.005145</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>In 2012, Bergstra and Bengio from the University of Montreal proposed a
+new technique called <a class="reference external" href="http://www.jmlr.org/papers/volume13/bergstra12a/bergstra12a.pdf">random
+search</a>
+which is similar to grid search but instead of sampling over a discrete
+set of values, you’re now randomly sampling from a distribution of
+values. Random search is effective in situations where not all
+hyperparameters are equally important.</p>
+<p>The visualization above gives an example of when random search can
+perform better. With grid search, you’re only looking at 3 different
+values of a given hyperparamter. But with random search you’re looking
+at nine different values. As you increase the number of samples in your
+random search, you increase the probability of finding the optimal
+hyperparameters for your model.</p>
+<p>Let’s test out random search using scikit-learn’s RandomizedSearchCV.
+We’ll define our search space over a uniform distribution of values.
+We’ll iterate 9 times, just like we did for grid search.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [53]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">RandomizedSearchCV</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">randint</span>
+
+<span class="n">search_space</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;n_estimators&quot;</span><span class="p">:</span> <span class="n">randint</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span>
+    <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="n">random_search</span> <span class="o">=</span> <span class="n">RandomizedSearchCV</span><span class="p">(</span><span class="n">rfc</span><span class="p">,</span> <span class="n">param_distributions</span><span class="o">=</span><span class="n">search_space</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">random_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Optimal hyperparameters: </span><span class="si">{random_search.best_params_}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Best score: </span><span class="si">{random_search.best_score_:.3f}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Optimal hyperparameters: {&#39;max_depth&#39;: 7, &#39;n_estimators&#39;: 58}
+Best score: 0.616
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [54]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">random_search</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;mean_test_score&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">results</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[54]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean_fit_time</th>
+      <th>std_fit_time</th>
+      <th>mean_score_time</th>
+      <th>std_score_time</th>
+      <th>param_max_depth</th>
+      <th>param_n_estimators</th>
+      <th>params</th>
+      <th>split0_test_score</th>
+      <th>split1_test_score</th>
+      <th>split2_test_score</th>
+      <th>mean_test_score</th>
+      <th>std_test_score</th>
+      <th>rank_test_score</th>
+      <th>split0_train_score</th>
+      <th>split1_train_score</th>
+      <th>split2_train_score</th>
+      <th>mean_train_score</th>
+      <th>std_train_score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>6</th>
+      <td>1.647243</td>
+      <td>0.026765</td>
+      <td>0.170798</td>
+      <td>0.005107</td>
+      <td>7</td>
+      <td>58</td>
+      <td>{'max_depth': 7, 'n_estimators': 58}</td>
+      <td>0.610980</td>
+      <td>0.627480</td>
+      <td>0.610279</td>
+      <td>0.616246</td>
+      <td>0.007949</td>
+      <td>1</td>
+      <td>0.637549</td>
+      <td>0.626586</td>
+      <td>0.633778</td>
+      <td>0.632638</td>
+      <td>0.004547</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>0.589577</td>
+      <td>0.007274</td>
+      <td>0.070038</td>
+      <td>0.001949</td>
+      <td>4</td>
+      <td>26</td>
+      <td>{'max_depth': 4, 'n_estimators': 26}</td>
+      <td>0.605736</td>
+      <td>0.629128</td>
+      <td>0.611567</td>
+      <td>0.615477</td>
+      <td>0.009942</td>
+      <td>2</td>
+      <td>0.626611</td>
+      <td>0.615484</td>
+      <td>0.625313</td>
+      <td>0.622469</td>
+      <td>0.004968</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2.094977</td>
+      <td>0.272647</td>
+      <td>0.179518</td>
+      <td>0.006369</td>
+      <td>8</td>
+      <td>53</td>
+      <td>{'max_depth': 8, 'n_estimators': 53}</td>
+      <td>0.610380</td>
+      <td>0.626221</td>
+      <td>0.608720</td>
+      <td>0.615107</td>
+      <td>0.007888</td>
+      <td>3</td>
+      <td>0.641429</td>
+      <td>0.633808</td>
+      <td>0.635412</td>
+      <td>0.636883</td>
+      <td>0.003281</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1.654977</td>
+      <td>0.069732</td>
+      <td>0.189271</td>
+      <td>0.011885</td>
+      <td>4</td>
+      <td>80</td>
+      <td>{'max_depth': 4, 'n_estimators': 80}</td>
+      <td>0.606215</td>
+      <td>0.629577</td>
+      <td>0.609050</td>
+      <td>0.614947</td>
+      <td>0.010409</td>
+      <td>4</td>
+      <td>0.628184</td>
+      <td>0.616533</td>
+      <td>0.625972</td>
+      <td>0.623563</td>
+      <td>0.005053</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2.854074</td>
+      <td>0.026852</td>
+      <td>0.282800</td>
+      <td>0.004831</td>
+      <td>8</td>
+      <td>90</td>
+      <td>{'max_depth': 8, 'n_estimators': 90}</td>
+      <td>0.609751</td>
+      <td>0.626371</td>
+      <td>0.607911</td>
+      <td>0.614678</td>
+      <td>0.008302</td>
+      <td>5</td>
+      <td>0.642898</td>
+      <td>0.634587</td>
+      <td>0.637284</td>
+      <td>0.638257</td>
+      <td>0.003462</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</div>
+<div class="section" id="Step-9:-Evaluating-Model-Performance">
+<h2>Step 9: Evaluating Model Performance<a class="headerlink" href="#Step-9:-Evaluating-Model-Performance" title="Permalink to this headline">¶</a></h2>
+<p>There are several metrics that we can use to evaluate model performance:</p>
+<ul class="simple">
+<li>RMSE</li>
+<li>accuracy</li>
+<li>precision</li>
+<li>recall</li>
+<li>AUC</li>
+</ul>
+<p>In this walkthrough, we’ll compare accuracy and precision.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [55]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">train_test_split</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="n">rfc</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">random_search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">)</span>
+<span class="n">rfc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[55]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>RandomForestClassifier(bootstrap=True, class_weight=None, criterion=&#39;gini&#39;,
+            max_depth=7, max_features=&#39;auto&#39;, max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=58, n_jobs=None,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+</pre></div>
+</div>
+</div>
+<p>Accuracy is RFC’s default evaluation metric. Using the score metric, we
+get the measured accuracy from the trained model.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [56]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">rfc</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[56]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>0.6213854067822004
+</pre></div>
+</div>
+</div>
+<p>But let’s also look at precision.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [57]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">precision_score</span>
+
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">rfc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+<span class="n">precision_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[57]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>0.6381449111925571
+</pre></div>
+</div>
+</div>
+<p>RandomForestClassifier gives us a list of feature importances. We can
+dig a bit further to examine which features were the most important in
+classification.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [61]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">feature_importances</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;features&#39;</span><span class="p">:</span><span class="nb">list</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+    <span class="s1">&#39;importance&#39;</span><span class="p">:</span><span class="nb">list</span><span class="p">(</span><span class="n">rfc</span><span class="o">.</span><span class="n">feature_importances_</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="n">important_features</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">feature_importances</span><span class="p">)</span>
+<span class="n">important_features</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;importance&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[61]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>features</th>
+      <th>importance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>28</th>
+      <td>number_inpatient</td>
+      <td>0.464901</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>number_diagnoses</td>
+      <td>0.123911</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>number_emergency</td>
+      <td>0.117507</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>number_outpatient</td>
+      <td>0.076745</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>num_medications</td>
+      <td>0.054187</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>num_lab_procedures</td>
+      <td>0.027678</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>num_procedures</td>
+      <td>0.022751</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>admission_type_Elective</td>
+      <td>0.018851</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>insulin_bool</td>
+      <td>0.013265</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>metformin_bool</td>
+      <td>0.010087</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>age_[70-80)</td>
+      <td>0.007444</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>age_[80-90)</td>
+      <td>0.007320</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>race_Caucasian</td>
+      <td>0.006018</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>age_[50-60)</td>
+      <td>0.004055</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>age_[30-40)</td>
+      <td>0.003907</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../markdown/getting_started.html" class="btn btn-neutral" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Jill Cates
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
