@@ -50,10 +50,3 @@ Which model works best? This depends entirely on your data. The [No Free Lunch T
 In other words, `model A` might outperform `model B` on some datasets, but model B might be better for other sets of data.
 
 <img src="https://s3.us-east-2.amazonaws.com/hidden.layers.assets/no_free_lunch.png" width='50%'>
-
-
-# Evaluating Model Performance
-
-- accuracy
-- precision
-- recall
