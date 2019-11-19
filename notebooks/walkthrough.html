@@ -102,6 +102,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#Decoding-Admission-Type">Decoding Admission Type</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Decoding-Discharge-Location">Decoding Discharge Location</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Converting-Medication-Features-From-Categorical-to-Boolean">Converting Medication Features From Categorical to Boolean</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Interpreting-Medications">Interpreting Medications</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Creating-a-Target-Variable">Creating a Target Variable</a></li>
 </ul>
 </li>
@@ -109,7 +110,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#Assessing-Missing-Values">Assessing Missing Values</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Patient-Demographics:-Age-and-Gender">Patient Demographics: Age and Gender</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#How-long-were-hospital-stays-for-a-given-admission?">How long were hospital stays for a given admission?</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Number-of-Diagnoses,-Procedures,-Medications">Number of Diagnoses, Procedures, Medications</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Number-of-Medications-and-Lab-Procedures">Number of Medications and Lab Procedures</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#What-was-the-most-common-medical-specialty?">What was the most common medical specialty?</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#What-proportion-of-patients-were-on-diabetes-medication-during-their-hospital-stay?">What proportion of patients were on diabetes medication during their hospital stay?</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Do-patients-have-normal-A1C-levels?">Do patients have normal A1C levels?</a></li>
@@ -124,7 +125,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#Data-Modelling">Data Modelling</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#Step-6:-Defining-the-X-and-y-Variables">Step 6: Defining the X and y Variables</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Step-7:-Choosing-our-Model">Step 7: Choosing our Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Step-7:-Choosing-our-Binary-Classification-Model">Step 7: Choosing our Binary Classification Model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Step-8:-Hyperparameter-Tuning">Step 8: Hyperparameter Tuning</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Step-9:-Evaluating-Model-Performance">Step 9: Evaluating Model Performance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Step-10:-Examining-Feature-Importance">Step 10: Examining Feature Importance</a></li>
@@ -886,6 +887,9 @@ method to do this.</p>
 </pre></div>
 </div>
 </div>
+<p>Great! We can now merge admission type with our original dataset. We’ll
+first rename <code class="docutils literal notranslate"><span class="pre">description</span></code> to <code class="docutils literal notranslate"><span class="pre">admission_type</span></code> so that it’s more
+descriptive.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [13]:
@@ -896,6 +900,9 @@ method to do this.</p>
 </pre></div>
 </div>
 </div>
+<p>We can do a merge on <code class="docutils literal notranslate"><span class="pre">admission_type_id</span></code>. The default merge setting is
+an <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.merge.html">inner
+join</a>.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [14]:
@@ -906,11 +913,8 @@ method to do this.</p>
 </pre></div>
 </div>
 </div>
-<p>Now that we have a “clean” mapper, we can apply it to our dataset. We
-can
-<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.map.html">map</a>
-<code class="docutils literal notranslate"><span class="pre">admission_type_id</span></code> values in our original dataframe to the
-descriptors in our <code class="docutils literal notranslate"><span class="pre">admission_type_mapper</span></code> dictionary.</p>
+<p>Now that we have an interpretable version of <code class="docutils literal notranslate"><span class="pre">admission_type</span></code> in our
+dataset, let’s see what the most common types of admissions are.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [15]:
@@ -952,12 +956,19 @@ Name: admission_type, dtype: int64
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_walkthrough_29_0.png" src="../_images/notebooks_walkthrough_29_0.png" />
+<img alt="../_images/notebooks_walkthrough_31_0.png" src="../_images/notebooks_walkthrough_31_0.png" />
 </div>
 </div>
+<p>It looks like <em>Emergency</em> is the most common type of admission followed
+by <em>Urgent</em> and <em>Elective</em>. <em>Trauma Center</em> and <em>Newborn</em> are very rare
+types of admissions.</p>
 </div>
 <div class="section" id="Decoding-Discharge-Location">
 <h4>Decoding Discharge Location<a class="headerlink" href="#Decoding-Discharge-Location" title="Permalink to this headline">¶</a></h4>
+<p>In medicine, “expired” is a term that describes a patient who has died.
+We only want to predict hospital readmission for living patients so
+we’re going to remove hospital admissions in which the patient was
+recorded as “expired” upon being discharged in our dataset.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [17]:
@@ -1027,10 +1038,6 @@ Name: admission_type, dtype: int64
 </table>
 </div></div>
 </div>
-<p>In medicine, “expired” is a term that describes a patient who has died.
-We only want to predict hospital readmission for living patients so
-we’re going to remove hospital admissions in which the patient was
-recorded as “expired” upon being discharged in our dataset.</p>
 <p>We’ll first convert our <code class="docutils literal notranslate"><span class="pre">description</span></code> column to lowercase
 (<code class="docutils literal notranslate"><span class="pre">str.lower()</span></code>), then we’ll search for rows that contain “expired”
 (<code class="docutils literal notranslate"><span class="pre">str.contains(&quot;expired&quot;)</span></code>).</p>
@@ -1235,7 +1242,7 @@ convert each column to boolean.</p>
 </div>
 </div>
 <p>Our medication data are now represented as boolean features. Let’s take
-a look at the prevelance of these medications. We’ll calcualte the
+a look at the prevalence of these medications. We’ll calcualte the
 proportion of patients taking each type of medication. Because some
 patients have had multiple hospital admissions in this dataset, we’ll
 need to do some wrangling to determine whether a patient was on a given
@@ -1256,28 +1263,28 @@ medication</li>
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">prevelance</span> <span class="o">=</span> <span class="p">[]</span>
+<span></span><span class="n">prevalence</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">medications</span><span class="p">:</span>
     <span class="n">patient_meds</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;patient_nbr&#39;</span><span class="p">)[</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{m}</span><span class="s1">_bool&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
     <span class="n">patient_meds</span><span class="p">[</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{m}</span><span class="s1">_bool&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">patient_meds</span><span class="p">[</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{m}</span><span class="s1">_bool&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
     <span class="n">n_patients_on_med</span> <span class="o">=</span> <span class="n">patient_meds</span><span class="p">[</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{m}</span><span class="s1">_bool&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
     <span class="n">proportion</span> <span class="o">=</span> <span class="n">n_patients_on_med</span><span class="o">/</span><span class="n">n_patients</span>
-    <span class="n">prevelance</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proportion</span><span class="p">)</span>
+    <span class="n">prevalence</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proportion</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<p>Now that we have a list of medication prevelance, we can create a
-dataframe and sort by prevelance to determine which medications are most
-prevelant in our dataset.</p>
+<p>Now that we have a list of medication prevalence, we can create a
+dataframe and sort by prevalence to determine which medications are most
+prevalent in our dataset.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [26]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">medication_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;medication&#39;</span><span class="p">:</span> <span class="n">medications</span><span class="p">,</span> <span class="s1">&#39;prevelance&#39;</span><span class="p">:</span><span class="n">prevelance</span><span class="p">})</span>
-<span class="n">medication_counts</span> <span class="o">=</span> <span class="n">medication_counts</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;prevelance&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span></span><span class="n">medication_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;medication&#39;</span><span class="p">:</span> <span class="n">medications</span><span class="p">,</span> <span class="s1">&#39;prevalence&#39;</span><span class="p">:</span><span class="n">prevalence</span><span class="p">})</span>
+<span class="n">medication_counts</span> <span class="o">=</span> <span class="n">medication_counts</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;prevalence&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">medication_counts</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -1340,17 +1347,17 @@ prevelant in our dataset.</p>
 </table>
 </div></div>
 </div>
-<p>Let’s also visualize the top 10 most prevelance medications. We’ll use
+<p>Let’s also visualize the top 10 most prevalent medications. We’ll use
 seaborn’s
 <a class="reference external" href="https://seaborn.pydata.org/generated/seaborn.barplot.html">barplot</a>
 method.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [27]:
+<span></span>In [62]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;medication&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;prevelance&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">medication_counts</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">palette</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+<span></span><span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;medication&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;prevalence&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">medication_counts</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">palette</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -1360,16 +1367,52 @@ method.</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_walkthrough_52_0.png" src="../_images/notebooks_walkthrough_52_0.png" />
-</div>
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-62-44b1c12a4eb4&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>sns<span class="ansi-blue-fg">.</span>barplot<span class="ansi-blue-fg">(</span>x<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;medication&#39;</span><span class="ansi-blue-fg">,</span> y<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;prevalence&#39;</span><span class="ansi-blue-fg">,</span> data<span class="ansi-blue-fg">=</span>medication_counts<span class="ansi-blue-fg">.</span>head<span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">10</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> palette<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;viridis&#39;</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      2</span> plt<span class="ansi-blue-fg">.</span>xticks<span class="ansi-blue-fg">(</span>rotation<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">90</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> plt<span class="ansi-blue-fg">.</span>show<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/usr/local/lib/python3.7/site-packages/seaborn/categorical.py</span> in <span class="ansi-cyan-fg">barplot</span><span class="ansi-blue-fg">(x, y, hue, data, order, hue_order, estimator, ci, n_boot, units, orient, color, palette, saturation, errcolor, errwidth, capsize, dodge, ax, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">   3147</span>                           estimator<span class="ansi-blue-fg">,</span> ci<span class="ansi-blue-fg">,</span> n_boot<span class="ansi-blue-fg">,</span> units<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">   3148</span>                           orient<span class="ansi-blue-fg">,</span> color<span class="ansi-blue-fg">,</span> palette<span class="ansi-blue-fg">,</span> saturation<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-fg">-&gt; 3149</span><span class="ansi-red-fg">                           errcolor, errwidth, capsize, dodge)
+</span><span class="ansi-green-intense-fg ansi-bold">   3150</span>
+<span class="ansi-green-intense-fg ansi-bold">   3151</span>     <span class="ansi-green-fg">if</span> ax <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">/usr/local/lib/python3.7/site-packages/seaborn/categorical.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, x, y, hue, data, order, hue_order, estimator, ci, n_boot, units, orient, color, palette, saturation, errcolor, errwidth, capsize, dodge)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1605</span>         <span class="ansi-blue-fg">&#34;&#34;&#34;Initialize the plotter.&#34;&#34;&#34;</span>
+<span class="ansi-green-intense-fg ansi-bold">   1606</span>         self.establish_variables(x, y, hue, data, orient,
+<span class="ansi-green-fg">-&gt; 1607</span><span class="ansi-red-fg">                                  order, hue_order, units)
+</span><span class="ansi-green-intense-fg ansi-bold">   1608</span>         self<span class="ansi-blue-fg">.</span>establish_colors<span class="ansi-blue-fg">(</span>color<span class="ansi-blue-fg">,</span> palette<span class="ansi-blue-fg">,</span> saturation<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1609</span>         self<span class="ansi-blue-fg">.</span>estimate_statistic<span class="ansi-blue-fg">(</span>estimator<span class="ansi-blue-fg">,</span> ci<span class="ansi-blue-fg">,</span> n_boot<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/usr/local/lib/python3.7/site-packages/seaborn/categorical.py</span> in <span class="ansi-cyan-fg">establish_variables</span><span class="ansi-blue-fg">(self, x, y, hue, data, orient, order, hue_order, units)</span>
+<span class="ansi-green-intense-fg ansi-bold">    153</span>                 <span class="ansi-green-fg">if</span> isinstance<span class="ansi-blue-fg">(</span>input<span class="ansi-blue-fg">,</span> string_types<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    154</span>                     err <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">&#34;Could not interpret input &#39;{}&#39;&#34;</span><span class="ansi-blue-fg">.</span>format<span class="ansi-blue-fg">(</span>input<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">--&gt; 155</span><span class="ansi-red-fg">                     </span><span class="ansi-green-fg">raise</span> ValueError<span class="ansi-blue-fg">(</span>err<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    156</span>
+<span class="ansi-green-intense-fg ansi-bold">    157</span>             <span class="ansi-red-fg"># Figure out the plotting orientation</span>
+
+<span class="ansi-red-fg">ValueError</span>: Could not interpret input &#39;prevalence&#39;
+</pre></div></div>
 </div>
 <p>We can see that <code class="docutils literal notranslate"><span class="pre">insulin</span></code> is by far the most prevelance medication
 followed by <code class="docutils literal notranslate"><span class="pre">metformin</span></code>. More than half of the patients in our dataset
 were prescribed insulin whie 22% were prescribed metformin.</p>
-<p><a class="reference external" href="https://en.wikipedia.org/wiki/Medical_Subject_Headings">MeSH</a> (or
-Medical Subject Headings) are a type of “tag” that describes a medical
-term. We’ll use RxNav’s API to further investigate which MeSH terms are
-assocaited with our list of medications. We’ll cretea a function called
+</div>
+<div class="section" id="Interpreting-Medications">
+<h4>Interpreting Medications<a class="headerlink" href="#Interpreting-Medications" title="Permalink to this headline">¶</a></h4>
+<p>If you’re not a medical doctor, it might be difficult to interpret what
+these medications mean. We can use
+<a class="reference external" href="https://en.wikipedia.org/wiki/Medical_Subject_Headings">MeSH</a> (or
+Medical Subject Headings) to better understand what kinds of medications
+we’re dealing with.</p>
+<p>MeSH are a type of “tag” that describes a medical term. We’ll use
+RxNav’s API to further investigate which MeSH terms are assocaited with
+our list of medications. We’ll create a function called
 <code class="docutils literal notranslate"><span class="pre">get_mesh_from_drug_name</span></code> which returns relevant MeSH terms for a
 given drug name.</p>
 <div class="nbinput nblast docutils container">
@@ -1551,7 +1594,7 @@ it using <a class="reference external" href="https://github.com/ResidentMario/mi
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_walkthrough_67_1.png" src="../_images/notebooks_walkthrough_67_1.png" />
+<img alt="../_images/notebooks_walkthrough_69_1.png" src="../_images/notebooks_walkthrough_69_1.png" />
 </div>
 </div>
 <p>The data-dense columns are fully black, while the sparse columns (with
@@ -1581,7 +1624,7 @@ missing values) have a mixture of white and black.</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_walkthrough_70_0.png" src="../_images/notebooks_walkthrough_70_0.png" />
+<img alt="../_images/notebooks_walkthrough_72_0.png" src="../_images/notebooks_walkthrough_72_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1630,7 +1673,7 @@ also has a higher proportion of females than males.</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_walkthrough_74_0.png" src="../_images/notebooks_walkthrough_74_0.png" />
+<img alt="../_images/notebooks_walkthrough_76_0.png" src="../_images/notebooks_walkthrough_76_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1654,8 +1697,8 @@ Mean time in hospital: 4.39
 <p>Patients stayed on average 4.4 days in hospital. The longest stay was 14
 days.</p>
 </div>
-<div class="section" id="Number-of-Diagnoses,-Procedures,-Medications">
-<h4>Number of Diagnoses, Procedures, Medications<a class="headerlink" href="#Number-of-Diagnoses,-Procedures,-Medications" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Number-of-Medications-and-Lab-Procedures">
+<h4>Number of Medications and Lab Procedures<a class="headerlink" href="#Number-of-Medications-and-Lab-Procedures" title="Permalink to this headline">¶</a></h4>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [38]:
@@ -1679,7 +1722,7 @@ days.</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_walkthrough_78_0.png" src="../_images/notebooks_walkthrough_78_0.png" />
+<img alt="../_images/notebooks_walkthrough_80_0.png" src="../_images/notebooks_walkthrough_80_0.png" />
 </div>
 </div>
 <p>Patients on average were administered 16 medications during their
@@ -1694,13 +1737,11 @@ would suggest that the patient’s presenting issue was bone-related,
 while “nephrology” suggests a kidney problem.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [39]:
+<span></span>In [64]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">medical_specialties</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;medical_specialty&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-<span class="n">medical_specialties</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;specialty&#39;</span><span class="p">,</span> <span class="s1">&#39;count&#39;</span><span class="p">]</span>
-<span class="n">medical_specialties</span><span class="p">[</span><span class="s1">&#39;prevalence&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">medical_specialties</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span></span><span class="n">medical_specialties</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;medical_specialty&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;There are {data[&#39;medical_specialty&#39;].nunique()} medical specialties.&quot;</span><span class="p">)</span>
 <span class="n">medical_specialties</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
@@ -1716,7 +1757,7 @@ There are 72 medical specialties.
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[39]:
+<span></span>Out[64]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1738,71 +1779,60 @@ There are 72 medical specialties.
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>specialty</th>
-      <th>count</th>
-      <th>prevalence</th>
+      <th>index</th>
+      <th>medical_specialty</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
       <td>InternalMedicine</td>
-      <td>14328</td>
-      <td>0.143117</td>
+      <td>0.281029</td>
     </tr>
     <tr>
       <th>1</th>
       <td>Emergency/Trauma</td>
-      <td>7449</td>
-      <td>0.074405</td>
+      <td>0.146105</td>
     </tr>
     <tr>
       <th>2</th>
       <td>Family/GeneralPractice</td>
-      <td>7302</td>
-      <td>0.072937</td>
+      <td>0.143221</td>
     </tr>
     <tr>
       <th>3</th>
       <td>Cardiology</td>
-      <td>5296</td>
-      <td>0.052900</td>
+      <td>0.103856</td>
     </tr>
     <tr>
       <th>4</th>
       <td>Surgery-General</td>
-      <td>3068</td>
-      <td>0.030645</td>
+      <td>0.060176</td>
     </tr>
     <tr>
       <th>5</th>
       <td>Nephrology</td>
-      <td>1544</td>
-      <td>0.015422</td>
+      <td>0.030284</td>
     </tr>
     <tr>
       <th>6</th>
       <td>Orthopedics</td>
-      <td>1394</td>
-      <td>0.013924</td>
+      <td>0.027342</td>
     </tr>
     <tr>
       <th>7</th>
       <td>Orthopedics-Reconstructive</td>
-      <td>1231</td>
-      <td>0.012296</td>
+      <td>0.024145</td>
     </tr>
     <tr>
       <th>8</th>
       <td>Radiologist</td>
-      <td>1129</td>
-      <td>0.011277</td>
+      <td>0.022144</td>
     </tr>
     <tr>
       <th>9</th>
       <td>Pulmonology</td>
-      <td>856</td>
-      <td>0.008550</td>
+      <td>0.016790</td>
     </tr>
   </tbody>
 </table>
@@ -1927,8 +1957,6 @@ iteration of our model.</p>
 <p>Our dataset contains quite a few categorical variables. In general,
 machine learning models can’t handle categorical variables so we will
 need to apply one-hot encoding.</p>
-<p>By the end of this step, we’ll have a training dataset (<code class="docutils literal notranslate"><span class="pre">X</span></code>) with
-corresponding targets (<code class="docutils literal notranslate"><span class="pre">y</span></code>).</p>
 <div class="section" id="One-hot-Encoding">
 <h4>One-hot Encoding<a class="headerlink" href="#One-hot-Encoding" title="Permalink to this headline">¶</a></h4>
 <div class="nbinput nblast docutils container">
@@ -1996,8 +2024,8 @@ features and target into variables <code class="docutils literal notranslate"><s
 </div>
 </div>
 </div>
-<div class="section" id="Step-7:-Choosing-our-Model">
-<h3>Step 7: Choosing our Model<a class="headerlink" href="#Step-7:-Choosing-our-Model" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="Step-7:-Choosing-our-Binary-Classification-Model">
+<h3>Step 7: Choosing our Binary Classification Model<a class="headerlink" href="#Step-7:-Choosing-our-Binary-Classification-Model" title="Permalink to this headline">¶</a></h3>
 <p>We’ll test out the <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">Random Forest Classifier
 (RFC)</a>
 for this dataset. We’re choosing this model because it uses ensemble
