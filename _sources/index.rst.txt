@@ -6,7 +6,7 @@
 TMLS Data Science Workshop
 ===========================
 
-This workshop is an introduction to data science using Python. We'll be 
+This is an introductory workshop to data science using Python. We'll be 
 building a binary classification model to predict hospital readmission 
 in patients with diabetes. A large focus will be on data pre-processing, 
 which is a key part of the machine learning pipeline.
@@ -52,6 +52,8 @@ Environment Setup
 
    markdown/getting_started.md
    notebooks/walkthrough.ipynb
+
+
 
 Indices and tables
 ==================

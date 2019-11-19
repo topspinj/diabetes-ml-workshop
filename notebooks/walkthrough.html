@@ -86,44 +86,47 @@
 <p class="caption"><span class="caption-text">Workshop Walkthrough:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../markdown/getting_started.html">Getting Started</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Predicting Hospital Readmission with a Binary Classification Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#Data-Preprocessing">Data Preprocessing</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#Step-1:-Importing-Depedencies">Step 1: Importing Depedencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Step-2:-Load-the-Data">Step 2: Load the Data</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#How-many-rows-and-columns-are-in-our-dataset?">How many rows and columns are in our dataset?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#How-many-hospital-admissions-and-unique-patients-are-in-the-dataset?">How many hospital admissions and unique patients are in the dataset?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#How-many-patients-have-had-more-than-one-hospital-admission?">How many patients have had more than one hospital admission?</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Predicting Hospital Readmission with a Binary Classification Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Data-Preprocessing">Data Preprocessing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Step-1:-Importing-Depedencies">Step 1: Importing Depedencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Step-2:-Load-the-Data">Step 2: Load the Data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#How-many-rows-and-columns-are-in-our-dataset?">How many rows and columns are in our dataset?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#How-many-hospital-admissions-and-unique-patients-are-in-the-dataset?">How many hospital admissions and unique patients are in the dataset?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#How-many-patients-have-had-more-than-one-hospital-admission?">How many patients have had more than one hospital admission?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#Step-3:-Data-Cleaning">Step 3: Data Cleaning</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Decoding-Admission-Type">Decoding Admission Type</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Decoding-Discharge-Location">Decoding Discharge Location</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Converting-Medication-Features-From-Categorical-to-Boolean">Converting Medication Features From Categorical to Boolean</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Creating-a-Target-Variable">Creating a Target Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Step-3:-Data-Cleaning">Step 3: Data Cleaning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Decoding-Admission-Type">Decoding Admission Type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Decoding-Discharge-Location">Decoding Discharge Location</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Converting-Medication-Features-From-Categorical-to-Boolean">Converting Medication Features From Categorical to Boolean</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Creating-a-Target-Variable">Creating a Target Variable</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#Step-4:-Data-Exploration-and-Visualization">Step 4: Data Exploration and Visualization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Assessing-Missing-Values">Assessing Missing Values</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Patient-Demographics:-Age-and-Gender">Patient Demographics: Age and Gender</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#How-long-were-hospital-stays-for-a-given-admission?">How long were hospital stays for a given admission?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Number-of-Diagnoses,-Procedures,-Medications">Number of Diagnoses, Procedures, Medications</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#What-was-the-most-common-medical-specialty?">What was the most common medical specialty?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#What-proportion-of-patients-were-on-diabetes-medication-during-their-hospital-stay?">What proportion of patients were on diabetes medication during their hospital stay?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Do-patients-have-normal-A1C-levels?">Do patients have normal A1C levels?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Step-4:-Data-Exploration-and-Visualization">Step 4: Data Exploration and Visualization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Assessing-Missing-Values">Assessing Missing Values</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Patient-Demographics:-Age-and-Gender">Patient Demographics: Age and Gender</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#How-long-were-hospital-stays-for-a-given-admission?">How long were hospital stays for a given admission?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Number-of-Diagnoses,-Procedures,-Medications">Number of Diagnoses, Procedures, Medications</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#What-was-the-most-common-medical-specialty?">What was the most common medical specialty?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#What-proportion-of-patients-were-on-diabetes-medication-during-their-hospital-stay?">What proportion of patients were on diabetes medication during their hospital stay?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Do-patients-have-normal-A1C-levels?">Do patients have normal A1C levels?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#Step-5:-Feature-Selection-and-Engineering">Step 5: Feature Selection and Engineering</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#One-hot-Encoding">One-hot Encoding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Encode-Binary-Categorical-Features">Encode Binary Categorical Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Step-5:-Feature-Selection-and-Engineering">Step 5: Feature Selection and Engineering</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#One-hot-Encoding">One-hot Encoding</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Encode-Binary-Categorical-Features">Encode Binary Categorical Features</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#Data-Modelling">Data Modelling</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#Step-6:-Defining-the-X-and-y-Variables">Step 6: Defining the X and y Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Step-7:-Choosing-our-Model">Step 7: Choosing our Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Step-8:-Hyperparameter-Tuning">Step 8: Hyperparameter Tuning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Step-9:-Evaluating-Model-Performance">Step 9: Evaluating Model Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Data-Modelling">Data Modelling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Step-6:-Defining-the-X-and-y-Variables">Step 6: Defining the X and y Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Step-7:-Choosing-our-Model">Step 7: Choosing our Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Step-8:-Hyperparameter-Tuning">Step 8: Hyperparameter Tuning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Step-9:-Evaluating-Model-Performance">Step 9: Evaluating Model Performance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Step-10:-Examining-Feature-Importance">Step 10: Examining Feature Importance</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -388,11 +391,10 @@ exploration, and feature engineering</li>
 learning model to predict whether a patient will be readmitted to the
 hospital</li>
 </ul>
-</div>
 <div class="section" id="Data-Preprocessing">
-<h1>Data Preprocessing<a class="headerlink" href="#Data-Preprocessing" title="Permalink to this headline">¶</a></h1>
+<h2>Data Preprocessing<a class="headerlink" href="#Data-Preprocessing" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="Step-1:-Importing-Depedencies">
-<h2>Step 1: Importing Depedencies<a class="headerlink" href="#Step-1:-Importing-Depedencies" title="Permalink to this headline">¶</a></h2>
+<h3>Step 1: Importing Depedencies<a class="headerlink" href="#Step-1:-Importing-Depedencies" title="Permalink to this headline">¶</a></h3>
 <p>Before getting started, we’ll need to import several packages. These
 include:</p>
 <ul class="simple">
@@ -423,7 +425,7 @@ visualization package that is built off of <strong>matplotlib</strong></li>
 </div>
 </div>
 <div class="section" id="Step-2:-Load-the-Data">
-<h2>Step 2: Load the Data<a class="headerlink" href="#Step-2:-Load-the-Data" title="Permalink to this headline">¶</a></h2>
+<h3>Step 2: Load the Data<a class="headerlink" href="#Step-2:-Load-the-Data" title="Permalink to this headline">¶</a></h3>
 <p>We will be loading in the data as a
 <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html">pandas.DataFrame</a>.</p>
 <p>The data is stored in a csv file, which we can access locally (see
@@ -626,7 +628,7 @@ shows the first 5 rows of the dataframe.</p>
 </div></div>
 </div>
 <div class="section" id="How-many-rows-and-columns-are-in-our-dataset?">
-<h3>How many rows and columns are in our dataset?<a class="headerlink" href="#How-many-rows-and-columns-are-in-our-dataset?" title="Permalink to this headline">¶</a></h3>
+<h4>How many rows and columns are in our dataset?<a class="headerlink" href="#How-many-rows-and-columns-are-in-our-dataset?" title="Permalink to this headline">¶</a></h4>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [5]:
@@ -699,7 +701,7 @@ There are 23 medications represented as columns in the dataset.
 </div>
 </div>
 <div class="section" id="How-many-hospital-admissions-and-unique-patients-are-in-the-dataset?">
-<h3>How many hospital admissions and unique patients are in the dataset?<a class="headerlink" href="#How-many-hospital-admissions-and-unique-patients-are-in-the-dataset?" title="Permalink to this headline">¶</a></h3>
+<h4>How many hospital admissions and unique patients are in the dataset?<a class="headerlink" href="#How-many-hospital-admissions-and-unique-patients-are-in-the-dataset?" title="Permalink to this headline">¶</a></h4>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [8]:
@@ -725,7 +727,7 @@ Number of unique patients: 71,518
 </div>
 </div>
 <div class="section" id="How-many-patients-have-had-more-than-one-hospital-admission?">
-<h3>How many patients have had more than one hospital admission?<a class="headerlink" href="#How-many-patients-have-had-more-than-one-hospital-admission?" title="Permalink to this headline">¶</a></h3>
+<h4>How many patients have had more than one hospital admission?<a class="headerlink" href="#How-many-patients-have-had-more-than-one-hospital-admission?" title="Permalink to this headline">¶</a></h4>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [9]:
@@ -764,11 +766,11 @@ given patient is 40.</p>
 </div>
 </div>
 <div class="section" id="Step-3:-Data-Cleaning">
-<h2>Step 3: Data Cleaning<a class="headerlink" href="#Step-3:-Data-Cleaning" title="Permalink to this headline">¶</a></h2>
+<h3>Step 3: Data Cleaning<a class="headerlink" href="#Step-3:-Data-Cleaning" title="Permalink to this headline">¶</a></h3>
 <p>Data cleaning is a crucial step in the machine learning pipeline, and
 typically requires the most time and effort in any data science project.</p>
 <div class="section" id="Decoding-Admission-Type">
-<h3>Decoding Admission Type<a class="headerlink" href="#Decoding-Admission-Type" title="Permalink to this headline">¶</a></h3>
+<h4>Decoding Admission Type<a class="headerlink" href="#Decoding-Admission-Type" title="Permalink to this headline">¶</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">admission_type_id</span></code> column describes the type of admission and is
 represented by integers. The <code class="docutils literal notranslate"><span class="pre">id</span></code> column links to descriptors found in
 a separate file. We’ll update this column so that it represents the
@@ -952,7 +954,7 @@ Name: admission_type, dtype: int64
 </div>
 </div>
 <div class="section" id="Decoding-Discharge-Location">
-<h3>Decoding Discharge Location<a class="headerlink" href="#Decoding-Discharge-Location" title="Permalink to this headline">¶</a></h3>
+<h4>Decoding Discharge Location<a class="headerlink" href="#Decoding-Discharge-Location" title="Permalink to this headline">¶</a></h4>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [17]:
@@ -1172,7 +1174,7 @@ After filtering out expired patients: 70,439
 dataset has 70439 patients.</p>
 </div>
 <div class="section" id="Converting-Medication-Features-From-Categorical-to-Boolean">
-<h3>Converting Medication Features From Categorical to Boolean<a class="headerlink" href="#Converting-Medication-Features-From-Categorical-to-Boolean" title="Permalink to this headline">¶</a></h3>
+<h4>Converting Medication Features From Categorical to Boolean<a class="headerlink" href="#Converting-Medication-Features-From-Categorical-to-Boolean" title="Permalink to this headline">¶</a></h4>
 <p>Remember that list of medications we created when we loaded our data in
 Step 1? We’re going to convert these medication columns into boolean
 variables.</p>
@@ -1451,7 +1453,7 @@ out the <a class="reference external" href="https://mor.nlm.nih.gov/RxNav/">RxNa
 an overview of medication properties and interactions.</p>
 </div>
 <div class="section" id="Creating-a-Target-Variable">
-<h3>Creating a Target Variable<a class="headerlink" href="#Creating-a-Target-Variable" title="Permalink to this headline">¶</a></h3>
+<h4>Creating a Target Variable<a class="headerlink" href="#Creating-a-Target-Variable" title="Permalink to this headline">¶</a></h4>
 <p>The goal of our model will be to predict whether a patient will get
 readmitted to the hospital. Looking at the <code class="docutils literal notranslate"><span class="pre">readmitted</span></code> column, we see
 that there are 3 possible values:</p>
@@ -1514,9 +1516,9 @@ Name: readmitted_bool, dtype: int64
 </div>
 </div>
 <div class="section" id="Step-4:-Data-Exploration-and-Visualization">
-<h2>Step 4: Data Exploration and Visualization<a class="headerlink" href="#Step-4:-Data-Exploration-and-Visualization" title="Permalink to this headline">¶</a></h2>
+<h3>Step 4: Data Exploration and Visualization<a class="headerlink" href="#Step-4:-Data-Exploration-and-Visualization" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="Assessing-Missing-Values">
-<h3>Assessing Missing Values<a class="headerlink" href="#Assessing-Missing-Values" title="Permalink to this headline">¶</a></h3>
+<h4>Assessing Missing Values<a class="headerlink" href="#Assessing-Missing-Values" title="Permalink to this headline">¶</a></h4>
 <p>To get a better sense of the missing values in our data, let’s visualize
 it using <a class="reference external" href="https://github.com/ResidentMario/missingno">missingno</a>’s
 “nullity” matrix.</p>
@@ -1553,7 +1555,7 @@ it using <a class="reference external" href="https://github.com/ResidentMario/mi
 missing values) have a mixture of white and black.</p>
 </div>
 <div class="section" id="Patient-Demographics:-Age-and-Gender">
-<h3>Patient Demographics: Age and Gender<a class="headerlink" href="#Patient-Demographics:-Age-and-Gender" title="Permalink to this headline">¶</a></h3>
+<h4>Patient Demographics: Age and Gender<a class="headerlink" href="#Patient-Demographics:-Age-and-Gender" title="Permalink to this headline">¶</a></h4>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [34]:
@@ -1606,7 +1608,7 @@ population. The most common age range is 70-80 years old. Our population
 also has a higher proportion of females than males.</p>
 </div>
 <div class="section" id="How-long-were-hospital-stays-for-a-given-admission?">
-<h3>How long were hospital stays for a given admission?<a class="headerlink" href="#How-long-were-hospital-stays-for-a-given-admission?" title="Permalink to this headline">¶</a></h3>
+<h4>How long were hospital stays for a given admission?<a class="headerlink" href="#How-long-were-hospital-stays-for-a-given-admission?" title="Permalink to this headline">¶</a></h4>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [36]:
@@ -1650,7 +1652,7 @@ Mean time in hospital: 4.39
 days.</p>
 </div>
 <div class="section" id="Number-of-Diagnoses,-Procedures,-Medications">
-<h3>Number of Diagnoses, Procedures, Medications<a class="headerlink" href="#Number-of-Diagnoses,-Procedures,-Medications" title="Permalink to this headline">¶</a></h3>
+<h4>Number of Diagnoses, Procedures, Medications<a class="headerlink" href="#Number-of-Diagnoses,-Procedures,-Medications" title="Permalink to this headline">¶</a></h4>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [38]:
@@ -1681,7 +1683,7 @@ days.</p>
 hospital stay. The average number of lab procedures was 43.</p>
 </div>
 <div class="section" id="What-was-the-most-common-medical-specialty?">
-<h3>What was the most common medical specialty?<a class="headerlink" href="#What-was-the-most-common-medical-specialty?" title="Permalink to this headline">¶</a></h3>
+<h4>What was the most common medical specialty?<a class="headerlink" href="#What-was-the-most-common-medical-specialty?" title="Permalink to this headline">¶</a></h4>
 <p>We also have information on the medical specialty of a patient’s
 attending physician. This can give us a sense of the nature of a
 patient’s illness during their hospital stay. For example, “orthopedics”
@@ -1805,7 +1807,7 @@ There are 72 medical specialties.
 </div>
 </div>
 <div class="section" id="What-proportion-of-patients-were-on-diabetes-medication-during-their-hospital-stay?">
-<h3>What proportion of patients were on diabetes medication during their hospital stay?<a class="headerlink" href="#What-proportion-of-patients-were-on-diabetes-medication-during-their-hospital-stay?" title="Permalink to this headline">¶</a></h3>
+<h4>What proportion of patients were on diabetes medication during their hospital stay?<a class="headerlink" href="#What-proportion-of-patients-were-on-diabetes-medication-during-their-hospital-stay?" title="Permalink to this headline">¶</a></h4>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [40]:
@@ -1831,7 +1833,7 @@ Name: diabetesMed, dtype: float64
 <p>77% of patients were on diabetes medication during their stay.</p>
 </div>
 <div class="section" id="Do-patients-have-normal-A1C-levels?">
-<h3>Do patients have normal A1C levels?<a class="headerlink" href="#Do-patients-have-normal-A1C-levels?" title="Permalink to this headline">¶</a></h3>
+<h4>Do patients have normal A1C levels?<a class="headerlink" href="#Do-patients-have-normal-A1C-levels?" title="Permalink to this headline">¶</a></h4>
 <p>The A1C blood test is used to diagnose whether a patient has type I or
 II diabetes, and represents the average levels of blood sugar over the
 past 3 months. The higher the A1C level, the poorer a patient’s blood
@@ -1918,14 +1920,14 @@ iteration of our model.</p>
 </div>
 </div>
 <div class="section" id="Step-5:-Feature-Selection-and-Engineering">
-<h2>Step 5: Feature Selection and Engineering<a class="headerlink" href="#Step-5:-Feature-Selection-and-Engineering" title="Permalink to this headline">¶</a></h2>
+<h3>Step 5: Feature Selection and Engineering<a class="headerlink" href="#Step-5:-Feature-Selection-and-Engineering" title="Permalink to this headline">¶</a></h3>
 <p>Our dataset contains quite a few categorical variables. In general,
 machine learning models can’t handle categorical variables so we will
 need to apply one-hot encoding.</p>
 <p>By the end of this step, we’ll have a training dataset (<code class="docutils literal notranslate"><span class="pre">X</span></code>) with
 corresponding targets (<code class="docutils literal notranslate"><span class="pre">y</span></code>).</p>
 <div class="section" id="One-hot-Encoding">
-<h3>One-hot Encoding<a class="headerlink" href="#One-hot-Encoding" title="Permalink to this headline">¶</a></h3>
+<h4>One-hot Encoding<a class="headerlink" href="#One-hot-Encoding" title="Permalink to this headline">¶</a></h4>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [43]:
@@ -1942,7 +1944,7 @@ corresponding targets (<code class="docutils literal notranslate"><span class="p
 </div>
 </div>
 <div class="section" id="Encode-Binary-Categorical-Features">
-<h3>Encode Binary Categorical Features<a class="headerlink" href="#Encode-Binary-Categorical-Features" title="Permalink to this headline">¶</a></h3>
+<h4>Encode Binary Categorical Features<a class="headerlink" href="#Encode-Binary-Categorical-Features" title="Permalink to this headline">¶</a></h4>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [44]:
@@ -1958,9 +1960,9 @@ corresponding targets (<code class="docutils literal notranslate"><span class="p
 </div>
 </div>
 <div class="section" id="Data-Modelling">
-<h1>Data Modelling<a class="headerlink" href="#Data-Modelling" title="Permalink to this headline">¶</a></h1>
+<h2>Data Modelling<a class="headerlink" href="#Data-Modelling" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="Step-6:-Defining-the-X-and-y-Variables">
-<h2>Step 6: Defining the X and y Variables<a class="headerlink" href="#Step-6:-Defining-the-X-and-y-Variables" title="Permalink to this headline">¶</a></h2>
+<h3>Step 6: Defining the X and y Variables<a class="headerlink" href="#Step-6:-Defining-the-X-and-y-Variables" title="Permalink to this headline">¶</a></h3>
 <p>Given that we now have a good understanding of our dataset, we can now
 aim to build predictive models. The first step is to separate our
 features and target into variables <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> respectively.</p>
@@ -1992,7 +1994,7 @@ features and target into variables <code class="docutils literal notranslate"><s
 </div>
 </div>
 <div class="section" id="Step-7:-Choosing-our-Model">
-<h2>Step 7: Choosing our Model<a class="headerlink" href="#Step-7:-Choosing-our-Model" title="Permalink to this headline">¶</a></h2>
+<h3>Step 7: Choosing our Model<a class="headerlink" href="#Step-7:-Choosing-our-Model" title="Permalink to this headline">¶</a></h3>
 <p>We’ll test out the <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">Random Forest Classifier
 (RFC)</a>
 for this dataset. We’re choosing this model because it uses ensemble
@@ -2067,7 +2069,7 @@ the model. To select the optimal values of a hyperparameter, we’ll need
 to use a technique called hyperparameter tuning.</p>
 </div>
 <div class="section" id="Step-8:-Hyperparameter-Tuning">
-<h2>Step 8: Hyperparameter Tuning<a class="headerlink" href="#Step-8:-Hyperparameter-Tuning" title="Permalink to this headline">¶</a></h2>
+<h3>Step 8: Hyperparameter Tuning<a class="headerlink" href="#Step-8:-Hyperparameter-Tuning" title="Permalink to this headline">¶</a></h3>
 <p>Hyperparemter tuning is a critical step in the machine learning
 pipeline. It describes the process of choosing a set of optimal
 hyperparameters for a model. The hyperparameters that you select can
@@ -2562,7 +2564,7 @@ Best score: 0.616
 </div>
 </div>
 <div class="section" id="Step-9:-Evaluating-Model-Performance">
-<h2>Step 9: Evaluating Model Performance<a class="headerlink" href="#Step-9:-Evaluating-Model-Performance" title="Permalink to this headline">¶</a></h2>
+<h3>Step 9: Evaluating Model Performance<a class="headerlink" href="#Step-9:-Evaluating-Model-Performance" title="Permalink to this headline">¶</a></h3>
 <p>There are several metrics that we can use to evaluate model performance:</p>
 <ul class="simple">
 <li>RMSE</li>
@@ -2650,6 +2652,9 @@ get the measured accuracy from the trained model.</p>
 </pre></div>
 </div>
 </div>
+</div>
+<div class="section" id="Step-10:-Examining-Feature-Importance">
+<h3>Step 10: Examining Feature Importance<a class="headerlink" href="#Step-10:-Examining-Feature-Importance" title="Permalink to this headline">¶</a></h3>
 <p>RandomForestClassifier gives us a list of feature importances. We can
 dig a bit further to examine which features were the most important in
 classification.</p>
@@ -2776,6 +2781,7 @@ classification.</p>
   </tbody>
 </table>
 </div></div>
+</div>
 </div>
 </div>
 </div>
