@@ -45,7 +45,6 @@ Environment Setup
    :caption: Glossary of Terms:
 
    markdown/machine_learning.md
-   markdown/learning_resources.md
 
 .. toctree::
    :maxdepth: 2
