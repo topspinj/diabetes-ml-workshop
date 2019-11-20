@@ -597,26 +597,12 @@
    ]
   },
   {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "Great! We can now merge admission type with our original dataset. We'll first rename `description` to `admission_type` so that it's more descriptive."
-   ]
-  },
-  {
    "cell_type": "code",
    "execution_count": 13,
    "metadata": {},
    "outputs": [],
    "source": [
     "admission_type.columns = ['admission_type_id', 'admission_type']"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "We can do a merge on `admission_type_id`. The default merge setting is an [inner join](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.merge.html)."
    ]
   },
   {
@@ -632,7 +618,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "Now that we have an interpretable version of `admission_type` in our dataset, let's see what the most common types of admissions are."
+    "Now that we have a \"clean\" mapper, we can apply it to our dataset. We can [map](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.map.html) `admission_type_id` values in our original dataframe to the descriptors in our `admission_type_mapper` dictionary."
    ]
   },
   {
@@ -688,16 +674,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "It looks like *Emergency* is the most common type of admission followed by *Urgent* and *Elective*. *Trauma Center* and *Newborn* are very rare types of admissions."
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "#### Decoding Discharge Location\n",
-    "\n",
-    "In medicine, \"expired\" is a term that describes a patient who has died. We only want to predict hospital readmission for living patients so we're going to remove hospital admissions in which the patient was recorded as \"expired\" upon being discharged in our dataset."
+    "#### Decoding Discharge Location"
    ]
   },
   {
@@ -790,6 +767,8 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
+    "In medicine, \"expired\" is a term that describes a patient who has died. We only want to predict hospital readmission for living patients so we're going to remove hospital admissions in which the patient was recorded as \"expired\" upon being discharged in our dataset.\n",
+    "\n",
     "We'll first convert our `description` column to lowercase (`str.lower()`), then we'll search for rows that contain \"expired\" (`str.contains(\"expired\")`). "
    ]
   },
@@ -967,8 +946,13 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "#### Converting Medication Features From Categorical to Boolean\n",
-    "\n",
+    "#### Converting Medication Features From Categorical to Boolean"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
     "Remember that list of medications we created when we loaded our data in Step 1? We're going to convert these medication columns into boolean variables."
    ]
   },
@@ -1085,7 +1069,7 @@
        "    <tr style=\"text-align: right;\">\n",
        "      <th></th>\n",
        "      <th>medication</th>\n",
-       "      <th>prevelance</th>\n",
+       "      <th>prevalence</th>\n",
        "    </tr>\n",
        "  </thead>\n",
        "  <tbody>\n",
@@ -1119,7 +1103,7 @@
        "</div>"
       ],
       "text/plain": [
-       "      medication  prevelance\n",
+       "      medication  prevalence\n",
        "17       insulin    0.543779\n",
        "0      metformin    0.229523\n",
        "6      glipizide    0.138916\n",
@@ -1147,22 +1131,20 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 62,
+   "execution_count": 27,
    "metadata": {},
    "outputs": [
     {
-     "ename": "ValueError",
-     "evalue": "Could not interpret input 'prevalence'",
-     "output_type": "error",
-     "traceback": [
-      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
-      "\u001b[0;31mValueError\u001b[0m                                Traceback (most recent call last)",
-      "\u001b[0;32m<ipython-input-62-44b1c12a4eb4>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0msns\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mbarplot\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mx\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;34m'medication'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0my\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;34m'prevalence'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mdata\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mmedication_counts\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mhead\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;36m10\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mpalette\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;34m'viridis'\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      2\u001b[0m \u001b[0mplt\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mxticks\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mrotation\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;36m90\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      3\u001b[0m \u001b[0mplt\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mshow\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
-      "\u001b[0;32m/usr/local/lib/python3.7/site-packages/seaborn/categorical.py\u001b[0m in \u001b[0;36mbarplot\u001b[0;34m(x, y, hue, data, order, hue_order, estimator, ci, n_boot, units, orient, color, palette, saturation, errcolor, errwidth, capsize, dodge, ax, **kwargs)\u001b[0m\n\u001b[1;32m   3147\u001b[0m                           \u001b[0mestimator\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mci\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mn_boot\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0munits\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   3148\u001b[0m                           \u001b[0morient\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mcolor\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mpalette\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0msaturation\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-> 3149\u001b[0;31m                           errcolor, errwidth, capsize, dodge)\n\u001b[0m\u001b[1;32m   3150\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   3151\u001b[0m     \u001b[0;32mif\u001b[0m \u001b[0max\u001b[0m \u001b[0;32mis\u001b[0m \u001b[0;32mNone\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
-      "\u001b[0;32m/usr/local/lib/python3.7/site-packages/seaborn/categorical.py\u001b[0m in \u001b[0;36m__init__\u001b[0;34m(self, x, y, hue, data, order, hue_order, estimator, ci, n_boot, units, orient, color, palette, saturation, errcolor, errwidth, capsize, dodge)\u001b[0m\n\u001b[1;32m   1605\u001b[0m         \u001b[0;34m\"\"\"Initialize the plotter.\"\"\"\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1606\u001b[0m         self.establish_variables(x, y, hue, data, orient,\n\u001b[0;32m-> 1607\u001b[0;31m                                  order, hue_order, units)\n\u001b[0m\u001b[1;32m   1608\u001b[0m         \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mestablish_colors\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mcolor\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mpalette\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0msaturation\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1609\u001b[0m         \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mestimate_statistic\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mestimator\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mci\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mn_boot\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
-      "\u001b[0;32m/usr/local/lib/python3.7/site-packages/seaborn/categorical.py\u001b[0m in \u001b[0;36mestablish_variables\u001b[0;34m(self, x, y, hue, data, orient, order, hue_order, units)\u001b[0m\n\u001b[1;32m    153\u001b[0m                 \u001b[0;32mif\u001b[0m \u001b[0misinstance\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0minput\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mstring_types\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    154\u001b[0m                     \u001b[0merr\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m\"Could not interpret input '{}'\"\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mformat\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0minput\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 155\u001b[0;31m                     \u001b[0;32mraise\u001b[0m \u001b[0mValueError\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0merr\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    156\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    157\u001b[0m             \u001b[0;31m# Figure out the plotting orientation\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
-      "\u001b[0;31mValueError\u001b[0m: Could not interpret input 'prevalence'"
-     ]
+     "data": {
+      "image/png": "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\n",
+      "text/plain": [
+       "<Figure size 432x288 with 1 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
     }
    ],
    "source": [
@@ -1175,18 +1157,14 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "We can see that `insulin` is by far the most prevelance medication followed by `metformin`. More than half of the patients in our dataset were prescribed insulin whie 22% were prescribed metformin. "
+    "We can see that `insulin` is by far the most prevalent medication followed by `metformin`. More than half of the patients in our dataset were prescribed insulin whie 22% were prescribed metformin. "
    ]
   },
   {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "#### Interpreting Medications \n",
-    "\n",
-    "If you're not a medical doctor, it might be difficult to interpret what these medications mean. We can use [MeSH](https://en.wikipedia.org/wiki/Medical_Subject_Headings) (or Medical Subject Headings) to better understand what kinds of medications we're dealing with. \n",
-    "\n",
-    "MeSH are a type of \"tag\" that describes a medical term. We'll use RxNav's API to further investigate which MeSH terms are assocaited with our list of medications. We'll create a function called `get_mesh_from_drug_name` which returns relevant MeSH terms for a given drug name."
+    "[MeSH](https://en.wikipedia.org/wiki/Medical_Subject_Headings) (or Medical Subject Headings) are a type of \"tag\" that describes a medical term. We'll use RxNav's API to further investigate which MeSH terms are assocaited with our list of medications. We'll cretea a function called `get_mesh_from_drug_name` which returns relevant MeSH terms for a given drug name."
    ]
   },
   {
@@ -1246,9 +1224,9 @@
        " 'glyburide': ['Hypoglycemic Agents'],\n",
        " 'pioglitazone': ['Hypoglycemic Agents'],\n",
        " 'rosiglitazone': ['Hypoglycemic Agents'],\n",
-       " 'glimepiride': ['Anti-Arrhythmia Agents',\n",
+       " 'glimepiride': ['Immunosuppressive Agents',\n",
        "  'Hypoglycemic Agents',\n",
-       "  'Immunosuppressive Agents'],\n",
+       "  'Anti-Arrhythmia Agents'],\n",
        " 'repaglinide': ['Hypoglycemic Agents'],\n",
        " 'nateglinide': ['Hypoglycemic Agents'],\n",
        " 'glyburide-metformin': ['Hypoglycemic Agents']}"
@@ -1369,7 +1347,7 @@
     {
      "data": {
       "text/plain": [
-       "<matplotlib.axes._subplots.AxesSubplot at 0x1188bf950>"
+       "<matplotlib.axes._subplots.AxesSubplot at 0x1145977d0>"
       ]
      },
      "execution_count": 33,
@@ -1529,7 +1507,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "#### Number of Medications and Lab Procedures "
+    "#### Number of Diagnoses, Procedures, Medications"
    ]
   },
   {
@@ -1581,7 +1559,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 64,
+   "execution_count": 39,
    "metadata": {},
    "outputs": [
     {
@@ -1612,86 +1590,99 @@
        "  <thead>\n",
        "    <tr style=\"text-align: right;\">\n",
        "      <th></th>\n",
-       "      <th>index</th>\n",
-       "      <th>medical_specialty</th>\n",
+       "      <th>specialty</th>\n",
+       "      <th>count</th>\n",
+       "      <th>prevalence</th>\n",
        "    </tr>\n",
        "  </thead>\n",
        "  <tbody>\n",
        "    <tr>\n",
        "      <th>0</th>\n",
        "      <td>InternalMedicine</td>\n",
-       "      <td>0.281029</td>\n",
+       "      <td>14328</td>\n",
+       "      <td>0.143117</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>1</th>\n",
        "      <td>Emergency/Trauma</td>\n",
-       "      <td>0.146105</td>\n",
+       "      <td>7449</td>\n",
+       "      <td>0.074405</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>2</th>\n",
        "      <td>Family/GeneralPractice</td>\n",
-       "      <td>0.143221</td>\n",
+       "      <td>7302</td>\n",
+       "      <td>0.072937</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>3</th>\n",
        "      <td>Cardiology</td>\n",
-       "      <td>0.103856</td>\n",
+       "      <td>5296</td>\n",
+       "      <td>0.052900</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>4</th>\n",
        "      <td>Surgery-General</td>\n",
-       "      <td>0.060176</td>\n",
+       "      <td>3068</td>\n",
+       "      <td>0.030645</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>5</th>\n",
        "      <td>Nephrology</td>\n",
-       "      <td>0.030284</td>\n",
+       "      <td>1544</td>\n",
+       "      <td>0.015422</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>6</th>\n",
        "      <td>Orthopedics</td>\n",
-       "      <td>0.027342</td>\n",
+       "      <td>1394</td>\n",
+       "      <td>0.013924</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>7</th>\n",
        "      <td>Orthopedics-Reconstructive</td>\n",
-       "      <td>0.024145</td>\n",
+       "      <td>1231</td>\n",
+       "      <td>0.012296</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>8</th>\n",
        "      <td>Radiologist</td>\n",
-       "      <td>0.022144</td>\n",
+       "      <td>1129</td>\n",
+       "      <td>0.011277</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>9</th>\n",
        "      <td>Pulmonology</td>\n",
-       "      <td>0.016790</td>\n",
+       "      <td>856</td>\n",
+       "      <td>0.008550</td>\n",
        "    </tr>\n",
        "  </tbody>\n",
        "</table>\n",
        "</div>"
       ],
       "text/plain": [
-       "                        index  medical_specialty\n",
-       "0            InternalMedicine           0.281029\n",
-       "1            Emergency/Trauma           0.146105\n",
-       "2      Family/GeneralPractice           0.143221\n",
-       "3                  Cardiology           0.103856\n",
-       "4             Surgery-General           0.060176\n",
-       "5                  Nephrology           0.030284\n",
-       "6                 Orthopedics           0.027342\n",
-       "7  Orthopedics-Reconstructive           0.024145\n",
-       "8                 Radiologist           0.022144\n",
-       "9                 Pulmonology           0.016790"
+       "                    specialty  count  prevalence\n",
+       "0            InternalMedicine  14328    0.143117\n",
+       "1            Emergency/Trauma   7449    0.074405\n",
+       "2      Family/GeneralPractice   7302    0.072937\n",
+       "3                  Cardiology   5296    0.052900\n",
+       "4             Surgery-General   3068    0.030645\n",
+       "5                  Nephrology   1544    0.015422\n",
+       "6                 Orthopedics   1394    0.013924\n",
+       "7  Orthopedics-Reconstructive   1231    0.012296\n",
+       "8                 Radiologist   1129    0.011277\n",
+       "9                 Pulmonology    856    0.008550"
       ]
      },
-     "execution_count": 64,
+     "execution_count": 39,
      "metadata": {},
      "output_type": "execute_result"
     }
    ],
    "source": [
-    "medical_specialties = data['medical_specialty'].value_counts(normalize=True).reset_index()\n",
+    "medical_specialties = data['medical_specialty'].value_counts().reset_index()\n",
+    "medical_specialties.columns = ['specialty', 'count']\n",
+    "medical_specialties['prevalence'] = medical_specialties['count']/len(data)\n",
     "print(f\"There are {data['medical_specialty'].nunique()} medical specialties.\")\n",
     "medical_specialties.head(10)"
    ]
@@ -1802,16 +1793,23 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "### Step 5: Feature Selection and Engineering\n",
-    "\n",
-    "Our dataset contains quite a few categorical variables. In general, machine learning models can't handle categorical variables so we will need to apply one-hot encoding. "
+    "### Step 5: Feature Selection and Engineering"
    ]
   },
   {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "#### One-hot Encoding "
+    "Our dataset contains quite a few categorical variables such as `race`, `age`, and `admission_type`. In general, machine learning models can't handle categorical variables so we can use one-hot and label encoding to convert our string features to numerical without adding a hierarchy. "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### One-hot Encoding\n",
+    "\n",
+    "For example, we want to convert a patient's race to a numerical feature. We could use label encoding to convert each race to values 0-5 but this suggests an inherent order between the different races that does not exist. With one-hot encoding, each race becomes an independent feature."
    ]
   },
   {
@@ -1820,7 +1818,7 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "categorical = ['race', 'age', 'admission_type']\n",
+    "categorical = ['race', 'admission_type']\n",
     "\n",
     "for c in categorical:\n",
     "    data = pd.concat([data, pd.get_dummies(data[c], prefix=c)], axis=1)\n",
@@ -1828,20 +1826,61 @@
    ]
   },
   {
+   "cell_type": "code",
+   "execution_count": 44,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "[70-80)     25562\n",
+       "[60-70)     22185\n",
+       "[50-60)     17102\n",
+       "[80-90)     16706\n",
+       "[40-50)      9626\n",
+       "[30-40)      3765\n",
+       "[90-100)     2668\n",
+       "[20-30)      1650\n",
+       "[10-20)       690\n",
+       "[0-10)        160\n",
+       "Name: age, dtype: int64"
+      ]
+     },
+     "execution_count": 44,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data['age'].value_counts()"
+   ]
+  },
+  {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "#### Encode Binary Categorical Features"
+    "#### Label Encoding\n",
+    "\n",
+    "There are a couple of features where label encoding is applicable. \n",
+    "\n",
+    "- age (from `[0-10)` to `[70-80)`) can assume an ordinal relationship\n",
+    "- gender (`Male` or `Female`) converts to 0 and 1 which is binary\n",
+    "\n",
+    "Let's go ahead and apply scikit-learn's [LabelEncoder](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html) to these two columns."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 44,
+   "execution_count": 45,
    "metadata": {},
    "outputs": [],
    "source": [
-    "data['gender_bool'] = data['gender'].map({'Female': 1, 'Male': 0})\n",
-    "data = data.dropna(subset=['gender_bool'])"
+    "from sklearn.preprocessing import LabelEncoder\n",
+    "\n",
+    "label_encoder = LabelEncoder()\n",
+    "\n",
+    "data['age_label'] = label_encoder.fit_transform(data['age'])\n",
+    "data['gender_bool'] = label_encoder.fit_transform(data['gender'].astype(str))"
    ]
   },
   {
@@ -1867,26 +1906,32 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 45,
+   "execution_count": 46,
    "metadata": {},
    "outputs": [],
    "source": [
-    "X = data[['metformin_bool', 'repaglinide_bool',\n",
-    "       'nateglinide_bool', 'chlorpropamide_bool', 'glimepiride_bool',\n",
-    "       'acetohexamide_bool', 'glipizide_bool', 'glyburide_bool',\n",
-    "       'tolbutamide_bool', 'pioglitazone_bool', 'rosiglitazone_bool',\n",
-    "       'acarbose_bool', 'miglitol_bool', 'troglitazone_bool',\n",
-    "       'tolazamide_bool', 'examide_bool', 'citoglipton_bool', 'insulin_bool',\n",
-    "       'glyburide-metformin_bool', 'glipizide-metformin_bool',\n",
-    "       'glimepiride-pioglitazone_bool', 'metformin-rosiglitazone_bool',\n",
-    "       'metformin-pioglitazone_bool','num_lab_procedures', 'num_procedures',\n",
-    "       'num_medications', 'number_outpatient', 'number_emergency',\n",
-    "       'number_inpatient', 'number_diagnoses', 'race_AfricanAmerican', 'race_Asian',\n",
-    "       'race_Caucasian', 'race_Hispanic', 'race_Other', 'age_[20-30)', 'age_[30-40)', 'age_[40-50)',\n",
-    "       'age_[50-60)', 'age_[60-70)', 'age_[70-80)', 'age_[80-90)',\n",
-    "       'age_[90-100)', 'admission_type_Elective', 'admission_type_Newborn',\n",
-    "       'admission_type_Trauma Center', 'admission_type_Urgent', 'gender_bool']]\n",
+    "med_features = ['metformin_bool', 'repaglinide_bool',\n",
+    "    'nateglinide_bool', 'chlorpropamide_bool', 'glimepiride_bool',\n",
+    "    'acetohexamide_bool', 'glipizide_bool', 'glyburide_bool',\n",
+    "    'tolbutamide_bool', 'pioglitazone_bool', 'rosiglitazone_bool',\n",
+    "    'acarbose_bool', 'miglitol_bool', 'troglitazone_bool',\n",
+    "    'tolazamide_bool', 'examide_bool', 'citoglipton_bool', 'insulin_bool',\n",
+    "    'glyburide-metformin_bool', 'glipizide-metformin_bool',\n",
+    "    'glimepiride-pioglitazone_bool', 'metformin-rosiglitazone_bool',\n",
+    "    'metformin-pioglitazone_bool']\n",
     "\n",
+    "demographic_features = ['race_AfricanAmerican', 'race_Asian',\n",
+    "    'race_Caucasian', 'race_Hispanic', 'race_Other', 'age_label',\n",
+    "    'admission_type_Elective', 'admission_type_Newborn',\n",
+    "    'admission_type_Trauma Center', 'admission_type_Urgent', 'gender_bool']\n",
+    "\n",
+    "other_features = ['num_lab_procedures', 'num_procedures',\n",
+    "       'num_medications', 'number_outpatient', 'number_emergency',\n",
+    "       'number_inpatient', 'number_diagnoses']\n",
+    "\n",
+    "all_features = med_features + demographic_features + other_features\n",
+    "\n",
+    "X = data[all_features]\n",
     "y = data['readmitted_bool']"
    ]
   },
@@ -1894,14 +1939,24 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "### Step 7: Choosing our Binary Classification Model\n",
+    "### Step 7: Choosing our Model\n",
     "\n",
-    "We'll test out the [Random Forest Classifier (RFC)](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html) for this dataset. We're choosing this model because it uses ensemble learning and has interpretable results in which feature importance can be extracted. We'll import it from [scikit-learn](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html) which is a very comprehensive Python library for data mining and data analysis."
+    "We'll test out the [Random Forest Classifier (RFC)](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html) for this dataset. RFC is an ensemble learning technique that works by creating a \"forest\" of decision trees. Each tree evaluates the data for a given patient and outputs a 0 or 1. Random Forest looks at the output of all trees and gives the majority vote as its result. Let's say we have a forest with 3 trees and 2 of them predict the patient will be readmitted. The majority vote is that the patient will be readmitted.\n",
+    "\n",
+    "<img src=\"https://s3.us-east-2.amazonaws.com/hidden.layers.assets/random_forest.png\" width=\"70%\"/>\n",
+    "\n",
+    "We're choosing Random Forest because:\n",
+    "\n",
+    "- it is robust to outliers\n",
+    "- it is able to handle unbalanced datasets \n",
+    "- it measures feature importance\n",
+    "\n",
+    "We'll import RFC from [scikit-learn](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html) which is a very comprehensive Python library for data mining and data analysis."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 46,
+   "execution_count": 47,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -1917,7 +1972,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 47,
+   "execution_count": 48,
    "metadata": {},
    "outputs": [
     {
@@ -1942,7 +1997,7 @@
        " 'warm_start': False}"
       ]
      },
-     "execution_count": 47,
+     "execution_count": 48,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -1969,8 +2024,13 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "### Step 8: Hyperparameter Tuning\n",
-    "\n",
+    "### Step 8: Hyperparameter Tuning"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
     "Hyperparemter tuning is a critical step in the machine learning pipeline. It describes the process of choosing a set of optimal hyperparameters for a model. The hyperparameters that you select can have a significant impact on your model's performance. \n",
     "\n",
     "We're going to be testing out two hyperparameter tuning techniques offered by scikit-learn:\n",
@@ -1992,7 +2052,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 48,
+   "execution_count": 49,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -2015,7 +2075,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 49,
+   "execution_count": 50,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -2031,7 +2091,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 50,
+   "execution_count": 51,
    "metadata": {},
    "outputs": [
     {
@@ -2050,7 +2110,7 @@
        "       scoring=None, verbose=0)"
       ]
      },
-     "execution_count": 50,
+     "execution_count": 51,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -2063,20 +2123,20 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "Let's see what our optimal hyperparameters are:"
+    "What are the optimal hyperparameters?"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 51,
+   "execution_count": 52,
    "metadata": {},
    "outputs": [
     {
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "Optimal hyperparameters: {'max_depth': 3, 'n_estimators': 50}\n",
-      "Best score: 0.616\n"
+      "Optimal hyperparameters: {'max_depth': 5, 'n_estimators': 50}\n",
+      "Best score: 0.617\n"
      ]
     }
    ],
@@ -2089,14 +2149,15 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "Based on the search space we defined for GridSearchCv, it looks like max_depth of 5 and n_estimators of 10 are our optimal hyperparmeters which gave us an accuracy of 0.616. \n",
+    "Based on the search space we defined for GridSearchCv, it looks like max_depth of 5 and n_estimators of 10 are our optimal hyperparmeters which gave us an accuracy of 0.617. \n",
+    "\n",
     "\n",
     "We can also see a thorough report of our results with `cv_results_`. It shows fit time, score time, and mean train/test score (averaged over all folds). We'll sort by `mean_test_score`."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 52,
+   "execution_count": 53,
    "metadata": {},
    "outputs": [
     {
@@ -2142,109 +2203,109 @@
        "  </thead>\n",
        "  <tbody>\n",
        "    <tr>\n",
-       "      <th>2</th>\n",
-       "      <td>0.898266</td>\n",
-       "      <td>0.022974</td>\n",
-       "      <td>0.109786</td>\n",
-       "      <td>0.010580</td>\n",
-       "      <td>3</td>\n",
-       "      <td>50</td>\n",
-       "      <td>{'max_depth': 3, 'n_estimators': 50}</td>\n",
-       "      <td>0.607803</td>\n",
-       "      <td>0.629937</td>\n",
-       "      <td>0.611208</td>\n",
-       "      <td>0.616316</td>\n",
-       "      <td>0.009731</td>\n",
-       "      <td>1</td>\n",
-       "      <td>0.626146</td>\n",
-       "      <td>0.614405</td>\n",
-       "      <td>0.621028</td>\n",
-       "      <td>0.620526</td>\n",
-       "      <td>0.004806</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>1</th>\n",
-       "      <td>0.211936</td>\n",
-       "      <td>0.002936</td>\n",
-       "      <td>0.031435</td>\n",
-       "      <td>0.000512</td>\n",
-       "      <td>3</td>\n",
-       "      <td>10</td>\n",
-       "      <td>{'max_depth': 3, 'n_estimators': 10}</td>\n",
-       "      <td>0.607084</td>\n",
-       "      <td>0.627600</td>\n",
-       "      <td>0.612586</td>\n",
-       "      <td>0.615757</td>\n",
-       "      <td>0.008670</td>\n",
-       "      <td>2</td>\n",
-       "      <td>0.622325</td>\n",
-       "      <td>0.613431</td>\n",
-       "      <td>0.619469</td>\n",
-       "      <td>0.618409</td>\n",
-       "      <td>0.003708</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>8</th>\n",
-       "      <td>2.002041</td>\n",
-       "      <td>0.079391</td>\n",
-       "      <td>0.195860</td>\n",
-       "      <td>0.007887</td>\n",
-       "      <td>10</td>\n",
-       "      <td>50</td>\n",
-       "      <td>{'max_depth': 10, 'n_estimators': 50}</td>\n",
-       "      <td>0.612028</td>\n",
-       "      <td>0.622355</td>\n",
-       "      <td>0.607612</td>\n",
-       "      <td>0.613998</td>\n",
-       "      <td>0.006178</td>\n",
-       "      <td>3</td>\n",
-       "      <td>0.654435</td>\n",
-       "      <td>0.646904</td>\n",
-       "      <td>0.646754</td>\n",
-       "      <td>0.649364</td>\n",
-       "      <td>0.003586</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
        "      <th>5</th>\n",
-       "      <td>1.344713</td>\n",
-       "      <td>0.114324</td>\n",
-       "      <td>0.142994</td>\n",
-       "      <td>0.017598</td>\n",
+       "      <td>1.132375</td>\n",
+       "      <td>0.009537</td>\n",
+       "      <td>0.121620</td>\n",
+       "      <td>0.001741</td>\n",
        "      <td>5</td>\n",
        "      <td>50</td>\n",
        "      <td>{'max_depth': 5, 'n_estimators': 50}</td>\n",
-       "      <td>0.607983</td>\n",
-       "      <td>0.630057</td>\n",
-       "      <td>0.602248</td>\n",
-       "      <td>0.613429</td>\n",
-       "      <td>0.011988</td>\n",
-       "      <td>4</td>\n",
-       "      <td>0.631930</td>\n",
-       "      <td>0.620144</td>\n",
-       "      <td>0.626631</td>\n",
-       "      <td>0.626235</td>\n",
-       "      <td>0.004820</td>\n",
+       "      <td>0.609014</td>\n",
+       "      <td>0.633214</td>\n",
+       "      <td>0.608373</td>\n",
+       "      <td>0.616867</td>\n",
+       "      <td>0.011562</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0.633694</td>\n",
+       "      <td>0.621683</td>\n",
+       "      <td>0.627437</td>\n",
+       "      <td>0.627605</td>\n",
+       "      <td>0.004905</td>\n",
        "    </tr>\n",
        "    <tr>\n",
-       "      <th>0</th>\n",
-       "      <td>0.136248</td>\n",
-       "      <td>0.007508</td>\n",
-       "      <td>0.024020</td>\n",
-       "      <td>0.001144</td>\n",
+       "      <th>2</th>\n",
+       "      <td>0.821872</td>\n",
+       "      <td>0.007762</td>\n",
+       "      <td>0.100330</td>\n",
+       "      <td>0.000355</td>\n",
        "      <td>3</td>\n",
+       "      <td>50</td>\n",
+       "      <td>{'max_depth': 3, 'n_estimators': 50}</td>\n",
+       "      <td>0.600264</td>\n",
+       "      <td>0.627461</td>\n",
+       "      <td>0.613047</td>\n",
+       "      <td>0.613591</td>\n",
+       "      <td>0.011110</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0.624509</td>\n",
+       "      <td>0.611839</td>\n",
+       "      <td>0.619121</td>\n",
+       "      <td>0.618490</td>\n",
+       "      <td>0.005192</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>8</th>\n",
+       "      <td>1.907094</td>\n",
+       "      <td>0.071164</td>\n",
+       "      <td>0.202362</td>\n",
+       "      <td>0.028745</td>\n",
+       "      <td>10</td>\n",
+       "      <td>50</td>\n",
+       "      <td>{'max_depth': 10, 'n_estimators': 50}</td>\n",
+       "      <td>0.610332</td>\n",
+       "      <td>0.621767</td>\n",
+       "      <td>0.606814</td>\n",
+       "      <td>0.612971</td>\n",
+       "      <td>0.006383</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0.655344</td>\n",
+       "      <td>0.647828</td>\n",
+       "      <td>0.647259</td>\n",
+       "      <td>0.650144</td>\n",
+       "      <td>0.003685</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>0.251050</td>\n",
+       "      <td>0.008086</td>\n",
+       "      <td>0.035588</td>\n",
+       "      <td>0.000535</td>\n",
        "      <td>5</td>\n",
-       "      <td>{'max_depth': 3, 'n_estimators': 5}</td>\n",
-       "      <td>0.609751</td>\n",
-       "      <td>0.624753</td>\n",
-       "      <td>0.601828</td>\n",
-       "      <td>0.612111</td>\n",
-       "      <td>0.009507</td>\n",
+       "      <td>10</td>\n",
+       "      <td>{'max_depth': 5, 'n_estimators': 10}</td>\n",
+       "      <td>0.606107</td>\n",
+       "      <td>0.624554</td>\n",
+       "      <td>0.596686</td>\n",
+       "      <td>0.609116</td>\n",
+       "      <td>0.011574</td>\n",
+       "      <td>4</td>\n",
+       "      <td>0.631596</td>\n",
+       "      <td>0.615375</td>\n",
+       "      <td>0.622912</td>\n",
+       "      <td>0.623294</td>\n",
+       "      <td>0.006628</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>7</th>\n",
+       "      <td>0.399570</td>\n",
+       "      <td>0.004194</td>\n",
+       "      <td>0.045592</td>\n",
+       "      <td>0.000699</td>\n",
+       "      <td>10</td>\n",
+       "      <td>10</td>\n",
+       "      <td>{'max_depth': 10, 'n_estimators': 10}</td>\n",
+       "      <td>0.609553</td>\n",
+       "      <td>0.614216</td>\n",
+       "      <td>0.601510</td>\n",
+       "      <td>0.608426</td>\n",
+       "      <td>0.005248</td>\n",
        "      <td>5</td>\n",
-       "      <td>0.623704</td>\n",
-       "      <td>0.611318</td>\n",
-       "      <td>0.619529</td>\n",
-       "      <td>0.618184</td>\n",
-       "      <td>0.005145</td>\n",
+       "      <td>0.654161</td>\n",
+       "      <td>0.644068</td>\n",
+       "      <td>0.642195</td>\n",
+       "      <td>0.646808</td>\n",
+       "      <td>0.005255</td>\n",
        "    </tr>\n",
        "  </tbody>\n",
        "</table>\n",
@@ -2252,42 +2313,42 @@
       ],
       "text/plain": [
        "   mean_fit_time  std_fit_time  mean_score_time  std_score_time  \\\n",
-       "2       0.898266      0.022974         0.109786        0.010580   \n",
-       "1       0.211936      0.002936         0.031435        0.000512   \n",
-       "8       2.002041      0.079391         0.195860        0.007887   \n",
-       "5       1.344713      0.114324         0.142994        0.017598   \n",
-       "0       0.136248      0.007508         0.024020        0.001144   \n",
+       "5       1.132375      0.009537         0.121620        0.001741   \n",
+       "2       0.821872      0.007762         0.100330        0.000355   \n",
+       "8       1.907094      0.071164         0.202362        0.028745   \n",
+       "4       0.251050      0.008086         0.035588        0.000535   \n",
+       "7       0.399570      0.004194         0.045592        0.000699   \n",
        "\n",
        "  param_max_depth param_n_estimators                                 params  \\\n",
-       "2               3                 50   {'max_depth': 3, 'n_estimators': 50}   \n",
-       "1               3                 10   {'max_depth': 3, 'n_estimators': 10}   \n",
-       "8              10                 50  {'max_depth': 10, 'n_estimators': 50}   \n",
        "5               5                 50   {'max_depth': 5, 'n_estimators': 50}   \n",
-       "0               3                  5    {'max_depth': 3, 'n_estimators': 5}   \n",
+       "2               3                 50   {'max_depth': 3, 'n_estimators': 50}   \n",
+       "8              10                 50  {'max_depth': 10, 'n_estimators': 50}   \n",
+       "4               5                 10   {'max_depth': 5, 'n_estimators': 10}   \n",
+       "7              10                 10  {'max_depth': 10, 'n_estimators': 10}   \n",
        "\n",
        "   split0_test_score  split1_test_score  split2_test_score  mean_test_score  \\\n",
-       "2           0.607803           0.629937           0.611208         0.616316   \n",
-       "1           0.607084           0.627600           0.612586         0.615757   \n",
-       "8           0.612028           0.622355           0.607612         0.613998   \n",
-       "5           0.607983           0.630057           0.602248         0.613429   \n",
-       "0           0.609751           0.624753           0.601828         0.612111   \n",
+       "5           0.609014           0.633214           0.608373         0.616867   \n",
+       "2           0.600264           0.627461           0.613047         0.613591   \n",
+       "8           0.610332           0.621767           0.606814         0.612971   \n",
+       "4           0.606107           0.624554           0.596686         0.609116   \n",
+       "7           0.609553           0.614216           0.601510         0.608426   \n",
        "\n",
        "   std_test_score  rank_test_score  split0_train_score  split1_train_score  \\\n",
-       "2        0.009731                1            0.626146            0.614405   \n",
-       "1        0.008670                2            0.622325            0.613431   \n",
-       "8        0.006178                3            0.654435            0.646904   \n",
-       "5        0.011988                4            0.631930            0.620144   \n",
-       "0        0.009507                5            0.623704            0.611318   \n",
+       "5        0.011562                1            0.633694            0.621683   \n",
+       "2        0.011110                2            0.624509            0.611839   \n",
+       "8        0.006383                3            0.655344            0.647828   \n",
+       "4        0.011574                4            0.631596            0.615375   \n",
+       "7        0.005248                5            0.654161            0.644068   \n",
        "\n",
        "   split2_train_score  mean_train_score  std_train_score  \n",
-       "2            0.621028          0.620526         0.004806  \n",
-       "1            0.619469          0.618409         0.003708  \n",
-       "8            0.646754          0.649364         0.003586  \n",
-       "5            0.626631          0.626235         0.004820  \n",
-       "0            0.619529          0.618184         0.005145  "
+       "5            0.627437          0.627605         0.004905  \n",
+       "2            0.619121          0.618490         0.005192  \n",
+       "8            0.647259          0.650144         0.003685  \n",
+       "4            0.622912          0.623294         0.006628  \n",
+       "7            0.642195          0.646808         0.005255  "
       ]
      },
-     "execution_count": 52,
+     "execution_count": 53,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -2312,15 +2373,15 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 53,
+   "execution_count": 54,
    "metadata": {},
    "outputs": [
     {
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "Optimal hyperparameters: {'max_depth': 7, 'n_estimators': 58}\n",
-      "Best score: 0.616\n"
+      "Optimal hyperparameters: {'max_depth': 4, 'n_estimators': 59}\n",
+      "Best score: 0.615\n"
      ]
     }
    ],
@@ -2342,7 +2403,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 54,
+   "execution_count": 55,
    "metadata": {},
    "outputs": [
     {
@@ -2388,109 +2449,109 @@
        "  </thead>\n",
        "  <tbody>\n",
        "    <tr>\n",
-       "      <th>6</th>\n",
-       "      <td>1.647243</td>\n",
-       "      <td>0.026765</td>\n",
-       "      <td>0.170798</td>\n",
-       "      <td>0.005107</td>\n",
-       "      <td>7</td>\n",
-       "      <td>58</td>\n",
-       "      <td>{'max_depth': 7, 'n_estimators': 58}</td>\n",
-       "      <td>0.610980</td>\n",
-       "      <td>0.627480</td>\n",
-       "      <td>0.610279</td>\n",
-       "      <td>0.616246</td>\n",
-       "      <td>0.007949</td>\n",
+       "      <th>7</th>\n",
+       "      <td>1.149746</td>\n",
+       "      <td>0.021392</td>\n",
+       "      <td>0.129111</td>\n",
+       "      <td>0.002811</td>\n",
+       "      <td>4</td>\n",
+       "      <td>59</td>\n",
+       "      <td>{'max_depth': 4, 'n_estimators': 59}</td>\n",
+       "      <td>0.606107</td>\n",
+       "      <td>0.629858</td>\n",
+       "      <td>0.609841</td>\n",
+       "      <td>0.615269</td>\n",
+       "      <td>0.010428</td>\n",
        "      <td>1</td>\n",
-       "      <td>0.637549</td>\n",
-       "      <td>0.626586</td>\n",
-       "      <td>0.633778</td>\n",
-       "      <td>0.632638</td>\n",
-       "      <td>0.004547</td>\n",
+       "      <td>0.629873</td>\n",
+       "      <td>0.614746</td>\n",
+       "      <td>0.624890</td>\n",
+       "      <td>0.623170</td>\n",
+       "      <td>0.006294</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>0</th>\n",
-       "      <td>0.589577</td>\n",
-       "      <td>0.007274</td>\n",
-       "      <td>0.070038</td>\n",
-       "      <td>0.001949</td>\n",
+       "      <td>1.136515</td>\n",
+       "      <td>0.057328</td>\n",
+       "      <td>0.126526</td>\n",
+       "      <td>0.004007</td>\n",
        "      <td>4</td>\n",
-       "      <td>26</td>\n",
-       "      <td>{'max_depth': 4, 'n_estimators': 26}</td>\n",
-       "      <td>0.605736</td>\n",
-       "      <td>0.629128</td>\n",
-       "      <td>0.611567</td>\n",
-       "      <td>0.615477</td>\n",
-       "      <td>0.009942</td>\n",
+       "      <td>58</td>\n",
+       "      <td>{'max_depth': 4, 'n_estimators': 58}</td>\n",
+       "      <td>0.605178</td>\n",
+       "      <td>0.630068</td>\n",
+       "      <td>0.609152</td>\n",
+       "      <td>0.614799</td>\n",
+       "      <td>0.010918</td>\n",
        "      <td>2</td>\n",
-       "      <td>0.626611</td>\n",
-       "      <td>0.615484</td>\n",
-       "      <td>0.625313</td>\n",
-       "      <td>0.622469</td>\n",
-       "      <td>0.004968</td>\n",
+       "      <td>0.629634</td>\n",
+       "      <td>0.614791</td>\n",
+       "      <td>0.625174</td>\n",
+       "      <td>0.623200</td>\n",
+       "      <td>0.006218</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>2.200676</td>\n",
+       "      <td>0.430752</td>\n",
+       "      <td>0.166357</td>\n",
+       "      <td>0.003467</td>\n",
+       "      <td>6</td>\n",
+       "      <td>65</td>\n",
+       "      <td>{'max_depth': 6, 'n_estimators': 65}</td>\n",
+       "      <td>0.609853</td>\n",
+       "      <td>0.623895</td>\n",
+       "      <td>0.609691</td>\n",
+       "      <td>0.614479</td>\n",
+       "      <td>0.006658</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0.636511</td>\n",
+       "      <td>0.625938</td>\n",
+       "      <td>0.630029</td>\n",
+       "      <td>0.630826</td>\n",
+       "      <td>0.004353</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>6</th>\n",
+       "      <td>2.004584</td>\n",
+       "      <td>0.041066</td>\n",
+       "      <td>0.205204</td>\n",
+       "      <td>0.006243</td>\n",
+       "      <td>6</td>\n",
+       "      <td>80</td>\n",
+       "      <td>{'max_depth': 6, 'n_estimators': 80}</td>\n",
+       "      <td>0.610362</td>\n",
+       "      <td>0.622247</td>\n",
+       "      <td>0.608313</td>\n",
+       "      <td>0.613640</td>\n",
+       "      <td>0.006143</td>\n",
+       "      <td>4</td>\n",
+       "      <td>0.636661</td>\n",
+       "      <td>0.626223</td>\n",
+       "      <td>0.630313</td>\n",
+       "      <td>0.631066</td>\n",
+       "      <td>0.004294</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>4</th>\n",
-       "      <td>2.094977</td>\n",
-       "      <td>0.272647</td>\n",
-       "      <td>0.179518</td>\n",
-       "      <td>0.006369</td>\n",
-       "      <td>8</td>\n",
-       "      <td>53</td>\n",
-       "      <td>{'max_depth': 8, 'n_estimators': 53}</td>\n",
-       "      <td>0.610380</td>\n",
-       "      <td>0.626221</td>\n",
-       "      <td>0.608720</td>\n",
-       "      <td>0.615107</td>\n",
-       "      <td>0.007888</td>\n",
-       "      <td>3</td>\n",
-       "      <td>0.641429</td>\n",
-       "      <td>0.633808</td>\n",
-       "      <td>0.635412</td>\n",
-       "      <td>0.636883</td>\n",
-       "      <td>0.003281</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>3</th>\n",
-       "      <td>1.654977</td>\n",
-       "      <td>0.069732</td>\n",
-       "      <td>0.189271</td>\n",
-       "      <td>0.011885</td>\n",
-       "      <td>4</td>\n",
-       "      <td>80</td>\n",
-       "      <td>{'max_depth': 4, 'n_estimators': 80}</td>\n",
-       "      <td>0.606215</td>\n",
-       "      <td>0.629577</td>\n",
-       "      <td>0.609050</td>\n",
-       "      <td>0.614947</td>\n",
-       "      <td>0.010409</td>\n",
-       "      <td>4</td>\n",
-       "      <td>0.628184</td>\n",
-       "      <td>0.616533</td>\n",
-       "      <td>0.625972</td>\n",
-       "      <td>0.623563</td>\n",
-       "      <td>0.005053</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>7</th>\n",
-       "      <td>2.854074</td>\n",
-       "      <td>0.026852</td>\n",
-       "      <td>0.282800</td>\n",
-       "      <td>0.004831</td>\n",
-       "      <td>8</td>\n",
-       "      <td>90</td>\n",
-       "      <td>{'max_depth': 8, 'n_estimators': 90}</td>\n",
-       "      <td>0.609751</td>\n",
-       "      <td>0.626371</td>\n",
-       "      <td>0.607911</td>\n",
-       "      <td>0.614678</td>\n",
-       "      <td>0.008302</td>\n",
+       "      <td>2.834532</td>\n",
+       "      <td>0.151390</td>\n",
+       "      <td>0.263107</td>\n",
+       "      <td>0.004990</td>\n",
+       "      <td>9</td>\n",
+       "      <td>77</td>\n",
+       "      <td>{'max_depth': 9, 'n_estimators': 77}</td>\n",
+       "      <td>0.610152</td>\n",
+       "      <td>0.623925</td>\n",
+       "      <td>0.606125</td>\n",
+       "      <td>0.613401</td>\n",
+       "      <td>0.007621</td>\n",
        "      <td>5</td>\n",
-       "      <td>0.642898</td>\n",
-       "      <td>0.634587</td>\n",
-       "      <td>0.637284</td>\n",
-       "      <td>0.638257</td>\n",
-       "      <td>0.003462</td>\n",
+       "      <td>0.648422</td>\n",
+       "      <td>0.641221</td>\n",
+       "      <td>0.641520</td>\n",
+       "      <td>0.643721</td>\n",
+       "      <td>0.003326</td>\n",
        "    </tr>\n",
        "  </tbody>\n",
        "</table>\n",
@@ -2498,42 +2559,42 @@
       ],
       "text/plain": [
        "   mean_fit_time  std_fit_time  mean_score_time  std_score_time  \\\n",
-       "6       1.647243      0.026765         0.170798        0.005107   \n",
-       "0       0.589577      0.007274         0.070038        0.001949   \n",
-       "4       2.094977      0.272647         0.179518        0.006369   \n",
-       "3       1.654977      0.069732         0.189271        0.011885   \n",
-       "7       2.854074      0.026852         0.282800        0.004831   \n",
+       "7       1.149746      0.021392         0.129111        0.002811   \n",
+       "0       1.136515      0.057328         0.126526        0.004007   \n",
+       "1       2.200676      0.430752         0.166357        0.003467   \n",
+       "6       2.004584      0.041066         0.205204        0.006243   \n",
+       "4       2.834532      0.151390         0.263107        0.004990   \n",
        "\n",
        "  param_max_depth param_n_estimators                                params  \\\n",
-       "6               7                 58  {'max_depth': 7, 'n_estimators': 58}   \n",
-       "0               4                 26  {'max_depth': 4, 'n_estimators': 26}   \n",
-       "4               8                 53  {'max_depth': 8, 'n_estimators': 53}   \n",
-       "3               4                 80  {'max_depth': 4, 'n_estimators': 80}   \n",
-       "7               8                 90  {'max_depth': 8, 'n_estimators': 90}   \n",
+       "7               4                 59  {'max_depth': 4, 'n_estimators': 59}   \n",
+       "0               4                 58  {'max_depth': 4, 'n_estimators': 58}   \n",
+       "1               6                 65  {'max_depth': 6, 'n_estimators': 65}   \n",
+       "6               6                 80  {'max_depth': 6, 'n_estimators': 80}   \n",
+       "4               9                 77  {'max_depth': 9, 'n_estimators': 77}   \n",
        "\n",
        "   split0_test_score  split1_test_score  split2_test_score  mean_test_score  \\\n",
-       "6           0.610980           0.627480           0.610279         0.616246   \n",
-       "0           0.605736           0.629128           0.611567         0.615477   \n",
-       "4           0.610380           0.626221           0.608720         0.615107   \n",
-       "3           0.606215           0.629577           0.609050         0.614947   \n",
-       "7           0.609751           0.626371           0.607911         0.614678   \n",
+       "7           0.606107           0.629858           0.609841         0.615269   \n",
+       "0           0.605178           0.630068           0.609152         0.614799   \n",
+       "1           0.609853           0.623895           0.609691         0.614479   \n",
+       "6           0.610362           0.622247           0.608313         0.613640   \n",
+       "4           0.610152           0.623925           0.606125         0.613401   \n",
        "\n",
        "   std_test_score  rank_test_score  split0_train_score  split1_train_score  \\\n",
-       "6        0.007949                1            0.637549            0.626586   \n",
-       "0        0.009942                2            0.626611            0.615484   \n",
-       "4        0.007888                3            0.641429            0.633808   \n",
-       "3        0.010409                4            0.628184            0.616533   \n",
-       "7        0.008302                5            0.642898            0.634587   \n",
+       "7        0.010428                1            0.629873            0.614746   \n",
+       "0        0.010918                2            0.629634            0.614791   \n",
+       "1        0.006658                3            0.636511            0.625938   \n",
+       "6        0.006143                4            0.636661            0.626223   \n",
+       "4        0.007621                5            0.648422            0.641221   \n",
        "\n",
        "   split2_train_score  mean_train_score  std_train_score  \n",
-       "6            0.633778          0.632638         0.004547  \n",
-       "0            0.625313          0.622469         0.004968  \n",
-       "4            0.635412          0.636883         0.003281  \n",
-       "3            0.625972          0.623563         0.005053  \n",
-       "7            0.637284          0.638257         0.003462  "
+       "7            0.624890          0.623170         0.006294  \n",
+       "0            0.625174          0.623200         0.006218  \n",
+       "1            0.630029          0.630826         0.004353  \n",
+       "6            0.630313          0.631066         0.004294  \n",
+       "4            0.641520          0.643721         0.003326  "
       ]
      },
-     "execution_count": 54,
+     "execution_count": 55,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -2556,33 +2617,34 @@
    "source": [
     "There are several metrics that we can use to evaluate model performance:\n",
     "\n",
-    "- RMSE\n",
     "- accuracy\n",
     "- precision\n",
     "- recall\n",
-    "- AUC\n",
+    "- F1-score\n",
+    "- ROC AUC score\n",
     "\n",
-    "In this walkthrough, we'll compare accuracy and precision."
+    "A comprehensive list of classification metrics can be found in scikit-learn's metrics module [documentation](https://scikit-learn.org/stable/modules/model_evaluation.html#classification-metrics). \n",
+    "\n",
+    "In this walkthrough, we'll look at accuracy, precision and recall. But before we can start evaluating our model, let's split our data into two parts: 1) a training set and 2) a test set. We'll fit our model on the training data, and evaluate its performance using the test set."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 55,
+   "execution_count": 56,
    "metadata": {},
    "outputs": [
     {
      "data": {
       "text/plain": [
        "RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',\n",
-       "            max_depth=7, max_features='auto', max_leaf_nodes=None,\n",
+       "            max_depth=4, max_features='auto', max_leaf_nodes=None,\n",
        "            min_impurity_decrease=0.0, min_impurity_split=None,\n",
        "            min_samples_leaf=1, min_samples_split=2,\n",
-       "            min_weight_fraction_leaf=0.0, n_estimators=58, n_jobs=None,\n",
-       "            oob_score=False, random_state=None, verbose=0,\n",
-       "            warm_start=False)"
+       "            min_weight_fraction_leaf=0.0, n_estimators=59, n_jobs=None,\n",
+       "            oob_score=False, random_state=99, verbose=0, warm_start=False)"
       ]
      },
-     "execution_count": 55,
+     "execution_count": 56,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -2590,7 +2652,7 @@
    "source": [
     "from sklearn.model_selection import train_test_split\n",
     "\n",
-    "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\n",
+    "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)\n",
     "\n",
     "rfc = RandomForestClassifier(**random_search.best_params_)\n",
     "rfc.fit(X_train, y_train)"
@@ -2605,53 +2667,119 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 56,
+   "execution_count": 57,
    "metadata": {},
    "outputs": [
     {
-     "data": {
-      "text/plain": [
-       "0.6213854067822004"
-      ]
-     },
-     "execution_count": 56,
-     "metadata": {},
-     "output_type": "execute_result"
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Accuracy: 0.620\n"
+     ]
     }
    ],
    "source": [
-    "rfc.score(X_test, y_test)"
+    "accuracy = rfc.score(X_test, y_test)\n",
+    "\n",
+    "print(f\"Accuracy: {accuracy:.3f}\")"
    ]
   },
   {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "But let's also look at precision."
+    "An accuracy score of 0.62 means that ~62% of hospital admissions were correctly labeled. The dataset that we're working with is relatively balanced, but let's say we have an imbalanced dataset where 90% of patients ended up being readmitted. Using accuracy to evaluate a model trained on imbalanced data is a problem because if we automatically predicted all patients to be readmitted, our accuracy would be 90% by default. Precision and recall are better ways to evaluate performance of models trained on imbalanced data. \n",
+    "\n",
+    "#### Precision and Recall \n",
+    "\n",
+    "Precision and recall are information retrieval metrics that evaluate classification models. \n",
+    "\n",
+    "- [Precision](https://developers.google.com/machine-learning/crash-course/classification/precision-and-recall) is the \"fraction of relevant instances among the retrieved instances\". In other words, it asks the question: \"What proportion of readmitted patients were actually readmitted?\"\n",
+    "- Recall is the \"fraction of the total amount of relevant instances that were actually retrieved\". It wants to find out: \"What proportion of readmitted patients were identified correctly?\" \n",
+    "\n",
+    "Looking at the equations below, we can see that precision aims to minimize the number of **False Positives**, while recall aims to minimize the number of **False Negatives**.\n",
+    "\n",
+    "<img src=\"https://s3.us-east-2.amazonaws.com/hidden.layers.assets/precision_recall.png\" width=\"80%\"/>"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 57,
+   "execution_count": 58,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Precision: 0.621\n",
+      "Recall: 0.451\n"
+     ]
+    }
+   ],
+   "source": [
+    "from sklearn.metrics import precision_score, recall_score, confusion_matrix\n",
+    "\n",
+    "y_pred = rfc.predict(X_test)\n",
+    "\n",
+    "precision = precision_score(y_true=y_test, y_pred=y_pred)\n",
+    "recall = recall_score(y_true=y_test, y_pred=y_pred)\n",
+    "\n",
+    "print(f\"Precision: {precision:.3f}\")\n",
+    "print(f\"Recall: {recall:.3f}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "- Of the patients who were labelled as readmitted, ~62% were actually readmitted.\n",
+    "- Of the patients who were actually readmitted, 45% were labelled as readmitted. \n",
+    "\n",
+    "Another way to assess our model's performance is to visualize our results with a [confusion matrix](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html#sklearn.metrics.confusion_matrix)."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 59,
    "metadata": {},
    "outputs": [
     {
      "data": {
       "text/plain": [
-       "0.6381449111925571"
+       "Text(33.0, 0.5, 'actual')"
       ]
      },
-     "execution_count": 57,
+     "execution_count": 59,
      "metadata": {},
      "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "image/png": "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\n",
+      "text/plain": [
+       "<Figure size 432x288 with 2 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
     }
    ],
    "source": [
-    "from sklearn.metrics import precision_score\n",
+    "confusion = confusion_matrix(y_true=y_test, y_pred=y_pred)\n",
+    "labels = np.array([['TN','FP'],['FN','TP']])\n",
     "\n",
-    "y_pred = rfc.predict(X_test)\n",
-    "\n",
-    "precision_score(y_true=y_test, y_pred=y_pred)"
+    "sns.heatmap(confusion,annot=labels, fmt='', linewidths=2, cmap=\"Blues\")\n",
+    "plt.xlabel(\"predicted\")\n",
+    "plt.ylabel(\"actual\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The heatmap above shows that we have more False Negatives than False Positives. This means that when we predict a patient will be readmitted, there's a good chance that we got it right. But when we predict that a patient won't be admitted, we're missing quite a few patients who actually do return to the hospital. "
    ]
   },
   {
@@ -2665,12 +2793,12 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "RandomForestClassifier gives us a list of feature importances. We can dig a bit further to examine which features were the most important in classification."
+    "With RandomForestClassifier, we can dig further to examine which features were the most important in classification."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 61,
+   "execution_count": 60,
    "metadata": {},
    "outputs": [
     {
@@ -2700,79 +2828,79 @@
        "  </thead>\n",
        "  <tbody>\n",
        "    <tr>\n",
-       "      <th>28</th>\n",
+       "      <th>39</th>\n",
        "      <td>number_inpatient</td>\n",
-       "      <td>0.464901</td>\n",
+       "      <td>0.502475</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>38</th>\n",
+       "      <td>number_emergency</td>\n",
+       "      <td>0.145222</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>37</th>\n",
+       "      <td>number_outpatient</td>\n",
+       "      <td>0.103304</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>40</th>\n",
+       "      <td>number_diagnoses</td>\n",
+       "      <td>0.095260</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>36</th>\n",
+       "      <td>num_medications</td>\n",
+       "      <td>0.049601</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>28</th>\n",
+       "      <td>age_label</td>\n",
+       "      <td>0.021661</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>29</th>\n",
-       "      <td>number_diagnoses</td>\n",
-       "      <td>0.123911</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>27</th>\n",
-       "      <td>number_emergency</td>\n",
-       "      <td>0.117507</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>26</th>\n",
-       "      <td>number_outpatient</td>\n",
-       "      <td>0.076745</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>25</th>\n",
-       "      <td>num_medications</td>\n",
-       "      <td>0.054187</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>23</th>\n",
-       "      <td>num_lab_procedures</td>\n",
-       "      <td>0.027678</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>24</th>\n",
-       "      <td>num_procedures</td>\n",
-       "      <td>0.022751</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>43</th>\n",
        "      <td>admission_type_Elective</td>\n",
-       "      <td>0.018851</td>\n",
+       "      <td>0.019275</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>34</th>\n",
+       "      <td>num_lab_procedures</td>\n",
+       "      <td>0.018061</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>35</th>\n",
+       "      <td>num_procedures</td>\n",
+       "      <td>0.016270</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>17</th>\n",
        "      <td>insulin_bool</td>\n",
-       "      <td>0.013265</td>\n",
+       "      <td>0.009118</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>0</th>\n",
        "      <td>metformin_bool</td>\n",
-       "      <td>0.010087</td>\n",
+       "      <td>0.005045</td>\n",
        "    </tr>\n",
        "    <tr>\n",
-       "      <th>40</th>\n",
-       "      <td>age_[70-80)</td>\n",
-       "      <td>0.007444</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>41</th>\n",
-       "      <td>age_[80-90)</td>\n",
-       "      <td>0.007320</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>32</th>\n",
+       "      <th>25</th>\n",
        "      <td>race_Caucasian</td>\n",
-       "      <td>0.006018</td>\n",
+       "      <td>0.003034</td>\n",
        "    </tr>\n",
        "    <tr>\n",
-       "      <th>38</th>\n",
-       "      <td>age_[50-60)</td>\n",
-       "      <td>0.004055</td>\n",
+       "      <th>1</th>\n",
+       "      <td>repaglinide_bool</td>\n",
+       "      <td>0.001752</td>\n",
        "    </tr>\n",
        "    <tr>\n",
-       "      <th>36</th>\n",
-       "      <td>age_[30-40)</td>\n",
-       "      <td>0.003907</td>\n",
+       "      <th>6</th>\n",
+       "      <td>glipizide_bool</td>\n",
+       "      <td>0.001735</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>24</th>\n",
+       "      <td>race_Asian</td>\n",
+       "      <td>0.001074</td>\n",
        "    </tr>\n",
        "  </tbody>\n",
        "</table>\n",
@@ -2780,36 +2908,43 @@
       ],
       "text/plain": [
        "                   features  importance\n",
-       "28         number_inpatient    0.464901\n",
-       "29         number_diagnoses    0.123911\n",
-       "27         number_emergency    0.117507\n",
-       "26        number_outpatient    0.076745\n",
-       "25          num_medications    0.054187\n",
-       "23       num_lab_procedures    0.027678\n",
-       "24           num_procedures    0.022751\n",
-       "43  admission_type_Elective    0.018851\n",
-       "17             insulin_bool    0.013265\n",
-       "0            metformin_bool    0.010087\n",
-       "40              age_[70-80)    0.007444\n",
-       "41              age_[80-90)    0.007320\n",
-       "32           race_Caucasian    0.006018\n",
-       "38              age_[50-60)    0.004055\n",
-       "36              age_[30-40)    0.003907"
+       "39         number_inpatient    0.502475\n",
+       "38         number_emergency    0.145222\n",
+       "37        number_outpatient    0.103304\n",
+       "40         number_diagnoses    0.095260\n",
+       "36          num_medications    0.049601\n",
+       "28                age_label    0.021661\n",
+       "29  admission_type_Elective    0.019275\n",
+       "34       num_lab_procedures    0.018061\n",
+       "35           num_procedures    0.016270\n",
+       "17             insulin_bool    0.009118\n",
+       "0            metformin_bool    0.005045\n",
+       "25           race_Caucasian    0.003034\n",
+       "1          repaglinide_bool    0.001752\n",
+       "6            glipizide_bool    0.001735\n",
+       "24               race_Asian    0.001074"
       ]
      },
-     "execution_count": 61,
+     "execution_count": 60,
      "metadata": {},
      "output_type": "execute_result"
     }
    ],
    "source": [
     "feature_importances = {\n",
-    "    'features':list(X.columns.values),\n",
-    "    'importance':list(rfc.feature_importances_)\n",
+    "    'features': list(X.columns.values),\n",
+    "    'importance': list(rfc.feature_importances_)\n",
     "}\n",
     "\n",
     "important_features = pd.DataFrame(feature_importances)\n",
     "important_features.sort_values(by='importance', ascending=False).head(15)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The most important feautures appear to be `number_inpatient` and `number_emergency`, which represents the number of inpatient and emergency visits of the patient in the year preceding the encounter. So if a patient was admitted to the hospital in the past, this increases their chance of being readmitted in the future. "
    ]
   }
  ],

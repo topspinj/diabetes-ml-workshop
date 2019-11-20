@@ -102,7 +102,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#Decoding-Admission-Type">Decoding Admission Type</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Decoding-Discharge-Location">Decoding Discharge Location</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Converting-Medication-Features-From-Categorical-to-Boolean">Converting Medication Features From Categorical to Boolean</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Interpreting-Medications">Interpreting Medications</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Creating-a-Target-Variable">Creating a Target Variable</a></li>
 </ul>
 </li>
@@ -110,7 +109,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#Assessing-Missing-Values">Assessing Missing Values</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Patient-Demographics:-Age-and-Gender">Patient Demographics: Age and Gender</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#How-long-were-hospital-stays-for-a-given-admission?">How long were hospital stays for a given admission?</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Number-of-Medications-and-Lab-Procedures">Number of Medications and Lab Procedures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Number-of-Diagnoses,-Procedures,-Medications">Number of Diagnoses, Procedures, Medications</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#What-was-the-most-common-medical-specialty?">What was the most common medical specialty?</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#What-proportion-of-patients-were-on-diabetes-medication-during-their-hospital-stay?">What proportion of patients were on diabetes medication during their hospital stay?</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Do-patients-have-normal-A1C-levels?">Do patients have normal A1C levels?</a></li>
@@ -118,16 +117,19 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#Step-5:-Feature-Selection-and-Engineering">Step 5: Feature Selection and Engineering</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#One-hot-Encoding">One-hot Encoding</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Encode-Binary-Categorical-Features">Encode Binary Categorical Features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Label-Encoding">Label Encoding</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#Data-Modelling">Data Modelling</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#Step-6:-Defining-the-X-and-y-Variables">Step 6: Defining the X and y Variables</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Step-7:-Choosing-our-Binary-Classification-Model">Step 7: Choosing our Binary Classification Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Step-7:-Choosing-our-Model">Step 7: Choosing our Model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Step-8:-Hyperparameter-Tuning">Step 8: Hyperparameter Tuning</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Step-9:-Evaluating-Model-Performance">Step 9: Evaluating Model Performance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Step-9:-Evaluating-Model-Performance">Step 9: Evaluating Model Performance</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Precision-and-Recall">Precision and Recall</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#Step-10:-Examining-Feature-Importance">Step 10: Examining Feature Importance</a></li>
 </ul>
 </li>
@@ -887,9 +889,6 @@ method to do this.</p>
 </pre></div>
 </div>
 </div>
-<p>Great! We can now merge admission type with our original dataset. We’ll
-first rename <code class="docutils literal notranslate"><span class="pre">description</span></code> to <code class="docutils literal notranslate"><span class="pre">admission_type</span></code> so that it’s more
-descriptive.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [13]:
@@ -900,9 +899,6 @@ descriptive.</p>
 </pre></div>
 </div>
 </div>
-<p>We can do a merge on <code class="docutils literal notranslate"><span class="pre">admission_type_id</span></code>. The default merge setting is
-an <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.merge.html">inner
-join</a>.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [14]:
@@ -913,8 +909,11 @@ join</a>.</p>
 </pre></div>
 </div>
 </div>
-<p>Now that we have an interpretable version of <code class="docutils literal notranslate"><span class="pre">admission_type</span></code> in our
-dataset, let’s see what the most common types of admissions are.</p>
+<p>Now that we have a “clean” mapper, we can apply it to our dataset. We
+can
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.map.html">map</a>
+<code class="docutils literal notranslate"><span class="pre">admission_type_id</span></code> values in our original dataframe to the
+descriptors in our <code class="docutils literal notranslate"><span class="pre">admission_type_mapper</span></code> dictionary.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [15]:
@@ -956,19 +955,12 @@ Name: admission_type, dtype: int64
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_walkthrough_31_0.png" src="../_images/notebooks_walkthrough_31_0.png" />
+<img alt="../_images/notebooks_walkthrough_29_0.png" src="../_images/notebooks_walkthrough_29_0.png" />
 </div>
 </div>
-<p>It looks like <em>Emergency</em> is the most common type of admission followed
-by <em>Urgent</em> and <em>Elective</em>. <em>Trauma Center</em> and <em>Newborn</em> are very rare
-types of admissions.</p>
 </div>
 <div class="section" id="Decoding-Discharge-Location">
 <h4>Decoding Discharge Location<a class="headerlink" href="#Decoding-Discharge-Location" title="Permalink to this headline">¶</a></h4>
-<p>In medicine, “expired” is a term that describes a patient who has died.
-We only want to predict hospital readmission for living patients so
-we’re going to remove hospital admissions in which the patient was
-recorded as “expired” upon being discharged in our dataset.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [17]:
@@ -1038,6 +1030,10 @@ recorded as “expired” upon being discharged in our dataset.</p>
 </table>
 </div></div>
 </div>
+<p>In medicine, “expired” is a term that describes a patient who has died.
+We only want to predict hospital readmission for living patients so
+we’re going to remove hospital admissions in which the patient was
+recorded as “expired” upon being discharged in our dataset.</p>
 <p>We’ll first convert our <code class="docutils literal notranslate"><span class="pre">description</span></code> column to lowercase
 (<code class="docutils literal notranslate"><span class="pre">str.lower()</span></code>), then we’ll search for rows that contain “expired”
 (<code class="docutils literal notranslate"><span class="pre">str.contains(&quot;expired&quot;)</span></code>).</p>
@@ -1314,7 +1310,7 @@ prevalent in our dataset.</p>
     <tr style="text-align: right;">
       <th></th>
       <th>medication</th>
-      <th>prevelance</th>
+      <th>prevalence</th>
     </tr>
   </thead>
   <tbody>
@@ -1353,7 +1349,7 @@ seaborn’s
 method.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [62]:
+<span></span>In [27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1367,52 +1363,16 @@ method.</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-62-44b1c12a4eb4&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>sns<span class="ansi-blue-fg">.</span>barplot<span class="ansi-blue-fg">(</span>x<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;medication&#39;</span><span class="ansi-blue-fg">,</span> y<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;prevalence&#39;</span><span class="ansi-blue-fg">,</span> data<span class="ansi-blue-fg">=</span>medication_counts<span class="ansi-blue-fg">.</span>head<span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">10</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> palette<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;viridis&#39;</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      2</span> plt<span class="ansi-blue-fg">.</span>xticks<span class="ansi-blue-fg">(</span>rotation<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">90</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      3</span> plt<span class="ansi-blue-fg">.</span>show<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
-
-<span class="ansi-green-fg">/usr/local/lib/python3.7/site-packages/seaborn/categorical.py</span> in <span class="ansi-cyan-fg">barplot</span><span class="ansi-blue-fg">(x, y, hue, data, order, hue_order, estimator, ci, n_boot, units, orient, color, palette, saturation, errcolor, errwidth, capsize, dodge, ax, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">   3147</span>                           estimator<span class="ansi-blue-fg">,</span> ci<span class="ansi-blue-fg">,</span> n_boot<span class="ansi-blue-fg">,</span> units<span class="ansi-blue-fg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">   3148</span>                           orient<span class="ansi-blue-fg">,</span> color<span class="ansi-blue-fg">,</span> palette<span class="ansi-blue-fg">,</span> saturation<span class="ansi-blue-fg">,</span>
-<span class="ansi-green-fg">-&gt; 3149</span><span class="ansi-red-fg">                           errcolor, errwidth, capsize, dodge)
-</span><span class="ansi-green-intense-fg ansi-bold">   3150</span>
-<span class="ansi-green-intense-fg ansi-bold">   3151</span>     <span class="ansi-green-fg">if</span> ax <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">:</span>
-
-<span class="ansi-green-fg">/usr/local/lib/python3.7/site-packages/seaborn/categorical.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, x, y, hue, data, order, hue_order, estimator, ci, n_boot, units, orient, color, palette, saturation, errcolor, errwidth, capsize, dodge)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1605</span>         <span class="ansi-blue-fg">&#34;&#34;&#34;Initialize the plotter.&#34;&#34;&#34;</span>
-<span class="ansi-green-intense-fg ansi-bold">   1606</span>         self.establish_variables(x, y, hue, data, orient,
-<span class="ansi-green-fg">-&gt; 1607</span><span class="ansi-red-fg">                                  order, hue_order, units)
-</span><span class="ansi-green-intense-fg ansi-bold">   1608</span>         self<span class="ansi-blue-fg">.</span>establish_colors<span class="ansi-blue-fg">(</span>color<span class="ansi-blue-fg">,</span> palette<span class="ansi-blue-fg">,</span> saturation<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1609</span>         self<span class="ansi-blue-fg">.</span>estimate_statistic<span class="ansi-blue-fg">(</span>estimator<span class="ansi-blue-fg">,</span> ci<span class="ansi-blue-fg">,</span> n_boot<span class="ansi-blue-fg">)</span>
-
-<span class="ansi-green-fg">/usr/local/lib/python3.7/site-packages/seaborn/categorical.py</span> in <span class="ansi-cyan-fg">establish_variables</span><span class="ansi-blue-fg">(self, x, y, hue, data, orient, order, hue_order, units)</span>
-<span class="ansi-green-intense-fg ansi-bold">    153</span>                 <span class="ansi-green-fg">if</span> isinstance<span class="ansi-blue-fg">(</span>input<span class="ansi-blue-fg">,</span> string_types<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    154</span>                     err <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">&#34;Could not interpret input &#39;{}&#39;&#34;</span><span class="ansi-blue-fg">.</span>format<span class="ansi-blue-fg">(</span>input<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-fg">--&gt; 155</span><span class="ansi-red-fg">                     </span><span class="ansi-green-fg">raise</span> ValueError<span class="ansi-blue-fg">(</span>err<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    156</span>
-<span class="ansi-green-intense-fg ansi-bold">    157</span>             <span class="ansi-red-fg"># Figure out the plotting orientation</span>
-
-<span class="ansi-red-fg">ValueError</span>: Could not interpret input &#39;prevalence&#39;
-</pre></div></div>
+<img alt="../_images/notebooks_walkthrough_52_0.png" src="../_images/notebooks_walkthrough_52_0.png" />
 </div>
-<p>We can see that <code class="docutils literal notranslate"><span class="pre">insulin</span></code> is by far the most prevelance medication
+</div>
+<p>We can see that <code class="docutils literal notranslate"><span class="pre">insulin</span></code> is by far the most prevalent medication
 followed by <code class="docutils literal notranslate"><span class="pre">metformin</span></code>. More than half of the patients in our dataset
 were prescribed insulin whie 22% were prescribed metformin.</p>
-</div>
-<div class="section" id="Interpreting-Medications">
-<h4>Interpreting Medications<a class="headerlink" href="#Interpreting-Medications" title="Permalink to this headline">¶</a></h4>
-<p>If you’re not a medical doctor, it might be difficult to interpret what
-these medications mean. We can use
-<a class="reference external" href="https://en.wikipedia.org/wiki/Medical_Subject_Headings">MeSH</a> (or
-Medical Subject Headings) to better understand what kinds of medications
-we’re dealing with.</p>
-<p>MeSH are a type of “tag” that describes a medical term. We’ll use
-RxNav’s API to further investigate which MeSH terms are assocaited with
-our list of medications. We’ll create a function called
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Medical_Subject_Headings">MeSH</a> (or
+Medical Subject Headings) are a type of “tag” that describes a medical
+term. We’ll use RxNav’s API to further investigate which MeSH terms are
+assocaited with our list of medications. We’ll cretea a function called
 <code class="docutils literal notranslate"><span class="pre">get_mesh_from_drug_name</span></code> which returns relevant MeSH terms for a
 given drug name.</p>
 <div class="nbinput nblast docutils container">
@@ -1478,9 +1438,9 @@ dictionary that we’ll call <code class="docutils literal notranslate"><span cl
  &#39;glyburide&#39;: [&#39;Hypoglycemic Agents&#39;],
  &#39;pioglitazone&#39;: [&#39;Hypoglycemic Agents&#39;],
  &#39;rosiglitazone&#39;: [&#39;Hypoglycemic Agents&#39;],
- &#39;glimepiride&#39;: [&#39;Anti-Arrhythmia Agents&#39;,
+ &#39;glimepiride&#39;: [&#39;Immunosuppressive Agents&#39;,
   &#39;Hypoglycemic Agents&#39;,
-  &#39;Immunosuppressive Agents&#39;],
+  &#39;Anti-Arrhythmia Agents&#39;],
  &#39;repaglinide&#39;: [&#39;Hypoglycemic Agents&#39;],
  &#39;nateglinide&#39;: [&#39;Hypoglycemic Agents&#39;],
  &#39;glyburide-metformin&#39;: [&#39;Hypoglycemic Agents&#39;]}
@@ -1586,7 +1546,7 @@ it using <a class="reference external" href="https://github.com/ResidentMario/mi
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x1188bf950&gt;
+<span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x1145977d0&gt;
 </pre></div>
 </div>
 </div>
@@ -1594,7 +1554,7 @@ it using <a class="reference external" href="https://github.com/ResidentMario/mi
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_walkthrough_69_1.png" src="../_images/notebooks_walkthrough_69_1.png" />
+<img alt="../_images/notebooks_walkthrough_67_1.png" src="../_images/notebooks_walkthrough_67_1.png" />
 </div>
 </div>
 <p>The data-dense columns are fully black, while the sparse columns (with
@@ -1624,7 +1584,7 @@ missing values) have a mixture of white and black.</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_walkthrough_72_0.png" src="../_images/notebooks_walkthrough_72_0.png" />
+<img alt="../_images/notebooks_walkthrough_70_0.png" src="../_images/notebooks_walkthrough_70_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1673,7 +1633,7 @@ also has a higher proportion of females than males.</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_walkthrough_76_0.png" src="../_images/notebooks_walkthrough_76_0.png" />
+<img alt="../_images/notebooks_walkthrough_74_0.png" src="../_images/notebooks_walkthrough_74_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1697,8 +1657,8 @@ Mean time in hospital: 4.39
 <p>Patients stayed on average 4.4 days in hospital. The longest stay was 14
 days.</p>
 </div>
-<div class="section" id="Number-of-Medications-and-Lab-Procedures">
-<h4>Number of Medications and Lab Procedures<a class="headerlink" href="#Number-of-Medications-and-Lab-Procedures" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Number-of-Diagnoses,-Procedures,-Medications">
+<h4>Number of Diagnoses, Procedures, Medications<a class="headerlink" href="#Number-of-Diagnoses,-Procedures,-Medications" title="Permalink to this headline">¶</a></h4>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [38]:
@@ -1722,7 +1682,7 @@ days.</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_walkthrough_80_0.png" src="../_images/notebooks_walkthrough_80_0.png" />
+<img alt="../_images/notebooks_walkthrough_78_0.png" src="../_images/notebooks_walkthrough_78_0.png" />
 </div>
 </div>
 <p>Patients on average were administered 16 medications during their
@@ -1737,11 +1697,13 @@ would suggest that the patient’s presenting issue was bone-related,
 while “nephrology” suggests a kidney problem.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [64]:
+<span></span>In [39]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">medical_specialties</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;medical_specialty&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span></span><span class="n">medical_specialties</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;medical_specialty&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">medical_specialties</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;specialty&#39;</span><span class="p">,</span> <span class="s1">&#39;count&#39;</span><span class="p">]</span>
+<span class="n">medical_specialties</span><span class="p">[</span><span class="s1">&#39;prevalence&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">medical_specialties</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;There are {data[&#39;medical_specialty&#39;].nunique()} medical specialties.&quot;</span><span class="p">)</span>
 <span class="n">medical_specialties</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
@@ -1757,7 +1719,7 @@ There are 72 medical specialties.
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[64]:
+<span></span>Out[39]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1779,60 +1741,71 @@ There are 72 medical specialties.
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>index</th>
-      <th>medical_specialty</th>
+      <th>specialty</th>
+      <th>count</th>
+      <th>prevalence</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
       <td>InternalMedicine</td>
-      <td>0.281029</td>
+      <td>14328</td>
+      <td>0.143117</td>
     </tr>
     <tr>
       <th>1</th>
       <td>Emergency/Trauma</td>
-      <td>0.146105</td>
+      <td>7449</td>
+      <td>0.074405</td>
     </tr>
     <tr>
       <th>2</th>
       <td>Family/GeneralPractice</td>
-      <td>0.143221</td>
+      <td>7302</td>
+      <td>0.072937</td>
     </tr>
     <tr>
       <th>3</th>
       <td>Cardiology</td>
-      <td>0.103856</td>
+      <td>5296</td>
+      <td>0.052900</td>
     </tr>
     <tr>
       <th>4</th>
       <td>Surgery-General</td>
-      <td>0.060176</td>
+      <td>3068</td>
+      <td>0.030645</td>
     </tr>
     <tr>
       <th>5</th>
       <td>Nephrology</td>
-      <td>0.030284</td>
+      <td>1544</td>
+      <td>0.015422</td>
     </tr>
     <tr>
       <th>6</th>
       <td>Orthopedics</td>
-      <td>0.027342</td>
+      <td>1394</td>
+      <td>0.013924</td>
     </tr>
     <tr>
       <th>7</th>
       <td>Orthopedics-Reconstructive</td>
-      <td>0.024145</td>
+      <td>1231</td>
+      <td>0.012296</td>
     </tr>
     <tr>
       <th>8</th>
       <td>Radiologist</td>
-      <td>0.022144</td>
+      <td>1129</td>
+      <td>0.011277</td>
     </tr>
     <tr>
       <th>9</th>
       <td>Pulmonology</td>
-      <td>0.016790</td>
+      <td>856</td>
+      <td>0.008550</td>
     </tr>
   </tbody>
 </table>
@@ -1954,18 +1927,24 @@ iteration of our model.</p>
 </div>
 <div class="section" id="Step-5:-Feature-Selection-and-Engineering">
 <h3>Step 5: Feature Selection and Engineering<a class="headerlink" href="#Step-5:-Feature-Selection-and-Engineering" title="Permalink to this headline">¶</a></h3>
-<p>Our dataset contains quite a few categorical variables. In general,
-machine learning models can’t handle categorical variables so we will
-need to apply one-hot encoding.</p>
+<p>Our dataset contains quite a few categorical variables such as <code class="docutils literal notranslate"><span class="pre">race</span></code>,
+<code class="docutils literal notranslate"><span class="pre">age</span></code>, and <code class="docutils literal notranslate"><span class="pre">admission_type</span></code>. In general, machine learning models
+can’t handle categorical variables so we can use one-hot and label
+encoding to convert our string features to numerical without adding a
+hierarchy.</p>
 <div class="section" id="One-hot-Encoding">
 <h4>One-hot Encoding<a class="headerlink" href="#One-hot-Encoding" title="Permalink to this headline">¶</a></h4>
+<p>For example, we want to convert a patient’s race to a numerical feature.
+We could use label encoding to convert each race to values 0-5 but this
+suggests an inherent order between the different races that does not
+exist. With one-hot encoding, each race becomes an independent feature.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [43]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">categorical</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;race&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;admission_type&#39;</span><span class="p">]</span>
+<span></span><span class="n">categorical</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;race&#39;</span><span class="p">,</span> <span class="s1">&#39;admission_type&#39;</span><span class="p">]</span>
 
 <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">categorical</span><span class="p">:</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="n">prefix</span><span class="o">=</span><span class="n">c</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -1973,17 +1952,60 @@ need to apply one-hot encoding.</p>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Encode-Binary-Categorical-Features">
-<h4>Encode Binary Categorical Features<a class="headerlink" href="#Encode-Binary-Categorical-Features" title="Permalink to this headline">¶</a></h4>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [44]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;gender_bool&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s1">&#39;Female&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Male&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gender_bool&#39;</span><span class="p">])</span>
+<span></span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[44]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>[70-80)     25562
+[60-70)     22185
+[50-60)     17102
+[80-90)     16706
+[40-50)      9626
+[30-40)      3765
+[90-100)     2668
+[20-30)      1650
+[10-20)       690
+[0-10)        160
+Name: age, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Label-Encoding">
+<h4>Label Encoding<a class="headerlink" href="#Label-Encoding" title="Permalink to this headline">¶</a></h4>
+<p>There are a couple of features where label encoding is applicable.</p>
+<ul class="simple">
+<li>age (from <code class="docutils literal notranslate"><span class="pre">[0-10)</span></code> to <code class="docutils literal notranslate"><span class="pre">[70-80)</span></code>) can assume an ordinal
+relationship</li>
+<li>gender (<code class="docutils literal notranslate"><span class="pre">Male</span></code> or <code class="docutils literal notranslate"><span class="pre">Female</span></code>) converts to 0 and 1 which is binary</li>
+</ul>
+<p>Let’s go ahead and apply scikit-learn’s
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html">LabelEncoder</a>
+to these two columns.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [45]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">LabelEncoder</span>
+
+<span class="n">label_encoder</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
+
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;age_label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">label_encoder</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">])</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;gender_bool&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">label_encoder</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -1999,44 +2021,60 @@ aim to build predictive models. The first step is to separate our
 features and target into variables <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> respectively.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [45]:
+<span></span>In [46]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s1">&#39;metformin_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;repaglinide_bool&#39;</span><span class="p">,</span>
-       <span class="s1">&#39;nateglinide_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;chlorpropamide_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;glimepiride_bool&#39;</span><span class="p">,</span>
-       <span class="s1">&#39;acetohexamide_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;glipizide_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;glyburide_bool&#39;</span><span class="p">,</span>
-       <span class="s1">&#39;tolbutamide_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;pioglitazone_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;rosiglitazone_bool&#39;</span><span class="p">,</span>
-       <span class="s1">&#39;acarbose_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;miglitol_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;troglitazone_bool&#39;</span><span class="p">,</span>
-       <span class="s1">&#39;tolazamide_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;examide_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;citoglipton_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;insulin_bool&#39;</span><span class="p">,</span>
-       <span class="s1">&#39;glyburide-metformin_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;glipizide-metformin_bool&#39;</span><span class="p">,</span>
-       <span class="s1">&#39;glimepiride-pioglitazone_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;metformin-rosiglitazone_bool&#39;</span><span class="p">,</span>
-       <span class="s1">&#39;metformin-pioglitazone_bool&#39;</span><span class="p">,</span><span class="s1">&#39;num_lab_procedures&#39;</span><span class="p">,</span> <span class="s1">&#39;num_procedures&#39;</span><span class="p">,</span>
-       <span class="s1">&#39;num_medications&#39;</span><span class="p">,</span> <span class="s1">&#39;number_outpatient&#39;</span><span class="p">,</span> <span class="s1">&#39;number_emergency&#39;</span><span class="p">,</span>
-       <span class="s1">&#39;number_inpatient&#39;</span><span class="p">,</span> <span class="s1">&#39;number_diagnoses&#39;</span><span class="p">,</span> <span class="s1">&#39;race_AfricanAmerican&#39;</span><span class="p">,</span> <span class="s1">&#39;race_Asian&#39;</span><span class="p">,</span>
-       <span class="s1">&#39;race_Caucasian&#39;</span><span class="p">,</span> <span class="s1">&#39;race_Hispanic&#39;</span><span class="p">,</span> <span class="s1">&#39;race_Other&#39;</span><span class="p">,</span> <span class="s1">&#39;age_[20-30)&#39;</span><span class="p">,</span> <span class="s1">&#39;age_[30-40)&#39;</span><span class="p">,</span> <span class="s1">&#39;age_[40-50)&#39;</span><span class="p">,</span>
-       <span class="s1">&#39;age_[50-60)&#39;</span><span class="p">,</span> <span class="s1">&#39;age_[60-70)&#39;</span><span class="p">,</span> <span class="s1">&#39;age_[70-80)&#39;</span><span class="p">,</span> <span class="s1">&#39;age_[80-90)&#39;</span><span class="p">,</span>
-       <span class="s1">&#39;age_[90-100)&#39;</span><span class="p">,</span> <span class="s1">&#39;admission_type_Elective&#39;</span><span class="p">,</span> <span class="s1">&#39;admission_type_Newborn&#39;</span><span class="p">,</span>
-       <span class="s1">&#39;admission_type_Trauma Center&#39;</span><span class="p">,</span> <span class="s1">&#39;admission_type_Urgent&#39;</span><span class="p">,</span> <span class="s1">&#39;gender_bool&#39;</span><span class="p">]]</span>
+<span></span><span class="n">med_features</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;metformin_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;repaglinide_bool&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;nateglinide_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;chlorpropamide_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;glimepiride_bool&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;acetohexamide_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;glipizide_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;glyburide_bool&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;tolbutamide_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;pioglitazone_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;rosiglitazone_bool&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;acarbose_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;miglitol_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;troglitazone_bool&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;tolazamide_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;examide_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;citoglipton_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;insulin_bool&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;glyburide-metformin_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;glipizide-metformin_bool&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;glimepiride-pioglitazone_bool&#39;</span><span class="p">,</span> <span class="s1">&#39;metformin-rosiglitazone_bool&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;metformin-pioglitazone_bool&#39;</span><span class="p">]</span>
 
+<span class="n">demographic_features</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;race_AfricanAmerican&#39;</span><span class="p">,</span> <span class="s1">&#39;race_Asian&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;race_Caucasian&#39;</span><span class="p">,</span> <span class="s1">&#39;race_Hispanic&#39;</span><span class="p">,</span> <span class="s1">&#39;race_Other&#39;</span><span class="p">,</span> <span class="s1">&#39;age_label&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;admission_type_Elective&#39;</span><span class="p">,</span> <span class="s1">&#39;admission_type_Newborn&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;admission_type_Trauma Center&#39;</span><span class="p">,</span> <span class="s1">&#39;admission_type_Urgent&#39;</span><span class="p">,</span> <span class="s1">&#39;gender_bool&#39;</span><span class="p">]</span>
+
+<span class="n">other_features</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;num_lab_procedures&#39;</span><span class="p">,</span> <span class="s1">&#39;num_procedures&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;num_medications&#39;</span><span class="p">,</span> <span class="s1">&#39;number_outpatient&#39;</span><span class="p">,</span> <span class="s1">&#39;number_emergency&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;number_inpatient&#39;</span><span class="p">,</span> <span class="s1">&#39;number_diagnoses&#39;</span><span class="p">]</span>
+
+<span class="n">all_features</span> <span class="o">=</span> <span class="n">med_features</span> <span class="o">+</span> <span class="n">demographic_features</span> <span class="o">+</span> <span class="n">other_features</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">all_features</span><span class="p">]</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;readmitted_bool&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
 </div>
-<div class="section" id="Step-7:-Choosing-our-Binary-Classification-Model">
-<h3>Step 7: Choosing our Binary Classification Model<a class="headerlink" href="#Step-7:-Choosing-our-Binary-Classification-Model" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="Step-7:-Choosing-our-Model">
+<h3>Step 7: Choosing our Model<a class="headerlink" href="#Step-7:-Choosing-our-Model" title="Permalink to this headline">¶</a></h3>
 <p>We’ll test out the <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">Random Forest Classifier
 (RFC)</a>
-for this dataset. We’re choosing this model because it uses ensemble
-learning and has interpretable results in which feature importance can
-be extracted. We’ll import it from
+for this dataset. RFC is an ensemble learning technique that works by
+creating a “forest” of decision trees. Each tree evaluates the data for
+a given patient and outputs a 0 or 1. Random Forest looks at the output
+of all trees and gives the majority vote as its result. Let’s say we
+have a forest with 3 trees and 2 of them predict the patient will be
+readmitted. The majority vote is that the patient will be readmitted.</p>
+<p>We’re choosing Random Forest because:</p>
+<ul class="simple">
+<li>it is robust to outliers</li>
+<li>it is able to handle unbalanced datasets</li>
+<li>it measures feature importance</li>
+</ul>
+<p>We’ll import RFC from
 <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">scikit-learn</a>
 which is a very comprehensive Python library for data mining and data
 analysis.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [46]:
+<span></span>In [47]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -2048,7 +2086,7 @@ analysis.</p>
 creating an instance of the class and applying <code class="docutils literal notranslate"><span class="pre">get_params()</span></code>:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [47]:
+<span></span>In [48]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -2058,7 +2096,7 @@ creating an instance of the class and applying <code class="docutils literal not
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[47]:
+<span></span>Out[48]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
@@ -2127,7 +2165,7 @@ define our search space as a dictionary. We also need to initialize our
 model.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [48]:
+<span></span>In [49]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -2149,7 +2187,7 @@ analysis. We’ll set our number of folds to 3. The more folds you use,
 the longer it will take to compute results.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [49]:
+<span></span>In [50]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -2161,7 +2199,7 @@ the longer it will take to compute results.</p>
 <em>Step 6</em>.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [50]:
+<span></span>In [51]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -2171,7 +2209,7 @@ the longer it will take to compute results.</p>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[50]:
+<span></span>Out[51]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
@@ -2189,10 +2227,10 @@ the longer it will take to compute results.</p>
 </pre></div>
 </div>
 </div>
-<p>Let’s see what our optimal hyperparameters are:</p>
+<p>What are the optimal hyperparameters?</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [51]:
+<span></span>In [52]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -2206,19 +2244,19 @@ the longer it will take to compute results.</p>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Optimal hyperparameters: {&#39;max_depth&#39;: 3, &#39;n_estimators&#39;: 50}
-Best score: 0.616
+Optimal hyperparameters: {&#39;max_depth&#39;: 5, &#39;n_estimators&#39;: 50}
+Best score: 0.617
 </pre></div></div>
 </div>
 <p>Based on the search space we defined for GridSearchCv, it looks like
 max_depth of 5 and n_estimators of 10 are our optimal hyperparmeters
-which gave us an accuracy of 0.616.</p>
+which gave us an accuracy of 0.617.</p>
 <p>We can also see a thorough report of our results with <code class="docutils literal notranslate"><span class="pre">cv_results_</span></code>.
 It shows fit time, score time, and mean train/test score (averaged over
 all folds). We’ll sort by <code class="docutils literal notranslate"><span class="pre">mean_test_score</span></code>.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [52]:
+<span></span>In [53]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -2229,7 +2267,7 @@ all folds). We’ll sort by <code class="docutils literal notranslate"><span cla
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[52]:
+<span></span>Out[53]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -2273,109 +2311,109 @@ all folds). We’ll sort by <code class="docutils literal notranslate"><span cla
   </thead>
   <tbody>
     <tr>
-      <th>2</th>
-      <td>0.898266</td>
-      <td>0.022974</td>
-      <td>0.109786</td>
-      <td>0.010580</td>
-      <td>3</td>
-      <td>50</td>
-      <td>{'max_depth': 3, 'n_estimators': 50}</td>
-      <td>0.607803</td>
-      <td>0.629937</td>
-      <td>0.611208</td>
-      <td>0.616316</td>
-      <td>0.009731</td>
-      <td>1</td>
-      <td>0.626146</td>
-      <td>0.614405</td>
-      <td>0.621028</td>
-      <td>0.620526</td>
-      <td>0.004806</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>0.211936</td>
-      <td>0.002936</td>
-      <td>0.031435</td>
-      <td>0.000512</td>
-      <td>3</td>
-      <td>10</td>
-      <td>{'max_depth': 3, 'n_estimators': 10}</td>
-      <td>0.607084</td>
-      <td>0.627600</td>
-      <td>0.612586</td>
-      <td>0.615757</td>
-      <td>0.008670</td>
-      <td>2</td>
-      <td>0.622325</td>
-      <td>0.613431</td>
-      <td>0.619469</td>
-      <td>0.618409</td>
-      <td>0.003708</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>2.002041</td>
-      <td>0.079391</td>
-      <td>0.195860</td>
-      <td>0.007887</td>
-      <td>10</td>
-      <td>50</td>
-      <td>{'max_depth': 10, 'n_estimators': 50}</td>
-      <td>0.612028</td>
-      <td>0.622355</td>
-      <td>0.607612</td>
-      <td>0.613998</td>
-      <td>0.006178</td>
-      <td>3</td>
-      <td>0.654435</td>
-      <td>0.646904</td>
-      <td>0.646754</td>
-      <td>0.649364</td>
-      <td>0.003586</td>
-    </tr>
-    <tr>
       <th>5</th>
-      <td>1.344713</td>
-      <td>0.114324</td>
-      <td>0.142994</td>
-      <td>0.017598</td>
+      <td>1.132375</td>
+      <td>0.009537</td>
+      <td>0.121620</td>
+      <td>0.001741</td>
       <td>5</td>
       <td>50</td>
       <td>{'max_depth': 5, 'n_estimators': 50}</td>
-      <td>0.607983</td>
-      <td>0.630057</td>
-      <td>0.602248</td>
-      <td>0.613429</td>
-      <td>0.011988</td>
-      <td>4</td>
-      <td>0.631930</td>
-      <td>0.620144</td>
-      <td>0.626631</td>
-      <td>0.626235</td>
-      <td>0.004820</td>
+      <td>0.609014</td>
+      <td>0.633214</td>
+      <td>0.608373</td>
+      <td>0.616867</td>
+      <td>0.011562</td>
+      <td>1</td>
+      <td>0.633694</td>
+      <td>0.621683</td>
+      <td>0.627437</td>
+      <td>0.627605</td>
+      <td>0.004905</td>
     </tr>
     <tr>
-      <th>0</th>
-      <td>0.136248</td>
-      <td>0.007508</td>
-      <td>0.024020</td>
-      <td>0.001144</td>
+      <th>2</th>
+      <td>0.821872</td>
+      <td>0.007762</td>
+      <td>0.100330</td>
+      <td>0.000355</td>
       <td>3</td>
+      <td>50</td>
+      <td>{'max_depth': 3, 'n_estimators': 50}</td>
+      <td>0.600264</td>
+      <td>0.627461</td>
+      <td>0.613047</td>
+      <td>0.613591</td>
+      <td>0.011110</td>
+      <td>2</td>
+      <td>0.624509</td>
+      <td>0.611839</td>
+      <td>0.619121</td>
+      <td>0.618490</td>
+      <td>0.005192</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>1.907094</td>
+      <td>0.071164</td>
+      <td>0.202362</td>
+      <td>0.028745</td>
+      <td>10</td>
+      <td>50</td>
+      <td>{'max_depth': 10, 'n_estimators': 50}</td>
+      <td>0.610332</td>
+      <td>0.621767</td>
+      <td>0.606814</td>
+      <td>0.612971</td>
+      <td>0.006383</td>
+      <td>3</td>
+      <td>0.655344</td>
+      <td>0.647828</td>
+      <td>0.647259</td>
+      <td>0.650144</td>
+      <td>0.003685</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.251050</td>
+      <td>0.008086</td>
+      <td>0.035588</td>
+      <td>0.000535</td>
       <td>5</td>
-      <td>{'max_depth': 3, 'n_estimators': 5}</td>
-      <td>0.609751</td>
-      <td>0.624753</td>
-      <td>0.601828</td>
-      <td>0.612111</td>
-      <td>0.009507</td>
+      <td>10</td>
+      <td>{'max_depth': 5, 'n_estimators': 10}</td>
+      <td>0.606107</td>
+      <td>0.624554</td>
+      <td>0.596686</td>
+      <td>0.609116</td>
+      <td>0.011574</td>
+      <td>4</td>
+      <td>0.631596</td>
+      <td>0.615375</td>
+      <td>0.622912</td>
+      <td>0.623294</td>
+      <td>0.006628</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.399570</td>
+      <td>0.004194</td>
+      <td>0.045592</td>
+      <td>0.000699</td>
+      <td>10</td>
+      <td>10</td>
+      <td>{'max_depth': 10, 'n_estimators': 10}</td>
+      <td>0.609553</td>
+      <td>0.614216</td>
+      <td>0.601510</td>
+      <td>0.608426</td>
+      <td>0.005248</td>
       <td>5</td>
-      <td>0.623704</td>
-      <td>0.611318</td>
-      <td>0.619529</td>
-      <td>0.618184</td>
-      <td>0.005145</td>
+      <td>0.654161</td>
+      <td>0.644068</td>
+      <td>0.642195</td>
+      <td>0.646808</td>
+      <td>0.005255</td>
     </tr>
   </tbody>
 </table>
@@ -2399,7 +2437,7 @@ We’ll define our search space over a uniform distribution of values.
 We’ll iterate 9 times, just like we did for grid search.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [53]:
+<span></span>In [54]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -2424,13 +2462,13 @@ We’ll iterate 9 times, just like we did for grid search.</p>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Optimal hyperparameters: {&#39;max_depth&#39;: 7, &#39;n_estimators&#39;: 58}
-Best score: 0.616
+Optimal hyperparameters: {&#39;max_depth&#39;: 4, &#39;n_estimators&#39;: 59}
+Best score: 0.615
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [54]:
+<span></span>In [55]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -2441,7 +2479,7 @@ Best score: 0.616
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[54]:
+<span></span>Out[55]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -2485,109 +2523,109 @@ Best score: 0.616
   </thead>
   <tbody>
     <tr>
-      <th>6</th>
-      <td>1.647243</td>
-      <td>0.026765</td>
-      <td>0.170798</td>
-      <td>0.005107</td>
-      <td>7</td>
-      <td>58</td>
-      <td>{'max_depth': 7, 'n_estimators': 58}</td>
-      <td>0.610980</td>
-      <td>0.627480</td>
-      <td>0.610279</td>
-      <td>0.616246</td>
-      <td>0.007949</td>
+      <th>7</th>
+      <td>1.149746</td>
+      <td>0.021392</td>
+      <td>0.129111</td>
+      <td>0.002811</td>
+      <td>4</td>
+      <td>59</td>
+      <td>{'max_depth': 4, 'n_estimators': 59}</td>
+      <td>0.606107</td>
+      <td>0.629858</td>
+      <td>0.609841</td>
+      <td>0.615269</td>
+      <td>0.010428</td>
       <td>1</td>
-      <td>0.637549</td>
-      <td>0.626586</td>
-      <td>0.633778</td>
-      <td>0.632638</td>
-      <td>0.004547</td>
+      <td>0.629873</td>
+      <td>0.614746</td>
+      <td>0.624890</td>
+      <td>0.623170</td>
+      <td>0.006294</td>
     </tr>
     <tr>
       <th>0</th>
-      <td>0.589577</td>
-      <td>0.007274</td>
-      <td>0.070038</td>
-      <td>0.001949</td>
+      <td>1.136515</td>
+      <td>0.057328</td>
+      <td>0.126526</td>
+      <td>0.004007</td>
       <td>4</td>
-      <td>26</td>
-      <td>{'max_depth': 4, 'n_estimators': 26}</td>
-      <td>0.605736</td>
-      <td>0.629128</td>
-      <td>0.611567</td>
-      <td>0.615477</td>
-      <td>0.009942</td>
+      <td>58</td>
+      <td>{'max_depth': 4, 'n_estimators': 58}</td>
+      <td>0.605178</td>
+      <td>0.630068</td>
+      <td>0.609152</td>
+      <td>0.614799</td>
+      <td>0.010918</td>
       <td>2</td>
-      <td>0.626611</td>
-      <td>0.615484</td>
-      <td>0.625313</td>
-      <td>0.622469</td>
-      <td>0.004968</td>
+      <td>0.629634</td>
+      <td>0.614791</td>
+      <td>0.625174</td>
+      <td>0.623200</td>
+      <td>0.006218</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2.200676</td>
+      <td>0.430752</td>
+      <td>0.166357</td>
+      <td>0.003467</td>
+      <td>6</td>
+      <td>65</td>
+      <td>{'max_depth': 6, 'n_estimators': 65}</td>
+      <td>0.609853</td>
+      <td>0.623895</td>
+      <td>0.609691</td>
+      <td>0.614479</td>
+      <td>0.006658</td>
+      <td>3</td>
+      <td>0.636511</td>
+      <td>0.625938</td>
+      <td>0.630029</td>
+      <td>0.630826</td>
+      <td>0.004353</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2.004584</td>
+      <td>0.041066</td>
+      <td>0.205204</td>
+      <td>0.006243</td>
+      <td>6</td>
+      <td>80</td>
+      <td>{'max_depth': 6, 'n_estimators': 80}</td>
+      <td>0.610362</td>
+      <td>0.622247</td>
+      <td>0.608313</td>
+      <td>0.613640</td>
+      <td>0.006143</td>
+      <td>4</td>
+      <td>0.636661</td>
+      <td>0.626223</td>
+      <td>0.630313</td>
+      <td>0.631066</td>
+      <td>0.004294</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>2.094977</td>
-      <td>0.272647</td>
-      <td>0.179518</td>
-      <td>0.006369</td>
-      <td>8</td>
-      <td>53</td>
-      <td>{'max_depth': 8, 'n_estimators': 53}</td>
-      <td>0.610380</td>
-      <td>0.626221</td>
-      <td>0.608720</td>
-      <td>0.615107</td>
-      <td>0.007888</td>
-      <td>3</td>
-      <td>0.641429</td>
-      <td>0.633808</td>
-      <td>0.635412</td>
-      <td>0.636883</td>
-      <td>0.003281</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>1.654977</td>
-      <td>0.069732</td>
-      <td>0.189271</td>
-      <td>0.011885</td>
-      <td>4</td>
-      <td>80</td>
-      <td>{'max_depth': 4, 'n_estimators': 80}</td>
-      <td>0.606215</td>
-      <td>0.629577</td>
-      <td>0.609050</td>
-      <td>0.614947</td>
-      <td>0.010409</td>
-      <td>4</td>
-      <td>0.628184</td>
-      <td>0.616533</td>
-      <td>0.625972</td>
-      <td>0.623563</td>
-      <td>0.005053</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>2.854074</td>
-      <td>0.026852</td>
-      <td>0.282800</td>
-      <td>0.004831</td>
-      <td>8</td>
-      <td>90</td>
-      <td>{'max_depth': 8, 'n_estimators': 90}</td>
-      <td>0.609751</td>
-      <td>0.626371</td>
-      <td>0.607911</td>
-      <td>0.614678</td>
-      <td>0.008302</td>
+      <td>2.834532</td>
+      <td>0.151390</td>
+      <td>0.263107</td>
+      <td>0.004990</td>
+      <td>9</td>
+      <td>77</td>
+      <td>{'max_depth': 9, 'n_estimators': 77}</td>
+      <td>0.610152</td>
+      <td>0.623925</td>
+      <td>0.606125</td>
+      <td>0.613401</td>
+      <td>0.007621</td>
       <td>5</td>
-      <td>0.642898</td>
-      <td>0.634587</td>
-      <td>0.637284</td>
-      <td>0.638257</td>
-      <td>0.003462</td>
+      <td>0.648422</td>
+      <td>0.641221</td>
+      <td>0.641520</td>
+      <td>0.643721</td>
+      <td>0.003326</td>
     </tr>
   </tbody>
 </table>
@@ -2598,53 +2636,31 @@ Best score: 0.616
 <h3>Step 9: Evaluating Model Performance<a class="headerlink" href="#Step-9:-Evaluating-Model-Performance" title="Permalink to this headline">¶</a></h3>
 <p>There are several metrics that we can use to evaluate model performance:</p>
 <ul class="simple">
-<li>RMSE</li>
 <li>accuracy</li>
 <li>precision</li>
 <li>recall</li>
-<li>AUC</li>
+<li>F1-score</li>
+<li>ROC AUC score</li>
 </ul>
-<p>In this walkthrough, we’ll compare accuracy and precision.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [55]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">train_test_split</span>
-
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
-
-<span class="n">rfc</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">random_search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">)</span>
-<span class="n">rfc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[55]:
-</pre></div>
-</div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>RandomForestClassifier(bootstrap=True, class_weight=None, criterion=&#39;gini&#39;,
-            max_depth=7, max_features=&#39;auto&#39;, max_leaf_nodes=None,
-            min_impurity_decrease=0.0, min_impurity_split=None,
-            min_samples_leaf=1, min_samples_split=2,
-            min_weight_fraction_leaf=0.0, n_estimators=58, n_jobs=None,
-            oob_score=False, random_state=None, verbose=0,
-            warm_start=False)
-</pre></div>
-</div>
-</div>
-<p>Accuracy is RFC’s default evaluation metric. Using the score metric, we
-get the measured accuracy from the trained model.</p>
+<p>A comprehensive list of classification metrics can be found in
+scikit-learn’s metrics module
+<a class="reference external" href="https://scikit-learn.org/stable/modules/model_evaluation.html#classification-metrics">documentation</a>.</p>
+<p>In this walkthrough, we’ll look at accuracy, precision and recall. But
+before we can start evaluating our model, let’s split our data into two
+parts: 1) a training set and 2) a test set. We’ll fit our model on the
+training data, and evaluate its performance using the test set.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [56]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">rfc</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+<span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">train_test_split</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+
+<span class="n">rfc</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">random_search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">)</span>
+<span class="n">rfc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2654,50 +2670,149 @@ get the measured accuracy from the trained model.</p>
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>0.6213854067822004
+<span></span>RandomForestClassifier(bootstrap=True, class_weight=None, criterion=&#39;gini&#39;,
+            max_depth=4, max_features=&#39;auto&#39;, max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=59, n_jobs=None,
+            oob_score=False, random_state=99, verbose=0, warm_start=False)
 </pre></div>
 </div>
 </div>
-<p>But let’s also look at precision.</p>
+<p>Accuracy is RFC’s default evaluation metric. Using the score metric, we
+get the measured accuracy from the trained model.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [57]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">precision_score</span>
+<span></span><span class="n">accuracy</span> <span class="o">=</span> <span class="n">rfc</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
 
-<span class="n">y_pred</span> <span class="o">=</span> <span class="n">rfc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-
-<span class="n">precision_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Accuracy: </span><span class="si">{accuracy:.3f}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Accuracy: 0.620
+</pre></div></div>
+</div>
+<p>An accuracy score of 0.62 means that ~62% of hospital admissions were
+correctly labeled. The dataset that we’re working with is relatively
+balanced, but let’s say we have an imbalanced dataset where 90% of
+patients ended up being readmitted. Using accuracy to evaluate a model
+trained on imbalanced data is a problem because if we automatically
+predicted all patients to be readmitted, our accuracy would be 90% by
+default. Precision and recall are better ways to evaluate performance of
+models trained on imbalanced data.</p>
+<div class="section" id="Precision-and-Recall">
+<h4>Precision and Recall<a class="headerlink" href="#Precision-and-Recall" title="Permalink to this headline">¶</a></h4>
+<p>Precision and recall are information retrieval metrics that evaluate
+classification models.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://developers.google.com/machine-learning/crash-course/classification/precision-and-recall">Precision</a>
+is the “fraction of relevant instances among the retrieved
+instances”. In other words, it asks the question: “What proportion of
+readmitted patients were actually readmitted?”</li>
+<li>Recall is the “fraction of the total amount of relevant instances
+that were actually retrieved”. It wants to find out: “What proportion
+of readmitted patients were identified correctly?”</li>
+</ul>
+<p>Looking at the equations below, we can see that precision aims to
+minimize the number of <strong>False Positives</strong>, while recall aims to
+minimize the number of <strong>False Negatives</strong>.</p>
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[57]:
+<span></span>In [58]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">precision_score</span><span class="p">,</span> <span class="n">recall_score</span><span class="p">,</span> <span class="n">confusion_matrix</span>
+
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">rfc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+<span class="n">precision</span> <span class="o">=</span> <span class="n">precision_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred</span><span class="p">)</span>
+<span class="n">recall</span> <span class="o">=</span> <span class="n">recall_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Precision: </span><span class="si">{precision:.3f}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Recall: </span><span class="si">{recall:.3f}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Precision: 0.621
+Recall: 0.451
+</pre></div></div>
+</div>
+<ul class="simple">
+<li>Of the patients who were labelled as readmitted, ~62% were actually
+readmitted.</li>
+<li>Of the patients who were actually readmitted, 45% were labelled as
+readmitted.</li>
+</ul>
+<p>Another way to assess our model’s performance is to visualize our
+results with a <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html#sklearn.metrics.confusion_matrix">confusion
+matrix</a>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [59]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">confusion</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred</span><span class="p">)</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="s1">&#39;TN&#39;</span><span class="p">,</span><span class="s1">&#39;FP&#39;</span><span class="p">],[</span><span class="s1">&#39;FN&#39;</span><span class="p">,</span><span class="s1">&#39;TP&#39;</span><span class="p">]])</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">confusion</span><span class="p">,</span><span class="n">annot</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;predicted&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;actual&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[59]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>0.6381449111925571
+<span></span>Text(33.0, 0.5, &#39;actual&#39;)
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_walkthrough_127_1.png" src="../_images/notebooks_walkthrough_127_1.png" />
+</div>
+</div>
+<p>The heatmap above shows that we have more False Negatives than False
+Positives. This means that when we predict a patient will be readmitted,
+there’s a good chance that we got it right. But when we predict that a
+patient won’t be admitted, we’re missing quite a few patients who
+actually do return to the hospital.</p>
 </div>
 </div>
 <div class="section" id="Step-10:-Examining-Feature-Importance">
 <h3>Step 10: Examining Feature Importance<a class="headerlink" href="#Step-10:-Examining-Feature-Importance" title="Permalink to this headline">¶</a></h3>
-<p>RandomForestClassifier gives us a list of feature importances. We can
-dig a bit further to examine which features were the most important in
-classification.</p>
+<p>With RandomForestClassifier, we can dig further to examine which
+features were the most important in classification.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [61]:
+<span></span>In [60]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">feature_importances</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;features&#39;</span><span class="p">:</span><span class="nb">list</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
-    <span class="s1">&#39;importance&#39;</span><span class="p">:</span><span class="nb">list</span><span class="p">(</span><span class="n">rfc</span><span class="o">.</span><span class="n">feature_importances_</span><span class="p">)</span>
+    <span class="s1">&#39;features&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+    <span class="s1">&#39;importance&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">rfc</span><span class="o">.</span><span class="n">feature_importances_</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="n">important_features</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">feature_importances</span><span class="p">)</span>
@@ -2707,7 +2822,7 @@ classification.</p>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[61]:
+<span></span>Out[60]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -2735,84 +2850,89 @@ classification.</p>
   </thead>
   <tbody>
     <tr>
-      <th>28</th>
+      <th>39</th>
       <td>number_inpatient</td>
-      <td>0.464901</td>
+      <td>0.502475</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>number_emergency</td>
+      <td>0.145222</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>number_outpatient</td>
+      <td>0.103304</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>number_diagnoses</td>
+      <td>0.095260</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>num_medications</td>
+      <td>0.049601</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>age_label</td>
+      <td>0.021661</td>
     </tr>
     <tr>
       <th>29</th>
-      <td>number_diagnoses</td>
-      <td>0.123911</td>
-    </tr>
-    <tr>
-      <th>27</th>
-      <td>number_emergency</td>
-      <td>0.117507</td>
-    </tr>
-    <tr>
-      <th>26</th>
-      <td>number_outpatient</td>
-      <td>0.076745</td>
-    </tr>
-    <tr>
-      <th>25</th>
-      <td>num_medications</td>
-      <td>0.054187</td>
-    </tr>
-    <tr>
-      <th>23</th>
-      <td>num_lab_procedures</td>
-      <td>0.027678</td>
-    </tr>
-    <tr>
-      <th>24</th>
-      <td>num_procedures</td>
-      <td>0.022751</td>
-    </tr>
-    <tr>
-      <th>43</th>
       <td>admission_type_Elective</td>
-      <td>0.018851</td>
+      <td>0.019275</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>num_lab_procedures</td>
+      <td>0.018061</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>num_procedures</td>
+      <td>0.016270</td>
     </tr>
     <tr>
       <th>17</th>
       <td>insulin_bool</td>
-      <td>0.013265</td>
+      <td>0.009118</td>
     </tr>
     <tr>
       <th>0</th>
       <td>metformin_bool</td>
-      <td>0.010087</td>
+      <td>0.005045</td>
     </tr>
     <tr>
-      <th>40</th>
-      <td>age_[70-80)</td>
-      <td>0.007444</td>
-    </tr>
-    <tr>
-      <th>41</th>
-      <td>age_[80-90)</td>
-      <td>0.007320</td>
-    </tr>
-    <tr>
-      <th>32</th>
+      <th>25</th>
       <td>race_Caucasian</td>
-      <td>0.006018</td>
+      <td>0.003034</td>
     </tr>
     <tr>
-      <th>38</th>
-      <td>age_[50-60)</td>
-      <td>0.004055</td>
+      <th>1</th>
+      <td>repaglinide_bool</td>
+      <td>0.001752</td>
     </tr>
     <tr>
-      <th>36</th>
-      <td>age_[30-40)</td>
-      <td>0.003907</td>
+      <th>6</th>
+      <td>glipizide_bool</td>
+      <td>0.001735</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>race_Asian</td>
+      <td>0.001074</td>
     </tr>
   </tbody>
 </table>
 </div></div>
 </div>
+<p>The most important feautures appear to be <code class="docutils literal notranslate"><span class="pre">number_inpatient</span></code> and
+<code class="docutils literal notranslate"><span class="pre">number_emergency</span></code>, which represents the number of inpatient and
+emergency visits of the patient in the year preceding the encounter. So
+if a patient was admitted to the hospital in the past, this increases
+their chance of being readmitted in the future.</p>
 </div>
 </div>
 </div>
