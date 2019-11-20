@@ -1249,7 +1249,7 @@
     "\n",
     "If you want to learn more about each medication in our dataset, check out the [RxNav dashboard](https://mor.nlm.nih.gov/RxNav/) which gives an overview of medication properties and interactions.\n",
     "\n",
-    "<img src=\"https://s3.us-east-2.amazonaws.com/hidden.layers.assets/rxnav_dashboard.png\" width=\"70%\"/>"
+    "![](images/rxnav_dashboard.png)"
    ]
   },
   {
@@ -1809,7 +1809,7 @@
    "source": [
     "#### One-hot Encoding\n",
     "\n",
-    "For example, we want to convert a patient's race to a numerical feature. We could use label encoding to convert each race to values 0-5 but this suggests an inherent order between the different races that does not exist. With one-hot encoding, each race becomes an independent feature."
+    "Let's say we want to convert a patient's race to a numerical feature. We could use label encoding to convert each race to values 0-5 but this suggests an inherent order among races that does not exist. With one-hot encoding, each race becomes an independent feature."
    ]
   },
   {
@@ -1943,7 +1943,7 @@
     "\n",
     "We'll test out the [Random Forest Classifier (RFC)](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html) for this dataset. RFC is an ensemble learning technique that works by creating a \"forest\" of decision trees. Each tree evaluates the data for a given patient and outputs a 0 or 1. Random Forest looks at the output of all trees and gives the majority vote as its result. Let's say we have a forest with 3 trees and 2 of them predict the patient will be readmitted. The majority vote is that the patient will be readmitted.\n",
     "\n",
-    "<img src=\"https://s3.us-east-2.amazonaws.com/hidden.layers.assets/random_forest.png\" width=\"70%\"/>\n",
+    "![](images/random_forest.png)\n",
     "\n",
     "We're choosing Random Forest because:\n",
     "\n",
@@ -2038,7 +2038,6 @@
     "- [GridSearchCV](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html)\n",
     "- [RandomizedSearchCV](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html)\n",
     "\n",
-    "<img src=\"https://s3.us-east-2.amazonaws.com/hidden.layers.assets/grid_search.png\" align=\"right\" width=\"20%\"/>\n",
     "\n",
     "With grid search, you define your search space as a grid of values and iterate over each grid point until you find the optimal combination of values. Let's say we want to tune `max_depth` and `n_estimators` in our RandomForestClassifer. We'll set our search space as follows:\n",
     "\n",
@@ -2364,7 +2363,7 @@
    "source": [
     "In 2012, Bergstra and Bengio from the University of Montreal proposed a new technique called [random search](http://www.jmlr.org/papers/volume13/bergstra12a/bergstra12a.pdf) which is similar to grid search but instead of sampling over a discrete set of values, you’re now randomly sampling from a distribution of values. Random search is effective in situations where not all hyperparameters are equally important.\n",
     "\n",
-    "<img src=\"https://s3.us-east-2.amazonaws.com/hidden.layers.assets/random_grid_search.png\" width=\"50%\"/>\n",
+    "![](images/random_grid_search.png)\n",
     "\n",
     "The visualization above gives an example of when random search can perform better. With grid search, you’re only looking at 3 different values of a given hyperparamter. But with random search you’re looking at nine different values. As you increase the number of samples in your random search, you increase the probability of finding the optimal hyperparameters for your model. \n",
     "\n",
@@ -2699,7 +2698,7 @@
     "\n",
     "Looking at the equations below, we can see that precision aims to minimize the number of **False Positives**, while recall aims to minimize the number of **False Negatives**.\n",
     "\n",
-    "<img src=\"https://s3.us-east-2.amazonaws.com/hidden.layers.assets/precision_recall.png\" width=\"80%\"/>"
+    "![](images/precision_recall.png)"
    ]
   },
   {

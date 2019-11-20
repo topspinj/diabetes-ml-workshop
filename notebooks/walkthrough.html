@@ -1457,6 +1457,7 @@ it being a hypoglycemic agent.</p>
 <p>If you want to learn more about each medication in our dataset, check
 out the <a class="reference external" href="https://mor.nlm.nih.gov/RxNav/">RxNav dashboard</a> which gives
 an overview of medication properties and interactions.</p>
+<p><img alt="image0" src="../_images/precision_recall.png" /></p>
 </div>
 <div class="section" id="Creating-a-Target-Variable">
 <h4>Creating a Target Variable<a class="headerlink" href="#Creating-a-Target-Variable" title="Permalink to this headline">¶</a></h4>
@@ -1934,10 +1935,10 @@ encoding to convert our string features to numerical without adding a
 hierarchy.</p>
 <div class="section" id="One-hot-Encoding">
 <h4>One-hot Encoding<a class="headerlink" href="#One-hot-Encoding" title="Permalink to this headline">¶</a></h4>
-<p>For example, we want to convert a patient’s race to a numerical feature.
-We could use label encoding to convert each race to values 0-5 but this
-suggests an inherent order between the different races that does not
-exist. With one-hot encoding, each race becomes an independent feature.</p>
+<p>Let’s say we want to convert a patient’s race to a numerical feature. We
+could use label encoding to convert each race to values 0-5 but this
+suggests an inherent order among races that does not exist. With one-hot
+encoding, each race becomes an independent feature.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [43]:
@@ -2062,6 +2063,7 @@ a given patient and outputs a 0 or 1. Random Forest looks at the output
 of all trees and gives the majority vote as its result. Let’s say we
 have a forest with 3 trees and 2 of them predict the patient will be
 readmitted. The majority vote is that the patient will be readmitted.</p>
+<p><img alt="image0" src="../_images/precision_recall.png" /></p>
 <p>We’re choosing Random Forest because:</p>
 <ul class="simple">
 <li>it is robust to outliers</li>
@@ -2426,6 +2428,7 @@ which is similar to grid search but instead of sampling over a discrete
 set of values, you’re now randomly sampling from a distribution of
 values. Random search is effective in situations where not all
 hyperparameters are equally important.</p>
+<p><img alt="image0" src="../_images/precision_recall.png" /></p>
 <p>The visualization above gives an example of when random search can
 perform better. With grid search, you’re only looking at 3 different
 values of a given hyperparamter. But with random search you’re looking
@@ -2725,6 +2728,7 @@ of readmitted patients were identified correctly?”</li>
 <p>Looking at the equations below, we can see that precision aims to
 minimize the number of <strong>False Positives</strong>, while recall aims to
 minimize the number of <strong>False Negatives</strong>.</p>
+<p><img alt="image0" src="../_images/precision_recall.png" /></p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [58]:
