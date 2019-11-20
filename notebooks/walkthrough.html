@@ -1457,7 +1457,7 @@ it being a hypoglycemic agent.</p>
 <p>If you want to learn more about each medication in our dataset, check
 out the <a class="reference external" href="https://mor.nlm.nih.gov/RxNav/">RxNav dashboard</a> which gives
 an overview of medication properties and interactions.</p>
-<p><img alt="image0" src="../_images/precision_recall.png" /></p>
+<p><img alt="image0" src="../_images/rxnav_dashboard.png" /></p>
 </div>
 <div class="section" id="Creating-a-Target-Variable">
 <h4>Creating a Target Variable<a class="headerlink" href="#Creating-a-Target-Variable" title="Permalink to this headline">¶</a></h4>
@@ -2063,7 +2063,7 @@ a given patient and outputs a 0 or 1. Random Forest looks at the output
 of all trees and gives the majority vote as its result. Let’s say we
 have a forest with 3 trees and 2 of them predict the patient will be
 readmitted. The majority vote is that the patient will be readmitted.</p>
-<p><img alt="image0" src="../_images/precision_recall.png" /></p>
+<p><img alt="image0" src="../_images/random_forest.png" /></p>
 <p>We’re choosing Random Forest because:</p>
 <ul class="simple">
 <li>it is robust to outliers</li>
@@ -2428,7 +2428,7 @@ which is similar to grid search but instead of sampling over a discrete
 set of values, you’re now randomly sampling from a distribution of
 values. Random search is effective in situations where not all
 hyperparameters are equally important.</p>
-<p><img alt="image0" src="../_images/precision_recall.png" /></p>
+<p><img alt="image0" src="../_images/random_grid_search.png" /></p>
 <p>The visualization above gives an example of when random search can
 perform better. With grid search, you’re only looking at 3 different
 values of a given hyperparamter. But with random search you’re looking
