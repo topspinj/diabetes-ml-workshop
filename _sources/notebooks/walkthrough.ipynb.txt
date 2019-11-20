@@ -953,7 +953,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "Remember that list of medications we created when we loaded our data in Step 1? We're going to convert these medication columns into boolean variables."
+    "Remember that list of medications we created when we loaded our data in Step 2? We're going to convert these medication columns into boolean variables."
    ]
   },
   {
