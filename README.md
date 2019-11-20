@@ -26,6 +26,7 @@ Our [dataset](https://archive.ics.uci.edu/ml/datasets/diabetes+130-us+hospitals+
 is from the UCI Machine Learning Repository which includes patient and hospital outcome 
 data from 130 U.S. hospitals collected from 1999 to 2008. 
 
+Workshop slides are hosted [here](https://speakerdeck.com/topspinj/tmls-workshop-slides).
 ### Getting Started 
 
 There are two options for setting up your environment:
