@@ -10,7 +10,21 @@
   
   <title>Predicting Hospital Readmission with a Binary Classification Model &mdash; TMLS Workshop 1.0 documentation</title>
   
-  <link rel="shortcut icon" href="_static/favicon.ico"/>
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
 
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -1164,13 +1178,13 @@ Number of expired patients: 1,079
 After filtering out expired patients: 70,439
 </pre></div></div>
 </div>
-<p>We had 1079 expired patients in our dataset. After removing them, our
-dataset has 70439 patients.</p>
+<p>We had 1,079 expired patients in our dataset. After removing them, our
+dataset has 70,439 patients.</p>
 </div>
 <div class="section" id="Converting-Medication-Features-From-Categorical-to-Boolean">
 <h4>Converting Medication Features From Categorical to Boolean<a class="headerlink" href="#Converting-Medication-Features-From-Categorical-to-Boolean" title="Permalink to this headline">¶</a></h4>
 <p>Remember that list of medications we created when we loaded our data in
-Step 1? We’re going to convert these medication columns into boolean
+Step 2? We’re going to convert these medication columns into boolean
 variables.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
@@ -1998,6 +2012,9 @@ to these two columns.</p>
 </pre></div>
 </div>
 </div>
+<p>Because our <code class="docutils literal notranslate"><span class="pre">gender</span></code> column contained some missing values, it was
+considered to be a mixed datatype. We had to convert it to a string
+datatype in order to label encoding to work.</p>
 </div>
 </div>
 </div>
@@ -2043,6 +2060,16 @@ features and target into variables <code class="docutils literal notranslate"><s
 </div>
 <div class="section" id="Step-7:-Choosing-our-Model">
 <h3>Step 7: Choosing our Model<a class="headerlink" href="#Step-7:-Choosing-our-Model" title="Permalink to this headline">¶</a></h3>
+<p>When building a binary classification model, there are a wide selection
+of machine learning models to choose from:</p>
+<ul class="simple">
+<li>Random Forest Classification</li>
+<li>Logistic Regression</li>
+<li>Linear Discriminant Analysis</li>
+<li>Support Vector Machines (SVM)</li>
+<li>Gaussian Naive Bayes</li>
+<li>k-Nearest Neighbours</li>
+</ul>
 <p>We’ll test out the <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">Random Forest Classifier
 (RFC)</a>
 for this dataset. RFC is an ensemble learning technique that works by
@@ -2186,7 +2213,11 @@ the longer it will take to compute results.</p>
 </div>
 </div>
 <p>The last step is to run fit. We’ll pass in X and y which we created in
-<em>Step 6</em>.</p>
+<em>Step 6</em>. GridSearchCV will use RFC’s default metric,
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html#sklearn.ensemble.RandomForestClassifier.score">accuracy</a>.
+If we want to optimize our model using another metric, we can specify
+<code class="docutils literal notranslate"><span class="pre">scoring</span> <span class="pre">=</span> <span class="pre">'precision'</span></code> (or whichever metric we’re interested in)
+inside GridSearchCV. Let’s stick with accuracy for now.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [51]:
@@ -2622,6 +2653,18 @@ Best score: 0.615
 </table>
 </div></div>
 </div>
+<p>Grid Search and Random Search are uninformed methods which means that
+they do not take into consideration results from past evaluations. When
+you’re working with a very large search space, you might want to
+consider a “smarter” approach to hyperparameter tuning such a
+Sequential-Based Model Optimization (SMBO). The SMBO approach keeps
+track of previous iteration results which is used to sample
+hyperapramters at the current iteration. In other words, SMBO is trying
+to reduce the number of iterations by sampling the most promising
+hyperparameters based on past results. You can check out
+<a class="reference external" href="https://scikit-optimize.github.io/">scikit-optimize</a> to learn more
+about how to implement SMBO hyperparameter tuning with scikit-learn
+models.</p>
 </div>
 <div class="section" id="Step-9:-Evaluating-Model-Performance">
 <h3>Step 9: Evaluating Model Performance<a class="headerlink" href="#Step-9:-Evaluating-Model-Performance" title="Permalink to this headline">¶</a></h3>
@@ -2707,11 +2750,16 @@ classification models.</p>
 <ul class="simple">
 <li><a class="reference external" href="https://developers.google.com/machine-learning/crash-course/classification/precision-and-recall">Precision</a>
 is the “fraction of relevant instances among the retrieved
-instances”. In other words, it asks the question: “What proportion of
-readmitted patients were actually readmitted?”</li>
+instances”.<ul>
+<li>What proportion of predicted readmitted patients were actually
+readmitted?</li>
+</ul>
+</li>
 <li>Recall is the “fraction of the total amount of relevant instances
-that were actually retrieved”. It wants to find out: “What proportion
-of readmitted patients were identified correctly?”</li>
+that were actually retrieved”.<ul>
+<li>What proportion of readmitted patients were identified correctly?</li>
+</ul>
+</li>
 </ul>
 <p>Looking at the equations below, we can see that precision aims to
 minimize the number of <strong>False Positives</strong>, while recall aims to
@@ -2782,7 +2830,7 @@ matrix</a>.</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_walkthrough_127_1.png" src="../_images/notebooks_walkthrough_127_1.png" />
+<img alt="../_images/notebooks_walkthrough_129_1.png" src="../_images/notebooks_walkthrough_129_1.png" />
 </div>
 </div>
 <p>The heatmap above shows that we have more False Negatives than False

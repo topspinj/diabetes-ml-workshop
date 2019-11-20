@@ -10,7 +10,7 @@ Machine learning can be broken down into three paradigms:
 
 1. **Supervised learning:** Model has a label which is to be predicted from a set of predictors. For example, predicting whether a person will get sepsis based on their vital signs. 
 2. **Unsupervised learning:** Model looks for any patterns it can find and clusters data points into different groups. There is no label to predict. For example, group patients in the intensive care unit based on similar traits and past medical history. 
-3. **Reinforcement learning:** Model learns by trial and error in order to achieve a certain objective. For example, finding the optimal treatment regime for a cancer treatment.
+3. **Reinforcement learning:** Model learns by trial and error in order to achieve a certain objective. For example, finding the optimal treatment regime for a cancer patient.
 
 In this workshop, we will be focusing on *supervised learning*.
 

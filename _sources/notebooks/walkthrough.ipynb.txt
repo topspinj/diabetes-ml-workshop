@@ -939,7 +939,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "We had 1079 expired patients in our dataset. After removing them, our dataset has 70439 patients."
+    "We had 1,079 expired patients in our dataset. After removing them, our dataset has 70,439 patients."
    ]
   },
   {
@@ -1887,6 +1887,13 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
+    "Because our `gender` column contained some missing values, it was considered to be a mixed datatype. We had to convert it to a string datatype in order to label encoding to work."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
     "## Data Modelling"
    ]
   },
@@ -1940,6 +1947,15 @@
    "metadata": {},
    "source": [
     "### Step 7: Choosing our Model\n",
+    "\n",
+    "When building a binary classification model, there are a wide selection of machine learning models to choose from:\n",
+    "\n",
+    "- Random Forest Classification\n",
+    "- Logistic Regression\n",
+    "- Linear Discriminant Analysis\n",
+    "- Support Vector Machines (SVM)\n",
+    "- Gaussian Naive Bayes\n",
+    "- k-Nearest Neighbours\n",
     "\n",
     "We'll test out the [Random Forest Classifier (RFC)](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html) for this dataset. RFC is an ensemble learning technique that works by creating a \"forest\" of decision trees. Each tree evaluates the data for a given patient and outputs a 0 or 1. Random Forest looks at the output of all trees and gives the majority vote as its result. Let's say we have a forest with 3 trees and 2 of them predict the patient will be readmitted. The majority vote is that the patient will be readmitted.\n",
     "\n",
@@ -2038,6 +2054,7 @@
     "- [GridSearchCV](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html)\n",
     "- [RandomizedSearchCV](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html)\n",
     "\n",
+    "<img src=\"https://s3.us-east-2.amazonaws.com/hidden.layers.assets/grid_search.png\" align=\"right\" width=\"20%\"/>\n",
     "\n",
     "With grid search, you define your search space as a grid of values and iterate over each grid point until you find the optimal combination of values. Let's say we want to tune `max_depth` and `n_estimators` in our RandomForestClassifer. We'll set our search space as follows:\n",
     "\n",
@@ -2085,7 +2102,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "The last step is to run fit. We'll pass in X and y which we created in *Step 6*."
+    "The last step is to run fit. We'll pass in X and y which we created in *Step 6*. GridSearchCV will use RFC's default metric, [accuracy](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html#sklearn.ensemble.RandomForestClassifier.score). If we want to optimize our model using another metric, we can specify `scoring = 'precision'` (or whichever metric we're interested in) inside GridSearchCV. Let's stick with accuracy for now."
    ]
   },
   {
@@ -2149,7 +2166,6 @@
    "metadata": {},
    "source": [
     "Based on the search space we defined for GridSearchCv, it looks like max_depth of 5 and n_estimators of 50 are our optimal hyperparmeters which gave us an accuracy of 0.617. \n",
-    "\n",
     "\n",
     "We can also see a thorough report of our results with `cv_results_`. It shows fit time, score time, and mean train/test score (averaged over all folds). We'll sort by `mean_test_score`."
    ]
@@ -2403,7 +2419,9 @@
   {
    "cell_type": "code",
    "execution_count": 55,
-   "metadata": {},
+   "metadata": {
+    "scrolled": true
+   },
    "outputs": [
     {
      "data": {
@@ -2607,6 +2625,13 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
+    "Grid Search and Random Search are uninformed methods which means that they do not take into consideration results from past evaluations. When you're working with a very large search space, you might want to consider a \"smarter\" approach to hyperparameter tuning such a Sequential-Based Model Optimization (SMBO). The SMBO approach keeps track of previous iteration results which is used to sample hyperapramters at the current iteration. In other words, SMBO is trying to reduce the number of iterations by sampling the most promising hyperparameters based on past results. You can check out [scikit-optimize](https://scikit-optimize.github.io/) to learn more about how to implement SMBO hyperparameter tuning with scikit-learn models. "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
     "### Step 9: Evaluating Model Performance"
    ]
   },
@@ -2693,8 +2718,10 @@
     "\n",
     "Precision and recall are information retrieval metrics that evaluate classification models. \n",
     "\n",
-    "- [Precision](https://developers.google.com/machine-learning/crash-course/classification/precision-and-recall) is the \"fraction of relevant instances among the retrieved instances\". In other words, it asks the question: \"What proportion of readmitted patients were actually readmitted?\"\n",
-    "- Recall is the \"fraction of the total amount of relevant instances that were actually retrieved\". It wants to find out: \"What proportion of readmitted patients were identified correctly?\" \n",
+    "- [Precision](https://developers.google.com/machine-learning/crash-course/classification/precision-and-recall) is the \"fraction of relevant instances among the retrieved instances\".\n",
+    "    - What proportion of predicted readmitted patients were actually readmitted?\n",
+    "- Recall is the \"fraction of the total amount of relevant instances that were actually retrieved\".\n",
+    "    - What proportion of readmitted patients were identified correctly?\n",
     "\n",
     "Looking at the equations below, we can see that precision aims to minimize the number of **False Positives**, while recall aims to minimize the number of **False Negatives**.\n",
     "\n",
