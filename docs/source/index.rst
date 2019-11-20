@@ -42,7 +42,7 @@ Environment Setup
 For more details on how to get started, check out the 'Getting Started' section. All code is stored
 on Github (see repo `diabetes-ml-workshop <https://github.com/topspinj/diabetes-ml-workshop>`_).
 There's a `fill-in-the-blank  notebook <https://colab.research.google.com/drive/1LBth_Yk2jAyegg-elx9P7ljrYhojhe0z>`_
-that you can use to follow along on Google Colab. You can duplicate the notebook and modify it on your own account. 
+that you can use to follow along in Google Colab. You can duplicate the notebook and modify it on your own account. 
 
 .. toctree::
    :maxdepth: 1
