@@ -42,4 +42,4 @@ If you decide to run the tutorial on your local machine, make sure that your env
 pip install -r requirements.txt
 ```
 
-You can follow along with the [fill-in-the-blank walkthrough](https://github.com/topspinj/diabetes-ml-workshop/blob/master/notebooks/blank_walkthrough.ipynb). 
+The detailed walkthrough can be found [here](notebooks/walkthrough.ipynb). You can follow along with the fill-in-the-blank version [here](notebooks/blank_walkthrough.ipynb).
